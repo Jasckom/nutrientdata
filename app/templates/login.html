@@ -3,51 +3,51 @@
 {% block content %}
 <div id = account>
 
-<div id class = heading><strong>First Visit</strong></div>
+<div id class = heading><strong>First Visitttttt</strong></div>
 <table >
 <form action="" method="post" name="login">
 <tr>
 
 
-	<td class = tdConstraints>Age:</td> <td>{{profileFull.age(size=20)}}</td>
+	<td class = tdAccount>Age:</td> <td>{{profileFull.age(size=20)}}</td>
 </tr>
 <tr>
-	<td class = tdConstraints>Gender:</td><td> <input id="gender-0" name="gender" type="radio" value="Males"> <label for="gender-0">Male</label>
+	<td class = tdAccount>Gender:</td><td> <input id="gender-0" name="gender" type="radio" value="Males"> <label for="gender-0">Male</label>
 <input id="gender-1" name="gender" type="radio" value="Females"> <label for="gender-1">Female</label></td>
 </tr>
 <tr>
-	<td class = tdConstraints>Condition:</td> <td>{{profileFull.conditions}}</td>
+	<td class = tdAccount>Condition:</td> <td>{{profileFull.conditions}}</td>
 </tr>
 <tr>
-	<td class = tdConstraints> Unit System:</td> <td> <input id="unitSystem-0" name="unitSystem" type="radio" value="US"> <label for="unitSystem-0">US</label>
+	<td class = tdAccount> Unit System:</td> <td> <input id="unitSystem-0" name="unitSystem" type="radio" value="US"> <label for="unitSystem-0">US</label>
 	<input id="unitSystem-1" name="unitSystem" type="radio" value="Metric"> <label for="unitSystem-1">Metric</label>
 </td>
 </tr>
 
 
 	<tr id= "USUnit" class = "hide" >
-		<td class = tdConstraints> Weight(lb):</td> <td>{{profileFull.weight}}</td>
+		<td class = tdAccount> Weight(lb):</td> <td>{{profileFull.weight}}</td>
 	</tr>
 	<tr id= "USUnitH" class = "hide">
-		<td class = tdConstraints>Height(ft):</td> <td>{{profileFull.heightFeet}}</td>
+		<td class = tdAccount>Height(ft):</td> <td>{{profileFull.heightFeet}}</td>
 	</tr>
 	<tr id= "USUnitHI" class = "hide">
-		<td class = tdConstraints>Height(in):</td> <td>{{profileFull.heightInch}}</td>
+		<td class = tdAccount>Height(in):</td> <td>{{profileFull.heightInch}}</td>
 	</tr>
 
 
 
 <tr id = 'MetricUnit' class = "hide">
-	<td class = tdConstraints>Weight(kg):</td> <td>{{profileFull.weightKg}}</td>
+	<td class = tdAccount>Weight(kg):</td> <td>{{profileFull.weightKg}}</td>
 </tr>
 <tr id = 'MetricUnitH' class = "hide">
-	<td class = tdConstraints>Height(cm):</td> <td>{{profileFull.heightCm}}</td>
+	<td class = tdAccount>Height(cm):</td> <td>{{profileFull.heightCm}}</td>
 </tr>
 
 </div>
 
 <tr>
-	<td class = tdConstraints>Activity Level:</td> <td>{{profileFull.activity}}</td>
+	<td class = tdAccount>Activity Level:</td> <td>{{profileFull.activity}}</td>
 </tr>
 </table>
 {{profileFull.submitGuest}} {{profileFull.submitSignUp}}
@@ -59,11 +59,11 @@
 		<form action="" method="post" name="login">
 			{{formLogin.hidden_tag()}}
 			<tr>
-				<td class = tdConstraints>Username:</td>
+				<td class = tdAccount>Username:</td>
 				<td>{{formLogin.usernameLog(size=20)}}</td>
 			</tr>
 			<tr>
-				<td class = tdConstraints>Password:</td>
+				<td class = tdAccount>Password:</td>
 				<td>{{formLogin.passwordLog(size=20)}}</td>
 			</tr> 
 		

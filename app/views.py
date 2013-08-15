@@ -9,7 +9,7 @@ from linearOptimize import linearOptimize
 from filterFood import *
 from sqlalchemy import asc, desc
 from sqlalchemy.orm import aliased
-from whooshSearch import whooshSearch, whooshSearchBrand
+# from whooshSearch import whooshSearch, whooshSearchBrand
 from app.models import Food, Nutri
 from config import RESULTS_PER_PAGE
 SECRET_KEY = 'you-will-never-guess'
@@ -176,7 +176,6 @@ def getInfo():
 		
 	return info, food
 	
-@login_required
 @app.route('/resultSearch', methods = ['GET', 'POST'])
 @app.route('/resultSearch/<int:page>', methods = ['GET', 'POST'])
 def resultSearch(page = 1):
@@ -245,14 +244,16 @@ def resultSearch(page = 1):
 	
 	if searchEntry == "brandOnly":
 		#print "Brand search term: ",brandEntry
-		results = whooshSearchBrand(brandEntry)
+# 		results = whooshSearchBrand(brandEntry)
+		results = []
 		if results:
 			resultSearch = Food.query.filter(Food.id.in_(results)).order_by(asc(Food.food)).paginate(page, RESULTS_PER_PAGE, False)
 		else:
 			resultSearch = Food.query.filter(Food.id==0).paginate(page, RESULTS_PER_PAGE, False)
 	else:
 		#print "In normal search: "
-		results = whooshSearch(searchEntry, brandEntry)
+# 		results = whooshSearch(searchEntry, brandEntry)
+		results = []
 		if results:
 			resultSearch = Food.query.filter(Food.id.in_(results)).paginate(page, RESULTS_PER_PAGE, False)
 		else:
