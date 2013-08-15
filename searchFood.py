@@ -15,10 +15,8 @@ def searchFood(searchTerm, brandTerm, Food):
 	brandTerm.rstrip("|")
 	
 	#to be changed to tags
-	print andSearchTerm
 	q = Food.query.filter("Food.tag @@ to_tsquery(:searchTerm)").order_by(desc("ts_rank_cd(to_tsvector(Food.tag) , to_tsquery(:searchTerm))")).params(searchTerm=andSearchTerm)
 	if q.count() == 0:
-		print "looking for or term"
 		q = Food.query.filter("Food.tag @@ to_tsquery(:searchTerm)").order_by(desc("ts_rank_cd(to_tsvector(Food.tag) , to_tsquery(:searchTerm))")).params(searchTerm=orSearchTerm)
 	
 	qWithBrands = q.filter("Food.source @@ to_tsquery(:brandTerm)").params(brandTerm=brandTerm)
