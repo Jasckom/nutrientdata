@@ -10,7 +10,7 @@ Flask-WhooshAlchemy==0.55a
 Jinja2==2.7
 MarkupSafe==0.18
 PuLP==1.5.4
-SQLAlchemy==0.8.2
+SQLAlchemy==0.7.9
 SQLAlchemy-Searchable==0.1.7
 Tempita==0.5.1
 Unidecode==0.04.13
