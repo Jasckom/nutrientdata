@@ -1,0 +1,200 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/mystyle.css') }}">
+    	{% if title %}
+    	<title>{{title}} - NutriData </title>
+    	{% else %}
+    	<title>NutriData</title>
+    	{% endif %}
+	</head>
+	<body>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="{{url_for('static', filename= 'js/remove.js') }}"></script>
+    	<div>NutriData: <a href="/search">Home</a>
+      	 | <a href="{{ url_for('resultSearch') }}" >Search More Food</a>
+    	| <a href="{{ url_for('logout') }}" >Log out</a>
+    	
+    	</div>
+    	<hr>
+    	{% with messages = get_flashed_messages() %}
+    	{% if messages %}
+    	<ul>
+    	{% for message in messages %}
+        	<li>{{ message }} </li>
+    	{% endfor %}
+    	</ul>
+    	{% endif %}
+    	{% endwith %}
+    	{% if head_1%}
+    	<h1> {{head_1}} </h1>
+    	{% endif%}
+
+<!-- Search Box -->
+
+    <div id = firstPage>
+    	
+    	    	<div id = findFood style="display: table;">
+    				<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+						<div style=" #position: relative; #top: -50%">
+    							<h4 class= center>{{titleFindFood}}<br></h>
+						</div>
+					</div>
+				</div>
+  
+<!--  Nutritional Box  -->
+<div id = foodDetails>
+{%if info %}
+
+<table class="nutrition" summary="This table summarizes nutritional information">
+	<tr>
+		<th colspan="2">Nutrition Facts</th>
+	</tr>
+	<tr id="servings">
+		<td colspan="2">Serving Size {{food.value(5)}} {{food.value(6)}} ({{food.value(7)|round()|int}}g)</td>
+	</tr>
+	<tr>
+		<td colspan="2">Amount Per Serving</td>
+	</tr>
+	<tr id="calories">
+		<td><strong>Calories</strong> {{food.value(8)}}</td>
+		<td>Calories from Fat {{food.value(9)}} </td>
+	</tr>
+	<tr>
+		<td></td>
+		<td class="dv">% Daily Value *</td>
+	</tr>
+	<tr>
+		<td><strong>Total Fat</strong> {{food.value(10)}}g</td>
+		<td class="dv">{{food.value(11)}}%</td>
+	</tr>
+	<tr>
+		<td class="sub">Saturated Fat {{food.value(12)}}g</td>
+		<td class="dv">{{(100*food.value(12)/20)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td class="sub">Monounsaturated Fat {{food.value(13)}}g</td>
+		<td class="dv"></td>
+	</tr>
+	<tr>
+		<td class="sub">Polyunsaturated Fat {{food.value(14)}}g</td>
+		<td class="dv"></td>
+	</tr>
+
+	<tr>
+		<td><strong>Cholesterol</strong> {{food.value(15)}}g</td>
+		<td class="dv">{{(100*food.value(15)/300)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td><strong>Sodium</strong> {{food.value(16)}}mg</td>
+		<td class="dv">{{(100*food.value(16)/2400)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td><strong>Total Carbohydrate</strong> {{food.value(17)}}g</td>
+		<td class="dv">{{(100*food.value(17)/300)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td class="sub">Dietary Fiber {{food.value(18)}}g</td>
+		<td class="dv">{{(100*food.value(18)/25)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td class="sub">Sugars {{food.value(19)}}g</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><strong>Protein</strong> {{food.value(20)}}g</td>
+		<td class="dv">{{(100*food.value(20)/50)|round()|int}}%</td>
+	</tr>
+	<tr id="minerals">
+		<td>Vitamin A</td>
+		<td class="dv">{{food.value(21)}}%</td>
+	</tr>
+	<tr>
+		<td>Vitamin C</td>
+		<td class="dv">{{food.value(22)}}%</td>
+	</tr>
+	<tr>
+		<td>Calcium</td>
+		<td class="dv">{{food.value(23)}}%</td>
+	</tr>
+	<tr>
+		<td>Iron</td>
+		<td class="dv">{{food.value(24)}}%</td>
+	</tr>
+</table>
+
+<div class = center>
+<br>
+{{food.food}} {{food.detail}} ({{food.source}})
+</div>
+
+<form action="{{ url_for('selectFoodFromSuggest', foodIDFromSuggest = food.id) }}">
+<div class = center>
+    <input type="submit" value="Select This Food!">
+</div>
+    </form>
+{%endif%}
+</div>
+    
+<!-- Box 3-->
+    	
+       	{% if foodsILike %}
+    	<div id = "myFood">
+    			<form action="" method="post" name="foodsILike">
+    				{{foodsILike.hidden_tag()}}
+    			<div id = "submitMyFood" style="display: table;">
+    				<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+						<div style=" #position: relative; #top: -50%">
+    						<div class = "center">
+    				 			{{foodsILike.submit}}
+    			    		</div>
+    			    	</div>
+    				</div>
+        		</div>	
+    			<div id = box3FoodsILike>
+    			<div id = box3FoodsILikeListHead><strong>Foods I Like</strong>
+    			</div>
+    			<div id = box3FoodsILikeList>
+    					{%set indexField = 0%}
+    					{%for field in foodsILike %}
+    						{%if indexField >= 4%}
+        						{{ field(value=True)}}
+        						<a href="{{ url_for('selectFoodInfoSuggest', foodIDInfo = field.name) }}" style="text-decoration: none">
+        						{{foodNamesArg[indexField-4]}}
+        						</a>
+        						<br>
+        					{%endif%}
+        					{% set indexField = indexField + 1%}
+        				{%endfor%}
+    			</div>
+    			</div>
+    		    <div id = "editMyFood">
+    		    <div class = "center">
+    		    {{foodsILike.remove}}
+    		    {{foodsILike.toggle}}
+    		    </div>
+        		</div>	
+    	{% endif %}		
+    	
+    	{% if editPreferredListForm %}
+    			<form action="" method="post" name="searchEntry">
+    				{{editPreferredListForm.hidden_tag()}}
+    			<div id = "submitMyFood">
+    				<div class = "center">
+    			    {{ editPreferredListForm.submit}} </div>
+        		</div>	
+    			<div id = result_category>
+    			<div id = head_category><h4>Foods I Like</h4>
+    			</div>
+    			<div id = list_result_category>
+        				{{ editPreferredListForm.foodOptions}}	
+    			</div>
+    			</div>
+    		    <div id = "submitMyFood">
+					{{ editPreferredListForm.remove}}
+        		</div>
+        	{%endif%}
+    </div>
+    </div>
+  	</body>
+</html>
+

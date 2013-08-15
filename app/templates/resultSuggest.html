@@ -1,0 +1,303 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/mystyle.css') }}">
+    	{% if title %}
+    	<title>{{title}} - NutriData </title>
+    	{% else %}
+    	<title>NutriData</title>
+    	{% endif %}
+	</head>
+	<body>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="{{url_for('static', filename= 'js/remove.js') }}"></script>
+    	<div>NutriData: <a href="/search">Home</a>
+      	 | <a href="{{ url_for('resultSearch') }}" >Search More Food</a>
+    	| <a href="{{ url_for('logout') }}" >Log out</a>
+    	{%if userProfile%}
+    	| {{ userProfile }}
+    	{%endif%}
+    	
+    	</div>
+    	<hr>
+    	{% with messages = get_flashed_messages() %}
+    	{% if messages %}
+    	<ul>
+    	{% for message in messages %}
+        	<li>{{ message }} </li>
+    	{% endfor %}
+    	</ul>
+    	{% endif %}
+    	{% endwith %}
+    	{% if head_1%}
+    	<h1> {{head_1}} </h1>
+    	{% endif%}
+
+<!-- Search Box -->
+    <div id = firstPage>
+    	
+    	<div id = findFood>
+		
+	<div id = search style="display: table;">
+    	<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+			<div style=" #position: relative; #top: -50%">
+				<div class = "center">
+    				<strong>{{titleFindFood}}</strong>
+ 				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+    
+<!-- Box 1 -->
+    
+    	<div id = box1Cat>
+    		<div id = box1CatListHead><strong>Filter by</strong></div>
+    		<div id = box1CatList>
+    			<a href="{{ url_for('selectTypeILike', chosenType = "Suggested Food Types") }}" style="text-decoration: none" ><strong>Suggested Food Types</strong></a></li><br>
+    			or <br>
+    			<strong> Food Types I Like </strong><br>
+    		{%for eachFoodType in box1Cat%}
+    			
+    			<li class = "capitalize"><a href="{{ url_for('selectTypeILike', chosenType = eachFoodType) }}" style="text-decoration: none" > {{eachFoodType}} </a></li>
+    		{% endfor%}
+    		</div>
+    	</div>
+
+<!-- Box 2 -->
+
+    		
+    		<div id = box2Result>
+    	    	{% if resultSearch.pages != 0 %}
+    			<div id = box2ResultListHead>
+    				<strong>{{box2Head}}</strong>
+    			</div>
+    			<div id = box2ResultList>
+    				{%for eachFood in resultSearch.items%}
+<!--     				<li><a href="{{ url_for('selectFoodInfoSuggest', foodIDInfo = eachFood.id) }}" style="text-decoration: none"> -->
+
+    				<li><a id = {{eachFood.id}} href="{{ url_for('selectFoodFromSuggest', foodIDFromSuggest = eachFood.id) }}" style="text-decoration: none" > 
+    				{{eachFood.food}} {{eachFood.detail}} ({{eachFood.source}}) </a></li>
+    				{% endfor%}
+    			</div>
+    			{% else%}
+    				<div id = box2ResultListHead>
+    				<strong>{{heading2List}} <br>No Food with High {{chosenNut}}.</strong>
+    			</div>	
+    			{% endif %}
+    			{%if resultSearch.items|length >= 15 %}
+    				<div id = box2Scroll>⇩</div>
+    			{%endif%}
+    			<div id = box2PageNav>
+    			    	<div class = center>
+    			    	<br>
+    					{% if resultSearch.has_prev %}<a href="{{ url_for('resultSuggest',page = resultSearch.prev_num) }}"><< previous</a>{% else %}<< previous{% endif %} | 
+						{% if resultSearch.has_next %}<a href="{{ url_for('resultSuggest',page = resultSearch.next_num)  }}">next >></a>{% else %}next >>{% endif %}
+					</div>
+				</div>
+    		</div> 
+    		
+    			
+    	
+<!-- Box Below -->
+    	
+    <div id = boxBelow style="display: table;">
+    	{%if mainCat%}
+    	<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+			<div style=" #position: relative; #top: -50%">
+				<div class = "center">
+    				Choose Food by Main Types:<br>
+    			</div>
+				<div class = "centcap">
+    				{%set index = 0 %}
+					{%for eachCat in mainCat%}
+						<a href="{{ url_for('mainCat', mainCatChosen = index) }}" style="text-decoration: none" > {{eachCat}} </a>
+						{%set index = index+ 1 %}
+						{% if index is divisibleby (4)%}
+    					<br>
+    					{%else%}
+    					|
+    					{%endif%}
+    				{% endfor%}
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id = boxBelow style="display: table;">
+    	{%elif lackingNut%}
+    	<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+    		<div style=" #position: relative; #top: -50%">
+    			<div class = "center">
+    				Choose Nutrients for Balanced Diet:<br>
+    			</div>
+    			<div class = "centcap">
+    				{%set index = 0 %}
+    				{%for eachNut in lackingNut%}
+    					<a href="{{ url_for('selectNut', chosenNut = index) }}" style="text-decoration: none" > {{eachNut}}</a>
+    					{%set index = index+ 1 %}
+    					{% if index is divisibleby (4)%}
+						<br>
+						{% else%}
+						|
+						{%endif%}
+    				{% endfor%}
+    			</div>
+    	{%endif%}
+			</div>
+		</div>
+    </div>
+  </div>
+  
+  
+<!--  Nutritional Box  -->
+<div id = foodDetails>
+
+	{% if resultSearch%}
+		{%for food in resultSearch.items%}
+			<table id = "tabNut{{food.id}}" style= "display:none" class="nutrition" summary="This table summarizes nutritional information">
+		<tr>
+			<th colspan="2">Nutrition Facts</th>
+		</tr>
+		<tr id="servings">
+			<td colspan="2">Serving Size {{food.value(5)}} {{food.value(6)}} ({{food.value(7)|round()|int}}g)</td>
+		</tr>
+		<tr>
+			<td colspan="2">Amount Per Serving</td>
+		</tr>
+		<tr id="calories">
+			<td><strong>Calories</strong> {{food.value(8)}}</td>
+			<td>Calories from Fat {{food.value(9)}} </td>
+		</tr>
+		<tr>
+			<td></td>
+			<td class="dv">% Daily Value *</td>
+		</tr>
+		<tr>
+			<td><strong>Total Fat</strong> {{food.value(10)}}g</td>
+			<td class="dv">{{food.value(11)}}%</td>
+		</tr>
+		<tr>
+			<td class="sub">Saturated Fat {{food.value(12)}}g</td>
+			<td class="dv">{{(100*food.value(12)/20)|round()|int}}%</td>
+		</tr>
+		<tr>
+			<td class="sub">Monounsaturated Fat {{food.value(13)}}g</td>
+			<td class="dv"></td>
+		</tr>
+		<tr>
+			<td class="sub">Polyunsaturated Fat {{food.value(14)}}g</td>
+			<td class="dv"></td>
+		</tr>
+
+		<tr>
+			<td><strong>Cholesterol</strong> {{food.value(15)}}g</td>
+			<td class="dv">{{(100*food.value(15)/300)|round()|int}}%</td>
+		</tr>
+		<tr>
+			<td><strong>Sodium</strong> {{food.value(16)}}mg</td>
+			<td class="dv">{{(100*food.value(16)/2400)|round()|int}}%</td>
+		</tr>
+		<tr>
+			<td><strong>Total Carbohydrate</strong> {{food.value(17)}}g</td>
+			<td class="dv">{{(100*food.value(17)/300)|round()|int}}%</td>
+		</tr>
+		<tr>
+			<td class="sub">Dietary Fiber {{food.value(18)}}g</td>
+			<td class="dv">{{(100*food.value(18)/25)|round()|int}}%</td>
+		</tr>
+		<tr>
+			<td class="sub">Sugars {{food.value(19)}}g</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><strong>Protein</strong> {{food.value(20)}}g</td>
+			<td class="dv">{{(100*food.value(20)/50)|round()|int}}%</td>
+		</tr>
+		<tr id="minerals">
+			<td>Vitamin A</td>
+			<td class="dv">{{food.value(21)}}%</td>
+		</tr>
+		<tr>
+			<td>Vitamin C</td>
+			<td class="dv">{{food.value(22)}}%</td>
+		</tr>
+		<tr>
+			<td>Calcium</td>
+			<td class="dv">{{food.value(23)}}%</td>
+		</tr>
+		<tr>
+			<td>Iron</td>
+			<td class="dv">{{food.value(24)}}%</td>
+		</tr>
+		<caption>{{food.food}} {{food.detail}} ({{food.source}})</caption>
+	</table>
+		{%endfor%}
+	{%endif%}
+</div>
+
+    
+<!-- Box 3-->
+    	
+       	{% if foodsILike %}
+    	<div id = "myFood">
+    			<form action="" method="post" name="foodsILike">
+    				{{foodsILike.hidden_tag()}}
+    			<div id = "submitMyFood" style="display: table;">
+    				<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+						<div style=" #position: relative; #top: -50%">
+    						<div class = "center">
+    				 			{{foodsILike.submit}}
+    			    		</div>
+    			    	</div>
+    				</div>
+        		</div>	
+    			<div id = box3FoodsILike>
+    			<div id = box3FoodsILikeListHead><strong>Foods I Like</strong>
+    			</div>
+    			<div id = box3FoodsILikeList>
+    					{%set indexField = 0%}
+    					{%for field in foodsILike %}
+    						{%if indexField >= 4%}
+        						{{ field(value=True)}}
+        						<a href="{{ url_for('selectFoodInfoSuggest', foodIDInfo = field.name) }}" style="text-decoration: none">
+        						{{foodNamesArg[indexField-4]}}
+        						</a>
+        						<br>
+        					{%endif%}
+        					{% set indexField = indexField + 1%}
+        				{%endfor%}
+    			</div>
+    			</div>
+    		    <div id = "editMyFood">
+    		    <div class = "center">
+    		    {{foodsILike.remove}}
+    		    {{foodsILike.toggle}}
+    		    </div>
+        		</div>	
+    	{% endif %}		
+    	
+    	{% if editPreferredListForm %}
+    			<form action="" method="post" name="searchEntry">
+    				{{editPreferredListForm.hidden_tag()}}
+    			<div id = "submitMyFood">
+    				<div class = "center">
+    			    {{ editPreferredListForm.submit}} </div>
+        		</div>	
+    			<div id = result_category>
+    			<div id = head_category><h4>Foods I Like</h4>
+    			</div>
+    			<div id = list_result_category>
+        				{{ editPreferredListForm.foodOptions}}	
+    			</div>
+    			</div>
+    		    <div id = "submitMyFood">
+					{{ editPreferredListForm.remove}}
+        		</div>
+        	{%endif%}
+    </div>
+    </div>
+  	</body>
+</html>
+

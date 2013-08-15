@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if form_2 %}
+	<form action="" method="post" name="selectFood">
+		{{form_2.hidden_tag()}}
+    	<p>
+        	Search Results:<br>
+        	{{form_2.foodOptions}}
+        	<input type="submit" value="Choose"></p>
+    </form>	
+    {% endif %}
+</form>
+{% endblock %}

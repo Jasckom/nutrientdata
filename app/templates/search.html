@@ -1,0 +1,74 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/mystyle.css') }}">
+    	{% if title %}
+    	<title>{{title}} - NutriData </title>
+    	{% else %}
+    	<title>NutriData</title>
+    	{% endif %}
+	</head>
+	<body>
+    	<div>NutriData: <a href="/index">Home</a>
+    	{%if first %}
+    	 | <a href="{{ url_for('login') }}" >Log in</a>
+    	 {% if g.user.is_authenticated() %}
+    	 | <a href="{{ url_for('logout') }}" >Log out</a>
+    	 {%endif%}
+    	 | <a href="{{ url_for('signup') }}" >Sign up</a>
+    	{%endif%}
+    	
+    	</div>
+    	<hr>
+    	{% with messages = get_flashed_messages() %}
+    	{% if messages %}
+    	<ul>
+    	{% for message in messages %}
+        	<li>{{ message }} </li>
+    	{% endfor %}
+    	</ul>
+    	{% endif %}
+    	{% endwith %}
+    	{% if head_1%}
+    	<h1> {{head_1}} </h1>
+    	{% endif%}
+
+<!-- Search Box -->
+
+    
+    {% if form%}
+			<form action="" method="post" name="searchEntry">
+			{{form.hidden_tag()}}
+				<div class=center>Search Food by Keywords:
+				{{form.searchEntry(size=28,placeholder="Food")}}
+				{{form.brandEntry(size=27,placeholder="Brand (Optional)")}}
+				<input type="submit" name ="search" value="Go!">
+				</div>
+			</form>
+			{% if selectFilter %}
+			<form action="" method="post" name="Filter">
+				{{selectFilter.hidden_tag()}}
+				Order by Nutritional Content: {{selectFilter.filterNut}}
+				{{selectFilter.filter}}
+			</form>
+			{%endif%}
+		{%endif%}
+	    {%set index = 0 %}
+	   <div id =homeBox>
+    	
+    {%for eachCat in categories%}
+    	
+    	<div id = category>
+    		<div id = head_category><h4 class = capitalize>{{eachCat}}</h4></div>
+    		<div id = list_category>
+    		{%for eachFoodType in foodTypes[index]%}
+    			<li class = capitalize><a href="{{ url_for('mainCatFromSearch', mainCatChosen = eachCat,foodChosen = eachFoodType) }}" style="text-decoration: none" > {{eachFoodType}}</a></li>
+    		{% endfor%}
+    		</div>
+    	</div>
+    	{%set index = index+ 1 %}
+    	{% endfor %}	
+    </div> 
+  	</body>
+</html>
+
+

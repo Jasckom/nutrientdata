@@ -1,0 +1,515 @@
+li.capitalize {text-transform:capitalize;}
+h4.capitalize {text-transform:capitalize;}
+strong.capitalize {text-transform:capitalize;}
+a {
+    text-decoration: none;
+}
+a:link, a:visited {
+    color: blue;
+}
+a:hover {
+    color: black;
+}
+.center
+{
+text-align:center;
+}
+.right
+{
+text-align:right;
+}
+.centcap {
+text-align:center;
+text-transform:capitalize;}
+.cap {text-transform:capitalize;}
+.hide {display:none;}
+
+.tdConstraints{
+max-width:270px;
+min-width:270px; 
+width:270px; 
+}
+
+.tdAccount{
+max-width:100px;
+min-width:100px; 
+width:100px; 
+}
+
+
+.heading{
+font-size:xx-large;
+}
+
+
+
+
+
+#mainCat {
+float: left;
+width: 520;
+height: 130px;
+position: relative;
+overflow:auto;
+border: solid;
+margin-left: 10px;
+margin-right: 10px;
+margin-top: -7px;
+border-color: white;
+}
+
+
+
+#homeBox{
+width: 1105px;
+height: 1800px;
+position: relative;
+margin: auto;
+}
+
+#suggest {
+float: left;
+width: 726px;
+height: 26px;
+border:5px solid gray;
+margin:10px;
+margin-top: 14px;
+margin-bottom: 6px;
+position: relative;
+border: solid;
+border-color: white;
+}
+
+#search {
+float: left;
+width: 520px;
+height: 50px;
+border:5px solid gray;
+margin:10px;
+margin-top: 10px;
+margin-bottom: -5px;
+position: relative;
+border: solid;
+border-color: white;
+}
+
+
+#boxBelow{
+float: left;
+width: 520;
+height: 130px;
+position: relative;
+overflow:auto;
+border: solid;
+margin-left: 10px;
+margin-right: 10px;
+border-color: white;
+}
+
+#all_categories{
+float: left;
+width: 710;
+height: 606px;
+margin:10px;
+position: relative;
+overflow:auto;
+}
+
+#category {
+float: left;
+width: 250px;
+height: 280px;
+border:5px solid gray;
+margin:10px;
+position: relative;
+border: solid;
+}
+
+#list_category {
+width: 250px;
+height: 200px;
+overflow:auto;
+}
+
+/*All uses same head style*/
+#head_categoryBox1 {
+width: 250px;
+height: 40px;
+}
+
+#head_category {
+width: 400px;
+height: 40px;
+}
+
+
+/* box1 */
+#box1Cat {
+float: left;
+width: 180px;
+height: 280px;
+border:5px solid gray;
+margin:10px;
+margin-right:0px;
+position: relative;
+border: solid;
+}
+
+#box1CatList {
+width: 180px;
+height: 200px;
+overflow:scroll;
+padding-top: 10px;
+}
+
+/*All uses same head style*/
+#box1CatListHead {
+width: 180px;
+height: 40px;
+}
+
+/* box2 */
+#box2Result {
+float: left;
+width: 326px;
+height: 280px;
+border:5px solid gray;
+margin:10px;
+margin-right:0px;
+position: relative;
+border: solid;
+}
+
+#box2ResultList {
+width: 326px;
+height: 200px;
+overflow:auto;
+padding-top: 10px;
+}
+
+#box2ResultListHead {
+width: 326px;
+height: 40px;
+}
+
+#box2Scroll {
+width: 6px;
+height: 20px;
+position:absolute;
+bottom:30px;
+right:10px;
+}
+
+#box2PageNav {
+width: 326px;
+height: 20px;
+font-size : small;
+position:absolute;
+bottom:20px;
+}
+
+/* box3 */
+#box3FoodsILike {
+float: left;
+width: 326px;
+height: 280px;
+border:5px solid gray;
+margin:10px;
+margin-right:0px;
+position: relative;
+border: solid;
+}
+
+#box3FoodsILikeList {
+width: 326px;
+height: 220px;
+overflow:auto;
+padding-top: 10px;
+}
+
+#box3FoodsILikeListHead {
+width: 326px;
+height: 40px;
+
+}
+
+
+/*All find food*/
+#findFood{
+float: left;
+width: 550;
+height: 500px;
+position: relative;
+overflow:auto;
+border: solid;
+margin: 10px;
+margin-left: 0px;
+}
+
+#foodDetails{
+float: left;
+width: 260;
+height: 500px;
+position: relative;
+border: solid;
+margin: 10px;
+margin-left: 0px;
+border-color: white;
+}
+
+
+/*Box2*/
+#result_category {
+float: left;
+width: 450px;
+height: 280px;
+border:5px solid gray;
+margin:10px;
+position: relative;
+border: solid;
+}
+
+/*Lis in Box 2*/
+#list_result_category {
+width: 458px;
+height: 200px;
+overflow:auto;
+}
+/*Foods I Like*/
+#foodILike {
+float: left;
+width: 450px;
+height: 350px;
+border:5px solid gray;
+margin:10px;
+position: relative;
+}
+
+/* List in Food iLike */
+#listFoodILike {
+width: 458px;
+height: 280px;
+overflow:auto;
+}
+
+
+/*All find food*/
+#myFood{
+float: left;
+width: 354;
+height: 500px;
+position: relative;
+overflow:auto;
+border: solid;
+margin: 10px;
+margin-left: 0px;
+}
+
+#firstPage{
+width: 1280px;
+height: 500px;
+position: relative;
+margin: auto;}
+
+
+#editMyFood {
+float: left;
+width: 326px;
+height: 26px;
+border:5px solid gray;
+margin:10px;
+position: relative;
+border: solid;
+border-color: white;
+}
+
+#submitMyFood {
+float: left;
+width: 326px;
+height: 50px;
+border:5px solid gray;
+margin:10px;
+margin-top: 10px;
+margin-bottom: -5px;
+position: relative;
+border: solid;
+border-color: white;
+}
+
+
+#profileForm {
+float: left;
+width: 210px;
+height: 250px;
+position: relative;
+}
+
+#profileForm_objective {
+float: left;
+width: 210px;
+height: 480px;
+margin:10px;
+position: relative;
+padding:10px;
+border: solid
+}
+
+#chooseDefault{
+float: left;
+width: 200px;
+height: 60px;
+position: relative;
+border: solid;
+}
+#chooseminMax{
+float: left;
+width: 200px;
+height: 190px;
+position: relative;
+border: solid;
+}
+#listobj{
+width: 180px;
+height: 150px;
+position:absolute;
+bottom:10px;
+right:0px;
+overflow:auto;
+}
+
+#choosePlan{
+float: left;
+width: 200px;
+height: 40px;
+position: relative;
+border: solid;
+}
+
+#minMaxForm{
+float: left;
+width: 500px;
+height: 480px;
+margin:10px;
+position: relative;
+padding:10px;
+border: solid;
+overflow:auto;
+}
+#minMaxHead{
+float: left;
+width: 500px;
+height: 60px;
+position: relative;
+border: sold;
+}
+#resultLP{
+float: left;
+width: 400px;
+height: 480px;
+margin:10px;
+position: relative;
+padding:10px;
+border: solid;
+overflow:auto;
+}
+
+#account {
+float: left;
+width: 230px;
+height: 380px;
+margin:10px;
+position: relative;
+padding:10px;
+}
+
+
+
+table.nutrition {
+	width : 260px;
+	margin-top : 10px;
+	margin-left : 0;
+	margin-right : 0;
+
+	border : 1px solid black;
+	border-collapse : collapse;
+	table-layout : auto;
+
+}
+/**
+ * Format the caption at the top of the table
+ */
+.nutrition caption {
+	font-family : Arial;
+	font-size : small;
+	font-style: italic;
+}
+
+/** 
+ * Format the tr ids 
+ */
+.nutrition tr#calories td {
+	border-bottom : 4px solid black;
+}
+
+.nutrition tr#servings td {
+	border-bottom : 6px solid black;	
+}
+
+.nutrition tr#minerals td {
+	border-top : 4px solid black;
+}
+
+ /**
+  * Format the header, which is basically the text "Nutrition Facts"
+  */
+.nutrition th {
+	background-color : transparent;
+	padding : 3px;
+	border : 0;
+	font-family : Arial;
+	font-size : large;
+	font-weight : bolder;
+}	
+
+ /**
+  * Define the baseline style for cells
+  */
+.nutrition td {
+	padding : 3px;
+			
+	font-family : Arial;
+	font-size : x-small;
+	border : 0;
+	border-bottom : 1px solid black;
+	
+	text-align : left;
+}
+
+ /**
+  * Define the cell for Daily Values
+  */
+.nutrition td.dv {
+	font-weight : bold;
+	text-align : right;
+}
+
+ /**
+  * Set an indent for subordinate nutrients
+  */
+.nutrition td.sub {
+	text-indent : 10px;
+}
+
+ /**
+  * Set the style of the disclaimer text
+  */
+.nutrition td.disclaimer {
+	font-size : xx-small;
+}
+
+ /**
+  * Use the strong tag to set emphasis on particular text
+  */
+.nutrition strong {
+	font-weight : x-bolder;
+}		  

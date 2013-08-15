@@ -1,0 +1,22 @@
+{% extends "admin.html" %}
+
+{% block content %}
+<div id class = heading><strong>Sign Up</strong></div>
+	<table>
+		<form action="" method="post" name="login">
+			{{signupform.hidden_tag()}}
+			<tr>
+				<td class = tdConstraints>Username:</td>
+				<td>{{signupform.usernameSign(size=20)}}</td>
+			</tr>
+			<tr>
+				<td class = tdConstraints>Password:</td>
+				<td>{{signupform.passwordSign(size=20)}}</td>
+			</tr> 
+	</table>
+	<input type="submit" value="Log In">
+	</form>
+</div>
+{% endblock %}
+
+

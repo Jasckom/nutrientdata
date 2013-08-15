@@ -1,0 +1,134 @@
+{% extends "baseResult.html" %}
+
+{% block content %}
+	
+	<div id = profileForm_objective>
+    	{% if minMaxForm %}
+			<form action="" method="post" name="Contraints">
+					{{minMaxForm.hidden_tag()}}
+					1. Choose Diet Plan<br>
+					<div id = chooseDefault>
+						{%for subfield in minMaxForm.opt_maxormin%}
+							{%if loop.index0 >=2%}
+								{{subfield}}{{subfield.label}}<br>
+							{%endif%}	
+						{%endfor%}
+					</div>
+					<div class= center>or</div>
+					<div id = chooseminmax>
+						{%for subfield in minMaxForm.opt_maxormin%}
+							{%if loop.index0 <= 1%}
+								{{subfield}}{{subfield.label}}
+							{%endif%}	
+						{%endfor%}
+						<div id = listobj>
+							{%for subfield in minMaxForm.opt_nut%}
+								{{subfield}}{{subfield.label}}<br>
+							{%endfor%}
+						</div>
+						<div id = box2Scroll>⇩</div>
+					</div>
+					2. Choose Nutritional Plan<br>
+					<div id= choosePlan>
+						{%for subfield in minMaxForm.nutrientPlan%}
+							{{subfield}}{{subfield.label}}<br>
+						{%endfor%}
+					</div>
+					
+					{{minMaxForm.submit}}<br>
+	</div>
+	
+	<div id = minMaxForm>
+		3. Manage Nutritional Constraints<br>
+    	<table >
+    		
+    		<tr>
+    			<th>Nutrient</th>
+    			<th>Lower Bound</th>
+    			<th>Upper Bound</th>
+    		</tr>
+    		
+    	{% set i = 0%}		    		
+		{% for field in minMaxForm%}
+			{% if i != 0 and i <= 420 and check[(i-1)//3]== 1 %}
+				
+				{% if (i-1) is divisibleby(3)%}
+					<tr><td class="tdConstraints">{{field}}{{minMaxForm.heading[(i-1)//3]}}</td>
+				{% elif (i-2) is divisibleby(3)%}
+					<td>{{field(size=15,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
+				{%else%}
+					<td>{{field(size=15,value=minMaxForm.upperBound[(i-3)//3])}}</td>
+					</tr>
+				{%endif%}
+			
+			{%endif%}
+			{% set i = i+1%}
+		{%endfor%}
+		
+		{% set i = 0%}		    		
+		{% for field in minMaxForm%}
+			{% if i != 0 and i <= 420 and check[(i-1)//3]== 0 %}
+				{% if (i-1) is divisibleby(3)%}
+					<tr> <td class="tdConstraints">{{field}}{{minMaxForm.heading[(i-1)//3]}}</td>
+				{% elif (i-2) is divisibleby(3)%}
+					<td>{{field(size=15,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
+				{%else%}
+					<td>{{field(size=15,value=minMaxForm.upperBound[(i-3)//3])}}</td>
+					</tr>
+				{%endif%}
+			
+			{%endif%}
+			{% set i = i+1%}
+		{%endfor%}
+		</table>
+	</div>
+    </form>	
+    {% endif %}
+	
+	
+    {% if outputFood %}
+    <div id = resultLP>
+ 	{% if status != "Undefined"%}
+    <p>Your Recommended Diet:</p>
+    {% for i in range(outputFood|length)%}
+    <p>{{ outputFoodAmount[i]}} {{outputFood[i]}} </p>
+    {% endfor %}
+    
+    {%else%}
+    Cannot Satisfy the Nutritional Constraints.</br>
+    {%endif%}
+
+	{% if nutExceedStatement or nullNut%}
+	{% if status == "Optimal"%}
+	However, <br>
+	{%endif%}
+	{%endif %}
+	
+	{% set index = 0%}
+    {% if nutExceedStatement%}
+    	{%for eachExceed in nutExceedStatement%}
+    	<FONT COLOR="FF0000">{{eachExceed}}</FONT><br>
+    		{%for eachNutExceedWhichFood in nutExceedWhichFood [index]%}
+    			{{eachNutExceedWhichFood[0]}}% from {{eachNutExceedWhichFood[1].food}}<br>
+    		{%endfor%}
+    		{%set index = index +1%}
+    	{%endfor%}
+    
+    {%endif%}
+    <br>
+    {%if nullNut%}
+    	<a href="{{ url_for('resultSuggest') }}" style="text-decoration: none" >Compliment with these Nutrients:</a><br>
+    	{%for eachNullNut in nullNut%}
+    	{{eachNullNut}}<br>
+    	{%endfor%}
+    	<br>
+    	or Adjust the Constraints
+    {%endif%}
+    	
+    
+    
+    
+    </div>
+    {%endif%}
+    
+{% endblock %}

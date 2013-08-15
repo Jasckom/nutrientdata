@@ -1,0 +1,9 @@
+#!/Users/Mick/Desktop/nutri/flask/bin/python
+# EASY-INSTALL-ENTRY-SCRIPT: 'PuLP==1.5.4','console_scripts','pulptest'
+__requires__ = 'PuLP==1.5.4'
+import sys
+from pkg_resources import load_entry_point
+
+sys.exit(
+   load_entry_point('PuLP==1.5.4', 'console_scripts', 'pulptest')()
+)

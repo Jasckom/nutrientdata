@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/mystyle.css') }}">
+    	{% if title %}
+    	<title>{{title}} - NutriData </title>
+    	{% else %}
+    	<title>NutriData</title>
+    	{% endif %}
+	</head>
+	<body>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="{{url_for('static', filename= 'js/remove.js') }}"></script>
+    	<div>NutriData
+
+    	</div>
+    	<hr>
+    	{% with messages = get_flashed_messages() %}
+    	{% if messages %}
+    	<ul>
+    	{% for message in messages %}
+        	<li>{{ message }} </li>
+    	{% endfor %}
+    	</ul>
+    	{% endif %}
+    	{% endwith %}
+    	{% if head_1%}
+    	{% endif%}
+    
+{% block content %}{%endblock%}
+
+
+  	</body>
+</html>
+

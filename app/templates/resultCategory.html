@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    	<div id = box1Cat>
+    		<div id = box1CatListHead><strong><div class = cap>{{box1Head}}</div></strong></div>
+    		<div id = box1CatList>
+    		{%for eachFoodType in box1Cat%}
+    			<li class = "capitalize"><a href="{{ url_for('resultCategory', categoryChosen = box1Head+":"+eachFoodType) }}" style="text-decoration: none" > {{eachFoodType}} </a></li>
+    		{% endfor%}
+    		</div>
+			{%if box1Cat|length >= 10 %}
+				<div id = box2Scroll>⇩</div>
+			{%endif%}
+    	</div>
+{% endblock %}
