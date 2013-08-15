@@ -318,10 +318,6 @@ def addAllFood(session,dict):
 				eachBasicInfo[41] = float(eachBasicInfo[23])*1000/100 #calcium
 			if eachBasicInfo[24] != 0:
 				eachBasicInfo[42] = float(eachBasicInfo[24])*18/100 # iron
-			
-			# Strip of white space on left right
-			for inEchBasic in range(len(eachBasicInfo)):
-				eachBasicInfo[inEchBasic].rstrip().lstrip()
 				
 			session.add(createFood(eachBasicInfo))
 			session.commit()
