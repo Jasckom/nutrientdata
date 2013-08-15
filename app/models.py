@@ -241,7 +241,6 @@ class Nutri(db.Model):
 
 		return (val/cal)
 	
-	
 
 class Food(db.Model):
 	
@@ -254,6 +253,11 @@ class Food(db.Model):
 	amount = db.Column(db.Float)
 	unit = db.Column(db.String)
 	gram = db.Column(db.Float)
+	
+	#for search and for linking to user
+	tag =  db.Column(db.String)
+	userId = db.Column(db.Integer, db.ForeignKey('user.id'))
+	
 	cal_kcal = db.Column(db.Float)
 	calFat_kcal = db.Column(db.Float)
 	fat_g = db.Column(db.Float)
@@ -411,7 +415,6 @@ class Food(db.Model):
 	t5Alcohol_Ethyl_g= db.Column(db.Float)
 	t5Caffeine_mg= db.Column(db.Float)
 	t5Theobromine_mg= db.Column(db.Float)
-	userId = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     
 	def value(self,index):

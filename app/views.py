@@ -244,6 +244,7 @@ def resultSearch(page = 1):
 	
 	if searchEntry == "brandOnly":
 		#print "Brand search term: ",brandEntry
+		
 # 		results = whooshSearchBrand(brandEntry)
 		results = []
 		if results:
@@ -1339,7 +1340,6 @@ def create_form():
 def test():
 	form = manyButtons()
 	form2 = manyButtons()
-
 	a = session.keys()
 	#print "currentUser: ", g.user.get_id()
 	for each in a:

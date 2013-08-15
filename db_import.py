@@ -13,15 +13,26 @@ def convertMixedFraction(mixedFrac):
 		output += Fraction(i)
 	return output
 def createFood(food_item_info):
+	
+	#create tag
+	foodName = convertUni(food_item_info[2])
+	foodDetail = convertUni(food_item_info[3])
+	tag = foodName + " " + foodDetail
+	tagList = tag.split()
+	tag = list(set(tagList)) 
+	blank = " "
+	tag = blank.join(tag)
+	
 	#size of this list is 25
 	food_item = Food(mainType = food_item_info[0]
 	,type = food_item_info[1]
-	,food = convertUni(food_item_info[2])
-	,detail = convertUni(food_item_info[3])
+	,food = foodName
+	,detail = foodDetail
 	,source = food_item_info[4]
 	,amount = float(convertMixedFraction(str(food_item_info[5])))
 	,unit = food_item_info[6]
 	,gram = float(food_item_info[7])
+	,tag = tag
 	#nutrients per the stated gram
 	,cal_kcal = float(food_item_info[8])
 	,calFat_kcal = float(food_item_info[9])
@@ -242,7 +253,7 @@ def createDict():
 def addAllFood(session,dict):
 	j_result = -23
 	dict = createDict()
-	while j_result <= 826:
+	while j_result <= -22:
 		print j_result
 		result = open('result'+str(j_result),'r')
 		for eachInfo_list in result:

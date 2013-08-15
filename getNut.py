@@ -2,8 +2,6 @@
 from app.models import Nutri
 from app import db
 
-
-
 #upper 1 bound nutrient
 def upper1(correctOrder):
 	b = ["t2VitaminA_RAE_mcg_RAE","t2VitaminC_TotalAscorbicAcid_mg","t2VitaminD_IU","t2VitaminE_alpha_tocopherol__mg","t2VitaminKPhylloquinone_mcg","t2Thiamin_mg","t2Riboflavin_mg","t2Niacin_mg","t2VitaminB_6_mg","t2Folate_Total_mcg","t2VitaminB_12_mcg","t2PantothenicAcid_mg","[] Biotin","t2Choline_Total_mg","[]"]
