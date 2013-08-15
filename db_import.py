@@ -15,14 +15,15 @@ def convertMixedFraction(mixedFrac):
 def createFood(food_item_info):
 	
 	#create tag
-	foodName = convertUni(food_item_info[2])
-	foodName = foodName.replace('&amp;','&')
 
-	foodDetail = convertUni(food_item_info[3])
-	foodDetail = foodDetail.replace('&amp;','&')
-		
-	foodSource = food_item_info[4]
-	foodSource.replace('&amp;','&')
+	foodName = food_item_info[2].replace('&amp;','&')
+	foodName = convertUni(foodName)
+	
+	foodDetail = food_item_info[3].replace('&amp;','&')
+	foodDetail = convertUni(foodDetail)
+	
+	foodSource = food_item_info[4].replace('&amp;','&')	
+	foodSource = convertUni(foodSource)
 	
 	tag = foodName + " " + foodDetail
 	tagList = tag.split()
@@ -258,9 +259,9 @@ def createDict():
 	
 
 def addAllFood(session,dict):
-	j_result = -23
+	j_result = -22
 	dict = createDict()
-	while (j_result <= -23) :
+	while (j_result <= -22) :
 		print j_result
 		result = open('result'+str(j_result),'r')
 		for eachInfo_list in result:

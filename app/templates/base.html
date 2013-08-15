@@ -43,22 +43,36 @@
     	<div id = firstPage>
     	{% if form%}
     		<div id = findFood>
-			<form action="" method="post" name="searchEntry">
-			{{form.hidden_tag()}}
-			<div id = search><div class = "center"> 
-				Search by Keywords:
-				{{form.searchEntry(size=28,placeholder="Food")}}
-				{{form.brandEntry(size=27,placeholder="Brand (Optional)")}}
-				<input type="submit" name ="search" value="Go!">
-			</form>
-			{% if selectFilter %}
-			<form action="" method="post" name="Filter">
-				{{selectFilter.hidden_tag()}}
-				Order by Nutritional Content: {{selectFilter.filterNut}}
-				{{selectFilter.filter}}
-			</form>
-			{%endif%}
-			</div>
+    			<div id = search>
+				<table>
+				<form action="" method="post" name="searchEntry">
+				{{form.hidden_tag()}}
+				<tr>
+						<td>
+							Search by Keywords:
+							{{form.searchEntry(size=28,placeholder="Food")}}
+							{{form.brandEntry(size=27,placeholder="Brand (Optional)")}}
+						</td>
+						<td>
+							<input type="submit" name ="search" value="Go!">
+						</td>
+					</form>
+				</tr>
+				{% if selectFilter %}
+			
+				<form action="" method="post" name="Filter">
+				<tr>
+					{{selectFilter.hidden_tag()}}
+					<td>
+					Order by Nutritional Content: {{selectFilter.filterNut}}
+					</td>
+					<td>
+					{{selectFilter.filter}}
+					</td>
+				</tr>	
+				</form>
+				{%endif%}
+			</table>
 			</div>
 			
     	{% endif %}

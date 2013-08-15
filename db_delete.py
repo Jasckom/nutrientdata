@@ -8,3 +8,4 @@ for food in Food.query.all():
 	if i %500 == 0:
 		print i
 		db.session.commit()
+db.session.commit()
