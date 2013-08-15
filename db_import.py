@@ -16,7 +16,14 @@ def createFood(food_item_info):
 	
 	#create tag
 	foodName = convertUni(food_item_info[2])
+	foodName = foodName.replace('&amp;','&')
+
 	foodDetail = convertUni(food_item_info[3])
+	foodDetail = foodDetail.replace('&amp;','&')
+		
+	foodSource = food_item_info[4]
+	foodSource.replace('&amp;','&')
+	
 	tag = foodName + " " + foodDetail
 	tagList = tag.split()
 	tag = list(set(tagList)) 
@@ -28,7 +35,7 @@ def createFood(food_item_info):
 	,type = food_item_info[1]
 	,food = foodName
 	,detail = foodDetail
-	,source = food_item_info[4]
+	,source = foodSource
 	,amount = float(convertMixedFraction(str(food_item_info[5])))
 	,unit = food_item_info[6]
 	,gram = float(food_item_info[7])
@@ -253,7 +260,7 @@ def createDict():
 def addAllFood(session,dict):
 	j_result = -23
 	dict = createDict()
-	while j_result <= -22:
+	while (j_result <= -23) :
 		print j_result
 		result = open('result'+str(j_result),'r')
 		for eachInfo_list in result:

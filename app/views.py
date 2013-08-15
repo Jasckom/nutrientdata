@@ -9,7 +9,7 @@ from linearOptimize import linearOptimize
 from filterFood import *
 from sqlalchemy import asc, desc
 from sqlalchemy.orm import aliased
-# from whooshSearch import whooshSearch, whooshSearchBrand
+from searchFood import searchFood, searchFoodBrand
 from app.models import Food, Nutri
 from config import RESULTS_PER_PAGE
 SECRET_KEY = 'you-will-never-guess'
@@ -243,23 +243,13 @@ def resultSearch(page = 1):
 	matchingCat = getMatchingCat(searchEntry,foodTypes)
 	
 	if searchEntry == "brandOnly":
-		#print "Brand search term: ",brandEntry
-		
-# 		results = whooshSearchBrand(brandEntry)
-		results = []
-		if results:
-			resultSearch = Food.query.filter(Food.id.in_(results)).order_by(asc(Food.food)).paginate(page, RESULTS_PER_PAGE, False)
-		else:
-			resultSearch = Food.query.filter(Food.id==0).paginate(page, RESULTS_PER_PAGE, False)
+		print "Brand search term: ",brandEntry
+ 		results = searchFoodBrand(brandEntry, Food)
 	else:
-		#print "In normal search: "
-# 		results = whooshSearch(searchEntry, brandEntry)
-		results = []
-		if results:
-			resultSearch = Food.query.filter(Food.id.in_(results)).paginate(page, RESULTS_PER_PAGE, False)
-		else:
-			resultSearch = Food.query.filter(Food.id==0).paginate(page, RESULTS_PER_PAGE, False)
-	
+		print "In normal search: "
+ 		results = searchFood(searchEntry, brandEntry, Food)
+	resultSearch = results.paginate(page, RESULTS_PER_PAGE, False)
+
 	box2Head = "Search Results - Foods"	
 	# Filter to persist but if not then it goes to nutrient
 	if "filter" in session.keys() and results:
@@ -277,9 +267,6 @@ def resultSearch(page = 1):
 	session["box1Head"] = "Search Results - Categories"
 	session["box1Cat"] = matchingCat
 	(info, food) = getInfo()
-	
-
-
 	
 	return render_template('resultSearch.html',
 		title = 'Search your food',
@@ -506,6 +493,15 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 		for i in range(len(check)):
 			if check[i]:
 				constraints.append(i+25)
+		
+		if "basicPlan" in session.keys():
+			if session["basicPlan"] == 1:
+				global basicPlan
+				newConstrainsts = []
+				for each in constraints:
+					if each in basicPlan:
+						newConstrainsts.append(each)
+				constraints = newConstrainsts
 		
 		foodItems = []
 		for i in range(len(session[g.user.get_id()])):
@@ -740,9 +736,9 @@ def getUserProfileDisplay(user):
 @login_required
 @app.route('/optimize', methods = ['GET', 'POST'])
 def optimize():
-
+	print session[g.user.get_id()]
 	# Get save food that user select into Database
-	g.user.food = [Food.query.filter(Food.id==each).first() for each in session[g.user.get_id()]]
+	g.user.food = [Food.query.filter(Food.id==int(each)).first() for each in session[g.user.get_id()]]
 	db.session.commit()
 
 	# Get lower/upper bounds from the curent user - this is not overriding but based on what is recommended	
