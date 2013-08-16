@@ -135,8 +135,8 @@ $(function () {
 
 	$("div[id^='nutExceed']").each(function(){
 		$(this).on("click",function(){
-		var toShow = "li[id='"+$(this).attr('id')+"']";
-		$(toShow).toggle();
+		var toShow = "li[id='Food"+$(this).attr('id')+"']";
+		$(toShow).show();
 		});
 	});
 });
