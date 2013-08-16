@@ -10,12 +10,13 @@ from filterFood import *
 from sqlalchemy import asc, desc
 from sqlalchemy.orm import aliased
 from searchFood import searchFood, searchFoodBrand
-from app.models import Food, Nutri
+from app.models import Food, Nutri,User
 from config import RESULTS_PER_PAGE
 SECRET_KEY = 'you-will-never-guess'
 from flask.ext.wtf import Form, TextField, SubmitField
 
 full_ext_nutrient = ["Water/g","Energy/kcal","Energy/kj","Protein/g","Total lipid fat/g","Carbohydrate, by difference/g","Fiber, total dietary/g","Sugars, total/g","Sucrose/g","Glucose dextrose/g","Fructose/g","Lactose/g","Maltose/g","Galactose/g","Starch/g","Adjusted Protein/g","Calcium, Ca/mg","Iron, Fe/mg","Magnesium, Mg/mg","Phosphorus, P/mg","Potassium, K/mg","Sodium, Na/mg","Zinc, Zn/mg","Copper, Cu/mg","Manganese, Mn/mg","Selenium, Se/mcg","Fluoride, F/mcg","Vitamin C, total ascorbic acid/mg","Thiamin/mg","Riboflavin/mg","Niacin/mg","Pantothenic acid/mg","Vitamin B-6/mg","Folate, total/mcg","Folic acid/mcg","Folate, food/mcg","Folate, DFE/mcg_DFE","Choline, total/mg","Betaine/mg","Vitamin B-12/mcg","Vitamin B-12, added/mcg","Vitamin A, IU/IU","Vitamin A, RAE/mcg_RAE","Retinol/mcg","Vitamin E (alpha-tocopherol)/mg","Vitamin E, added/mg","Tocopherol, beta/mg","Tocopherol, gamma/mg","Tocopherol, delta/mg","Vitamin K phylloquinone/mcg","Carotene, beta/mcg","Carotene, alpha/mcg","Cryptoxanthin, beta/mcg","Lycopene/mcg","Lutein + zeaxanthin/mcg","Vitamin D/IU","Stigmasterol/mg","Phytosterols/mg","Beta-sitosterol/mg","Campesterol/mg","Cholesterol/mg","Fatty acids, total monounsaturated/g","Fatty acids, total polyunsaturated/g","Fatty acids, total saturated/g","Fatty acids, total trans-monoenoic/g","Fatty acids, total trans-polyenoic/g","Fatty acids, total trans/g","Monounsaturated fats14:1/g","Monounsaturated fats15:1/g","Monounsaturated fats16:1 c/g","Monounsaturated fats16:1 t/g","Monounsaturated fats16:1 undifferentiated/g","Monounsaturated fats17:1/g","Monounsaturated fats18:1 c/g","Monounsaturated fats18:1 t/g","Monounsaturated fats18:1 undifferentiated/g","Monounsaturated fats20:1/g","Monounsaturated fats22:1 c/g","Monounsaturated fats22:1 t/g","Monounsaturated fats22:1 undifferentiated/g","Monounsaturated fats24:1 c/g","Polyunsaturated fats18:2 CLAs/g","Polyunsaturated fats18:2 i/g","Polyunsaturated fats18:2 n-6 c,c/g","Polyunsaturated fats18:2 t not further defined/g","Polyunsaturated fats18:2 t,t/g","Polyunsaturated fats18:2 undifferentiated/g","Polyunsaturated fats18:3 n-3 c,c,c/g","Polyunsaturated fats18:3 n-6 c,c,c/g","Polyunsaturated fats18:3 undifferentiated/g","Polyunsaturated fats18:3i/g","Polyunsaturated fats18:4/g","Polyunsaturated fats20:2 n-6 c,c/g","Polyunsaturated fats20:3 n-3/g","Polyunsaturated fats20:3 n-6/g","Polyunsaturated fats20:3 undifferentiated/g","Polyunsaturated fats20:4 n-6/g","Polyunsaturated fats20:4 undifferentiated/g","Polyunsaturated fats20:5 n-3/g","Polyunsaturated fats21:5/g","Polyunsaturated fats22:4/g","Polyunsaturated fats22:5 n-3/g","Polyunsaturated fats22:6 n-3/g","Saturated fats10:0/g","Saturated fats12:0/g","Saturated fats13:0/g","Saturated fats14:0/g","Saturated fats15:0/g","Saturated fats16:0/g","Saturated fats17:0/g","Saturated fats18:0/g","Saturated fats20:0/g","Saturated fats22:0/g","Saturated fats24:0/g","Saturated fats4:0/g","Saturated fats6:0/g","Saturated fats8:0/g","Alanine/g","Arginine/g","Aspartic acid/g","Cystine/g","Glutamic acid/g","Glycine/g","Histidine/g","Hydroxyproline/g","Isoleucine/g","Leucine/g","Lysine/g","Methionine/g","Phenylalanine/g","Proline/g","Serine/g","Threonine/g","Tryptophan/g","Tyrosine/g","Valine/g","Ash/g","Alcohol, ethyl/g","Caffeine/mg","Theobromine/mg"]
+full_ext_nutrient_unit = [ each.split('/')[1] for each in full_ext_nutrient]
 full_ext_nutrient = [ each.split('/')[0] for each in full_ext_nutrient]
 basic_nutrient = ["Calories/kcal","Calories from Fat/kcal","Total Fat/g","Fat /%","Saturated Fat/g","Polyunsaturated Fat/g","Monounsaturated Fat/g","Cholestorl/mg","Sodium/mg","Total Carbohydrate/g","Fiber/g","Sugar/g","Protein/g","Vitamin A/%","Vitamin C/%","Calcium/%","Iron/%"]
 instrumentAttribute = [Food.mainType,Food.type,Food.food,Food.detail,Food.source,Food.amount,Food.unit,Food.gram,Food.cal_kcal,Food.calFat_kcal,Food.fat_g,Food.fat_pct,Food.saturFat_g,Food.polyunFat_g,Food.monounFat_g,Food.chol_mg,Food.sodium_mg,Food.carb_g,Food.fiber_g,Food.sugar_g,Food.protein_g,Food.vitA_pct,Food.vitC_pct,Food.calcium_pct,Food.iron_pct,Food.t0Water_g,Food.t0Energy_kcal,Food.t0Energy_kj,Food.t0Protein_g,Food.t0TotalLipidFat_g,Food.t0Carbohydrate_ByDifference_g,Food.t0Fiber_TotalDietary_g,Food.t0Sugars_Total_g,Food.t0Sucrose_g,Food.t0GlucoseDextrose_g,Food.t0Fructose_g,Food.t0Lactose_g,Food.t0Maltose_g,Food.t0Galactose_g,Food.t0Starch_g,Food.t0AdjustedProtein_g,Food.t1Calcium_Ca_mg,Food.t1Iron_Fe_mg,Food.t1Magnesium_Mg_mg,Food.t1Phosphorus_P_mg,Food.t1Potassium_K_mg,Food.t1Sodium_Na_mg,Food.t1Zinc_Zn_mg,Food.t1Copper_Cu_mg,Food.t1Manganese_Mn_mg,Food.t1Selenium_Se_mcg,Food.t1Fluoride_F_mcg,Food.t2VitaminC_TotalAscorbicAcid_mg,Food.t2Thiamin_mg,Food.t2Riboflavin_mg,Food.t2Niacin_mg,Food.t2PantothenicAcid_mg,Food.t2VitaminB_6_mg,Food.t2Folate_Total_mcg,Food.t2FolicAcid_mcg,Food.t2Folate_Food_mcg,Food.t2Folate_DFE_mcg_DFE,Food.t2Choline_Total_mg,Food.t2Betaine_mg,Food.t2VitaminB_12_mcg,Food.t2VitaminB_12_Added_mcg,Food.t2VitaminA_IU_IU,Food.t2VitaminA_RAE_mcg_RAE,Food.t2Retinol_mcg,Food.t2VitaminE_alpha_tocopherol__mg,Food.t2VitaminE_Added_mg,Food.t2Tocopherol_Beta_mg,Food.t2Tocopherol_Gamma_mg,Food.t2Tocopherol_Delta_mg,Food.t2VitaminKPhylloquinone_mcg,Food.t2Carotene_Beta_mcg,Food.t2Carotene_Alpha_mcg,Food.t2Cryptoxanthin_Beta_mcg,Food.t2Lycopene_mcg,Food.t2Lutein_Zeaxanthin_mcg,Food.t2VitaminD_IU,Food.t3Stigmasterol_mg,Food.t3Phytosterols_mg,Food.t3Beta_sitosterol_mg,Food.t3Campesterol_mg,Food.t3Cholesterol_mg,Food.t3FattyAcids_TotalMonounsaturated_g,Food.t3FattyAcids_TotalPolyunsaturated_g,Food.t3FattyAcids_TotalSaturated_g,Food.t3FattyAcids_TotalTrans_monoenoic_g,Food.t3FattyAcids_TotalTrans_polyenoic_g,Food.t3FattyAcids_TotalTrans_g,Food.t3MonounsaturatedFats14_1_g,Food.t3MonounsaturatedFats15_1_g,Food.t3MonounsaturatedFats16_1C_g,Food.t3MonounsaturatedFats16_1T_g,Food.t3MonounsaturatedFats16_1Undifferentiated_g,Food.t3MonounsaturatedFats17_1_g,Food.t3MonounsaturatedFats18_1C_g,Food.t3MonounsaturatedFats18_1T_g,Food.t3MonounsaturatedFats18_1Undifferentiated_g,Food.t3MonounsaturatedFats20_1_g,Food.t3MonounsaturatedFats22_1C_g,Food.t3MonounsaturatedFats22_1T_g,Food.t3MonounsaturatedFats22_1Undifferentiated_g,Food.t3MonounsaturatedFats24_1C_g,Food.t3PolyunsaturatedFats18_2CLAs_g,Food.t3PolyunsaturatedFats18_2I_g,Food.t3PolyunsaturatedFats18_2N_6C_c_g,Food.t3PolyunsaturatedFats18_2T_t_g,Food.t3PolyunsaturatedFats18_2TNotFurtherDefined_g,Food.t3PolyunsaturatedFats18_2Undifferentiated_g,Food.t3PolyunsaturatedFats18_3N_3C_c_c_g,Food.t3PolyunsaturatedFats18_3N_6C_c_c_g,Food.t3PolyunsaturatedFats18_3Undifferentiated_g,Food.t3PolyunsaturatedFats18_3i_g,Food.t3PolyunsaturatedFats18_4_g,Food.t3PolyunsaturatedFats20_2N_6C_c_g,Food.t3PolyunsaturatedFats20_3N_3_g,Food.t3PolyunsaturatedFats20_3N_6_g,Food.t3PolyunsaturatedFats20_3Undifferentiated_g,Food.t3PolyunsaturatedFats20_4N_6_g,Food.t3PolyunsaturatedFats20_4Undifferentiated_g,Food.t3PolyunsaturatedFats20_5N_3_g,Food.t3PolyunsaturatedFats21_5_g,Food.t3PolyunsaturatedFats22_4_g,Food.t3PolyunsaturatedFats22_5N_3_g,Food.t3PolyunsaturatedFats22_6N_3_g,Food.t3SaturatedFats10_0_g,Food.t3SaturatedFats12_0_g,Food.t3SaturatedFats13_0_g,Food.t3SaturatedFats14_0_g,Food.t3SaturatedFats15_0_g,Food.t3SaturatedFats16_0_g,Food.t3SaturatedFats17_0_g,Food.t3SaturatedFats18_0_g,Food.t3SaturatedFats20_0_g,Food.t3SaturatedFats22_0_g,Food.t3SaturatedFats24_0_g,Food.t3SaturatedFats4_0_g,Food.t3SaturatedFats6_0_g,Food.t3SaturatedFats8_0_g,Food.t4Alanine_g,Food.t4Arginine_g,Food.t4AsparticAcid_g,Food.t4Cystine_g,Food.t4GlutamicAcid_g,Food.t4Glycine_g,Food.t4Histidine_g,Food.t4Hydroxyproline_g,Food.t4Isoleucine_g,Food.t4Leucine_g,Food.t4Lysine_g,Food.t4Methionine_g,Food.t4Phenylalanine_g,Food.t4Proline_g,Food.t4Serine_g,Food.t4Threonine_g,Food.t4Tryptophan_g,Food.t4Tyrosine_g,Food.t4Valine_g,Food.t5Ash_g,Food.t5Alcohol_Ethyl_g,Food.t5Caffeine_mg,Food.t5Theobromine_mg]
@@ -178,6 +179,9 @@ def getInfo():
 @app.route('/resultSearch', methods = ['GET', 'POST'])
 @app.route('/resultSearch/<int:page>', methods = ['GET', 'POST'])
 def resultSearch(page = 1):
+	if not g.user.is_authenticated():
+		flash('Please First Sign in as a Guest')
+		return redirect(url_for('login'))
 	#get categories for the side
 	global mainCategories
 	global foodTypes
@@ -214,10 +218,12 @@ def resultSearch(page = 1):
 				if field.data: # if it is checked - get the ID of the food
 					checkedFood.append(field.name)
 			fieldIndex +=1
-		if foodsILike.submit.data == 1 and sum(check) >=1:
-			session["optimize"] = [i for i in checkedFood]
-			return redirect(url_for('optimize'))
-			#print "submit"
+		if foodsILike.submit.data == 1:
+			if sum(check) >=1:
+				session["optimize"] = [i for i in checkedFood]
+				return redirect(url_for('optimize'))
+			else:
+				flash('Please select the foods you like')
 		elif foodsILike.remove.data == 1:
 			for i in checkedFood:
 				indexToDelete = session[g.user.get_id()].index(i)
@@ -248,11 +254,11 @@ def resultSearch(page = 1):
 	
 	if searchEntry == "brandOnly":
 		print "Brand search term: ",brandEntry
- 		results = searchFoodBrand(brandEntry, Food)
+ 		(results, resultsOrdered) = searchFoodBrand(brandEntry, Food)
 	else:
 		print "In normal search: "
- 		results = searchFood(searchEntry, brandEntry, Food)
-	resultSearch = results.paginate(page, RESULTS_PER_PAGE, False)
+ 		(results, resultsOrdered) = searchFood(searchEntry, brandEntry, Food)
+	resultSearch = resultsOrdered.paginate(page, RESULTS_PER_PAGE, False)
 
 	box2Head = "Search Results - Foods"	
 	# Filter to persist but if not then it goes to nutrient
@@ -261,13 +267,12 @@ def resultSearch(page = 1):
 		filterNut = session["filter"]
 		if filterNut != 24:			
 			if filterNut in toReduce:
-				resultSearch = Food.query.filter(Food.id.in_(results)).order_by(asc(instrumentAttribute[filterNut])).paginate(page, RESULTS_PER_PAGE, False)
+				resultSearch = results.order_by(asc(instrumentAttribute[filterNut])).paginate(page, RESULTS_PER_PAGE, False)
 				box2Head += " with Lowest " + full_ext_nutrient[filterNut-25]
 			else:
-				resultSearch = Food.query.filter(Food.id.in_(results)).order_by(desc(instrumentAttribute[filterNut])).paginate(page, RESULTS_PER_PAGE, False)
+				resultSearch = results.order_by(desc(instrumentAttribute[filterNut])).paginate(page, RESULTS_PER_PAGE, False)
 				box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
 
-	
 	session["box1Head"] = "Search Results - Categories"
 	session["box1Cat"] = matchingCat
 	
@@ -309,13 +314,18 @@ def resultCategory(categoryChosen, page = 1):
 			session.pop("filter")
 		return redirect(url_for('resultSearch'))
 	
-	
 	#Store search term
 	session["result"] = categoryChosen
 	
 	foodIdsArg = session[g.user.get_id()]
 	foodNamesArg = session["foodItem"]
 	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)
+	
+	if foodIdsArg:
+		foodsItemsILike = Food.query.filter(Food.id.in_(foodIdsArg)).all()
+	else:
+		foodsItemsILike = []
+
 
 	if foodsILike.validate_on_submit() and (foodsILike.submit.data or  foodsILike.remove.data or foodsILike.toggle.data):
 		check = []
@@ -327,9 +337,12 @@ def resultCategory(categoryChosen, page = 1):
 				if field.data: # if it is checked - get the ID of the food
 					checkedFood.append(field.name)
 			fieldIndex +=1
-		if foodsILike.submit.data == 1 and sum(check) >=1:
-			session["optimize"] = [i for i in checkedFood]
-			return redirect(url_for('optimize'))
+		if foodsILike.submit.data == 1:
+			if sum(check) >=1:
+				session["optimize"] = [i for i in checkedFood]
+				return redirect(url_for('optimize'))
+			else:
+				flash('Please select the foods you like')
 		elif foodsILike.remove.data == 1:
 			for i in checkedFood:
 				indexToDelete = session[g.user.get_id()].index(i)
@@ -380,7 +393,6 @@ def resultCategory(categoryChosen, page = 1):
 # 	for each in foodsILike:
 		#print each.label
 	
-		
 	return render_template('resultCategory.html',
 			title = 'Search your food',
 			form = form,
@@ -392,10 +404,9 @@ def resultCategory(categoryChosen, page = 1):
 			resultCategory = resultCategory,
 			foodNamesArg = foodNamesArg,
 			box2Head= box2Head,
-			infoCat = info,
-			food = food,
 			categoryChosen = categoryChosen,
-			userProfile = session["userProfile"])
+			userProfile = session["userProfile"],
+			foodsItemsILike = foodsItemsILike)
 
 
 # redirecting functions Get Info
@@ -727,34 +738,33 @@ def getUserProfileDisplay(user):
 		userProfile = "Guest - "+userProfile 
 	return userProfile
 	
-
-@login_required
-@app.route('/optimize', methods = ['GET', 'POST'])
-def optimize():
-	print session[g.user.get_id()]
-	# Get save food that user select into Database
-	g.user.food = [Food.query.filter(Food.id==int(each)).first() for each in session[g.user.get_id()]]
-	db.session.commit()
-
+@app.route('/manage', methods = ['GET', 'POST'])
+def manage():
+	if not g.user.is_authenticated():
+		flash('Please First Sign in as a Guest')
+		return redirect(url_for('login'))
+	
+	if "basicPlan" not in session.keys():
+		firstDefault = 1
+	else:
+		firstDefault = session["basicPlan"]
+	
+	
 	# Get lower/upper bounds from the curent user - this is not overriding but based on what is recommended	
 	currentNutri = g.user.nutri[0]
 	(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(currentNutri,1)
-	minMaxForm = createMinMaxForm(check)
+	minMaxForm = createMinMaxForm(check,firstDefault)
 	minMaxForm.lowerBound = defaultGenlowerBound
 	minMaxForm.upperBound = defautGenupperBound	
 	
-	# Get food items from optimize to be given to linear
-	listFoodObject = [Food.query.filter(Food.id == i).first() for i in session["optimize"] ]	
-	
 	# Form is submitted
-
-	if minMaxForm.is_submitted() and request.form['submit'] == 'Find Diet' and (u'y' in request.form.values()):
+	if minMaxForm.is_submitted() and request.form['submit'] == 'Proceed to Select Foods' and (u'y' in request.form.values()):
 		#print "Imhere 1"
 		if ((minMaxForm.opt_maxormin.data == 0) or (minMaxForm.opt_maxormin.data == 1)):
 			#print "Im here2"
 			if minMaxForm.opt_nut.data is None:
 				#print "Ime here 3"
-				return redirect(url_for('optimize'))
+				return redirect(url_for('manage'))
 			else:
 				opt_maxormin = minMaxForm.opt_maxormin.data
 				opt_nut = minMaxForm.opt_nut.data
@@ -772,7 +782,7 @@ def optimize():
 			opt_nut = 28
 			minMaxForm.opt_nut.data = None
 		elif minMaxForm.opt_maxormin.data is None:
-			return redirect(url_for('optimize'))
+			return redirect(url_for('manage'))
 		constraints = []
 		constraintslowerBound = []
 		constraintsupperBound = []
@@ -815,141 +825,162 @@ def optimize():
 			setattr(modifyNut,newCon[ic+23],val)
 			
 		session["basicPlan"] = 	minMaxForm.nutrientPlan.data
-		db.session.commit()
-		
-		(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(g.user.nutri[0],1)
-		
-
-		minMaxForm = createMinMaxForm(check)
-		minMaxForm.upperBound = defautGenupperBound
-		minMaxForm.lowerBound = defaultGenlowerBound
-		
-		#print "nutreient plan is ", minMaxForm.nutrientPlan.data
-		if minMaxForm.nutrientPlan.data == 1: # Chosen basic
-			#print "constraints limited to basic"
-			global basicPlan 
-			newConstrainsts = []
-			for each in constraints:
-				if each in basicPlan:
-					newConstrainsts.append(each)
-			constraints = newConstrainsts
-		
-		#Check if objective is not put on constraint"
-		#print "MaxorMin: ",
-		#print "Objective Nutreint", opt_nut
-		#print constraints
-		result = linearOptimize(listFoodObject, constraints, constraintslowerBound, constraintsupperBound, opt_maxormin, opt_nut)
-		(outputFood , outputFoodAmount , status ,objective, nullNut) = result
-		
-		#get upperbound of constraints
-		upperBoundConst = []
-		for each in constraints:
-			upperBoundConst.append(constraintsupperBound[each-25])
-		
-		if status == "Undefined":
-			#print "LEAVE BOUND OPEN \n\n\n"
-			if opt_maxormin:
-				stat = "Optimal"
-				pace = 5000
-				while stat == "Optimal":
-					(outputFoodPre, outputFoodAmountPre, statPre, objective, nullNut) = (outputFood, outputFoodAmount, stat, objective, nullNut)
-					pace -= 100
-					for each in upperBoundConst:
-						if each > pace:
-							stat == "Undefined"
-					openUpperBound = [pace for i in range(len(constraintsupperBound))]
-					(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, constraintslowerBound, openUpperBound, opt_maxormin, opt_nut)
-					reportTotal(constraints, outputFoodAmount, listFoodObject)
-				#print "Open Bounded Solution"
-				(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
-			else:
-				#print "Open Bounded Solution"
-				openUpperBound = [5000 for i in range(len(constraintsupperBound))]
-				(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, constraintslowerBound, openUpperBound, opt_maxormin, opt_nut)
-				#reportTotal(constraints, outputFoodAmount, listFoodObject)
-		
-	
-		global full_ext_nutrient
-		#Find items that have too much
-		#Get total of the food to be compared with upperbound
-		totalNut = reportTotal(constraints, outputFoodAmount, listFoodObject)
-		
-		nutExceed = []
-		nutExceedVal = []
-		nutExceedStatement = []
-		for i in range(len(totalNut)):
-	 		if (totalNut[i]- float(upperBoundConst[i])) >= 1:
-				#print full_ext_nutrient[constraints[i]-25], "Upper Bound: ", upperBoundConst[i], "Total recommended", totalNut[i]
-				nutExceed.append(constraints[i])
-				nutExceedVal.append(totalNut[i])
-				nutExceedStatement.append("Too Much "+full_ext_nutrient[constraints[i]-25] +" " +str(int(round(totalNut[i])))+"/"+ str(upperBoundConst[i]))
-		
-		# nested list - inside is a tuple with percent value and the food by decreasing order
-		nutExceedWhichFood = []
-		for i in range(len(nutExceed)):
-			exceedPercent = showExceed(nutExceed[i], nutExceedVal[i], outputFoodAmount, listFoodObject)
-			nutExceedWhichFood.append(exceedPercent)
-		
-		(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])
-#		givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
-
-		session["sumCal"] = sumCal
-		session["sumNutUnmet"] = sumNutUnmet
-		session["nutRatioMin"] = nutRatioMin
-		session["nutRatioUnmet"] = nutRatioUnmet
 		session["opt_maxormin"] = opt_maxormin
 		session["opt_nut"] = opt_nut
-		session[("chosenNut")] = 0
+		db.session.commit()
 		
-		lackNut = []
-		zeroNut = []
-		for i in range(len(nutRatioUnmet)):
-			#print i
-			if sumNutUnmet[i] == 0:
-				zeroNut.append("Zero Amount of "+ full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0])
-			else:
-				percent = 100*(nutRatioMin[i]-sumNutUnmet[i])/(nutRatioMin[i])
-				if percent == 0:
-					continue
-				lackNut.append("Lacking "+ full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0]) 
-# 				lackNut.append("Lacking about " +"%0.2f" %percent+ "% of Required " + full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0]) 
+		return redirect(url_for('resultSearch'))
 		
-		nullNut = lackNut+zeroNut
-		
-		yesFood = []
-		yesFoodAmount = []
-		noFood = []
-		noFoodAmount = []
-		for i in range(len(outputFood)):
-			if outputFoodAmount[i] != 0:
-				yesFoodAmount.append("%0.2f"%outputFoodAmount[i])
-				yesFood.append(outputFood[i])
-			else:
-				noFoodAmount.append("%0.2f"%outputFoodAmount[i])
-				noFood.append(outputFood[i])
-		outputFood = yesFood+noFood
-		outputFoodAmount = yesFoodAmount+noFoodAmount
-		
-		
-
-		return render_template("optimize.html",
-			title = 'Nutrient Database',
-			minMaxForm = minMaxForm,
-			outputFood = outputFood,
-			outputFoodAmount = outputFoodAmount,
-			status = status,
-			objective = objective,
-			nullNut = nullNut,
-			check = check,
-			nutExceedStatement = nutExceedStatement,
-			nutExceedWhichFood =nutExceedWhichFood,
-			userProfile = session['userProfile'])
-	#print ("On the page")
-	
-	return render_template("optimize.html",
-		title = 'Nutrient Database',
+	return render_template("manage.html",
 		minMaxForm = minMaxForm,
 		check = check,
+		userProfile = session['userProfile'])
+
+@login_required
+@app.route('/optimize', methods = ['GET', 'POST'])
+def optimize():
+	if not g.user.is_authenticated():
+		flash('Please First Sign in as a Guest or Sign up')
+		return redirect(url_for('login'))
+
+	if "opt_maxormin" not in session.keys():
+		flash ('You have not chosen the diet plan')
+		return redirect(url_for('manage'))
+	
+	if "optimize" not in session.keys():
+		if session[g.user.get_id()]:
+			session["optimize"] = session[g.user.get_id()]
+		else:
+			flash('You have not selected any foods')
+			return redirect(url_for('resultSearch'))
+			
+	# Get save food that user select into Database
+	userFood = [Food.query.filter(Food.id==int(each)).first() for each in session[g.user.get_id()]]
+	if userFood:
+		g.user.food = userFood
+		db.session.commit()
+
+	listFoodObject = [Food.query.filter(Food.id == i).first() for i in session["optimize"] ]	
+	(check, nutriField, defaultGenlowerBound, defaultGenupperBound) = getKeysBounds(g.user.nutri[0],1)
+	constraints = []
+	for i in range(len(check)):
+		if check[i]:
+			constraints.append(i+25)
+	opt_maxormin = session["opt_maxormin"]
+	opt_nut = session["opt_nut"]
+	
+	if session["basicPlan"] == 1: # Chosen basic
+		global basicPlan 
+		newConstrainsts = []
+		for each in constraints:
+			if each in basicPlan:
+				newConstrainsts.append(each)
+		constraints = newConstrainsts
+
+	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut)
+	(outputFood , outputFoodAmount , status ,objective, nullNut) = result
+	
+	#get upperbound of constraints
+	upperBoundConst = []
+	for each in constraints:
+		upperBoundConst.append(defaultGenupperBound[each-25])
+	
+	if status == "Undefined":
+		#print "LEAVE BOUND OPEN \n\n\n"
+		if opt_maxormin:
+			stat = "Optimal"
+			pace = 5000
+			while stat == "Optimal":
+				(outputFoodPre, outputFoodAmountPre, statPre, objective, nullNut) = (outputFood, outputFoodAmount, stat, objective, nullNut)
+				pace -= 100
+				for each in upperBoundConst:
+					if each > pace:
+						stat == "Undefined"
+				openUpperBound = [pace for i in range(len(defaultGenupperBound))]
+				(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut)
+				reportTotal(constraints, outputFoodAmount, listFoodObject)
+			#print "Open Bounded Solution"
+			(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
+		else:
+			#print "Open Bounded Solution"
+			openUpperBound = [5000 for i in range(len(defaultGenupperBound))]
+			(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut)
+			#reportTotal(constraints, outputFoodAmount, listFoodObject)
+	
+
+	global full_ext_nutrient
+	#Find items that have too much
+	#Get total of the food to be compared with upperbound
+	totalNut = reportTotal(constraints, outputFoodAmount, listFoodObject)
+	
+	nutExceed = []
+	nutExceedVal = []
+	nutExceedStatement = []
+	global full_ext_nutrient_unit
+	for i in range(len(totalNut)):
+		if (totalNut[i]- float(upperBoundConst[i])) >= 1:
+			#print full_ext_nutrient[constraints[i]-25], "Upper Bound: ", upperBoundConst[i], "Total recommended", totalNut[i]
+			nutExceed.append(constraints[i])
+			nutExceedVal.append(totalNut[i])
+			upper = (upperBoundConst[i].split('.'))[0]
+		
+			nutExceedStatement.append("Too Much "+full_ext_nutrient[constraints[i]-25] +" " +str(int(round(totalNut[i])))+"/"+ upper + " "+full_ext_nutrient_unit[constraints[i]-25])
+	
+	# nested list - inside is a tuple with percent value and the food by decreasing order
+	nutExceedWhichFood = []
+	for i in range(len(nutExceed)):
+		exceedPercent = showExceed(nutExceed[i], nutExceedVal[i], outputFoodAmount, listFoodObject)
+		nutExceedWhichFood.append(exceedPercent)
+	
+	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])
+#		givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
+
+	session["sumCal"] = sumCal
+	session["sumNutUnmet"] = sumNutUnmet
+	session["nutRatioMin"] = nutRatioMin
+	session["nutRatioUnmet"] = nutRatioUnmet
+	session["opt_maxormin"] = opt_maxormin
+	session["opt_nut"] = opt_nut
+	session[("chosenNut")] = 0
+	
+	lackNut = []
+	zeroNut = []
+	for i in range(len(nutRatioUnmet)):
+		#print i
+		if sumNutUnmet[i] == 0:
+			zeroNut.append("Zero Amount of "+ full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0])
+		else:
+			percent = 100*(nutRatioMin[i]-sumNutUnmet[i])/(nutRatioMin[i])
+			if percent == 0:
+				continue
+			lackNut.append("Lacking "+ full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0]) 
+# 				lackNut.append("Lacking about " +"%0.2f" %percent+ "% of Required " + full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0]) 
+	
+	nullNut = lackNut+zeroNut
+	
+	yesFood = []
+	yesFoodAmount = []
+	noFood = []
+	noFoodAmount = []
+	for i in range(len(outputFood)):
+		if outputFoodAmount[i] != 0:
+			yesFoodAmount.append("%0.2f"%(outputFoodAmount[i]*listFoodObject[i].amount))
+			yesFood.append(outputFood[i])
+		else:
+			noFoodAmount.append("%0.2f"%(outputFoodAmount[i]*listFoodObject[i].amount))
+			noFood.append(outputFood[i])
+	outputFood = yesFood+noFood
+	outputFoodAmount = yesFoodAmount+noFoodAmount
+	
+	return render_template("optimize.html",
+		outputFood = outputFood,
+		outputFoodAmount = outputFoodAmount,
+		status = status,
+		objective = objective,
+		nullNut = nullNut,
+		check = check,
+		nutExceedStatement = nutExceedStatement,
+		nutExceedWhichFood =nutExceedWhichFood,
 		userProfile = session['userProfile'])
 				
 @app.route('/resultSuggest', methods=['GET', 'POST'])
@@ -961,10 +992,12 @@ def resultSuggest(page = 1):
 	
 	foodIdsArg = session[g.user.get_id()]
 	foodNamesArg = session["foodItem"]
-	#print "in result suggest to give to form: "
-# 	for each in session["foodItem"]:
-		#print each
 	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)
+	
+	if foodIdsArg:
+		foodsItemsILike = Food.query.filter(Food.id.in_(foodIdsArg)).all()
+	else:
+		foodsItemsILike = []
 	
 	#Validate form
 	if foodsILike.validate_on_submit():
@@ -977,10 +1010,12 @@ def resultSuggest(page = 1):
 				if field.data: # if it is checked - get the ID of the food
 					checkedFood.append(field.name)
 			fieldIndex +=1
-		if foodsILike.submit.data == 1 and sum(check) >=1:
-			session["optimize"] = [i for i in checkedFood]
-			return redirect(url_for('optimize'))
-			#print "submit"
+		if foodsILike.submit.data == 1:
+			if sum(check) >=1:
+				session["optimize"] = [i for i in checkedFood]
+				return redirect(url_for('optimize'))
+			else:
+				flash('Please select the foods you like')
 		elif foodsILike.remove.data == 1:
 			for i in checkedFood:
 				indexToDelete = session[g.user.get_id()].index(i)
@@ -1043,7 +1078,8 @@ def resultSuggest(page = 1):
 		titleFindFood = titleFindFood,
 		info = info,
 		food = food,
-		foodNamesArg= foodNamesArg)
+		foodNamesArg= foodNamesArg,
+		foodsItemsILike= foodsItemsILike)
 	
 	
 	indexRatio = int(session[("chosenNut")])
@@ -1098,7 +1134,7 @@ def resultSuggest(page = 1):
 						filter(instrumentAttribute[nutChosen]/sumCal>=ratio)
 			if result.count() == 0:
 				#result None
-				heading2List = "Please See Suggested Food Types. \nFrom "+heading2List+":"
+				heading2List = "Please See Suggested Food Types. "+heading2List+":"
 
 		if nutChosen in toReduce:
 			result = result.order_by(asc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
@@ -1110,8 +1146,11 @@ def resultSuggest(page = 1):
 		#print each.food, each.type, each.mainType
 		#print each.value(nutChosen)
  
-	titleFindFood = "Suggested Food: Sufficiently High in "+ currentNutName
-		
+ 	if nutChosen in toReduce:
+		titleFindFood = "Foods Low in "+ currentNutName
+	else:
+		titleFindFood = "Foods High in "+ currentNutName
+
 	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
 	(info, food) = getInfo()
 	return render_template('resultSuggest.html',
@@ -1128,7 +1167,8 @@ def resultSuggest(page = 1):
 		foodNamesArg = foodNamesArg,
 		info= info,
 		food = food,
-		userProfile = session['userProfile'])
+		userProfile = session['userProfile'],
+		foodsItemsILike= foodsItemsILike)
 	
 @app.route('/selectNut/<chosenNut>/')
 def selectNut(chosenNut):
@@ -1143,6 +1183,8 @@ def selectTypeILike(chosenType):
 	else:
 		session[("chosenType")] = chosenType
 	return redirect(url_for('resultSuggest'))
+
+
 
 @app.before_request
 def before_request():
@@ -1159,7 +1201,100 @@ def before_request():
 def load_user(id):
     return User.query.get(int(id))
     
-from app.models import User
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+	currentUser = g.user
+	
+	editProfile = Profile(currentUser)
+	formVal =  request.form.values()
+	valid = 0
+	if ("Save Changes" in formVal) and ("unitSystem" in request.form.keys()) and editProfile.is_submitted():
+		if editProfile.age.data is not None:
+			age = editProfile.age.data
+			gender = editProfile.gender.data
+			condition = editProfile.conditions.data
+			unitSystem = request.form["unitSystem"]
+			activity = editProfile.activity.data
+			if gender == "Males" and condition != "None":
+				flash ("Males only have 'None' condition.")
+				return redirect(url_for('profile'))
+			if unitSystem == "Metric":
+				if (editProfile.weightKg.data is not None) and (editProfile.heightCm.data is not None):
+					weight = editProfile.weightKg.data
+					height = editProfile.heightCm.data
+					#getCal(height, height2, weight, USorMetric, gender, editProfile.activity.data, age)
+					cal = getCal(height, 0, weight, unitSystem, gender,activity, age)
+					valid = 1
+					#print "Cal",cal
+			else:
+				if (editProfile.weight.data is not None) and (editProfile.heightFeet.data is not None):
+					weightLb = editProfile.weight.data
+					heightFeet = editProfile.heightFeet.data
+					if editProfile.heightInch.data is not None:
+						heightInch = editProfile.heightInch.data
+					else:
+						heightInch = 0
+					cal = getCal(heightFeet, heightInch, weightLb, unitSystem, gender, activity ,age)
+					valid = 1
+					#print "Cal ",cal
+					
+		if valid == 0:
+			return redirect(url_for('profile'))
+		else:
+			# Save profile of the user
+			currentUser = g.user
+			currentUser.age = age
+			currentUser.gender = gender
+			currentUser.conditions = condition
+			currentUser.activity = activity 
+			if unitSystem == "US":
+				currentUser.heightFeet =	heightFeet
+				currentUser.heightInch = heightInch
+				currentUser.weight = weightLb
+			else:
+				currentUser.weight = weight
+				currentUser.heightFeet = height
+				currentUser.heightInch = None
+				
+			# Get calories value
+			
+			currentNutri = currentUser.nutri[0]
+			ageGroup = getageGroup(age)
+			currentNutri.ageGroup = ageGroup
+			currentNutri.gender = gender
+			currentNutri.conditions = condition
+				 
+			# Get the default from "look-up table" from the database/ generate default lower and upper
+			recNut = Nutri.query.filter(Nutri.type==0).filter(Nutri.ageGroup==ageGroup).filter(Nutri.gender==gender).filter(Nutri.conditions==condition).first()
+			protup = recNut.protein_g
+			fatup = recNut.fat_g
+			carbup = recNut.carb_g
+		
+			# Copy this default into the current's user nutri
+			i = 0
+			for eachKey in recNut.__table__.columns.keys():
+				if i >= 23:
+					setattr(currentNutri, eachKey, getattr(recNut, eachKey))
+				i += 1
+		
+			currentNutri.t0Energy_kcal = "0:"+str(int(round(cal)))
+			#Adjust upperbound of macro according to calories values
+		
+			currentNutri.t0Protein_g=  currentNutri.t0Protein_g.replace("ND",str(int(round(cal*int(protup)/400))))
+			currentNutri.t0TotalLipidFat_g=currentNutri.t0TotalLipidFat_g.replace(":ND",":"+str(int(round(cal*int(fatup)/900))))
+			currentNutri.t0Carbohydrate_ByDifference_g=currentNutri.t0Carbohydrate_ByDifference_g.replace("ND",str(int(round(cal*int(carbup)/400 ))))	
+			(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(currentNutri,0)
+			db.session.commit()
+			
+			session['userProfile'] = getUserProfileDisplay(currentUser)
+			flash ("My Profile is updated! " +session['userProfile'])
+			
+	username = "Guest"
+	if currentUser.username is not None:
+		username = g.user.username
+
+	return render_template("profile.html", username = username, editProfile = editProfile)
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route("/login", methods=["GET", "POST"])
@@ -1266,7 +1401,7 @@ def login():
 				login_user(newUser)
 				session['userProfile'] = getUserProfileDisplay(newUser)
 				flash("Welcome, Guest!")
-				return redirect(request.args.get("next") or url_for("resultSearch"))
+				return redirect(request.args.get("next") or url_for("manage"))
 			
 	formLogin = LoginForm()
 	if formLogin.validate_on_submit():
@@ -1280,7 +1415,7 @@ def login():
 		session['userProfile'] = getUserProfileDisplay(g.user)
 		#print "logged user"
 		flash("Logged in successfully.")
-		return redirect(request.args.get("next") or url_for("resultSearch"))
+		return redirect(request.args.get("next") or url_for("profile"))
 	return render_template("login.html", formLogin=formLogin, profileFull= profileFull)
     
 @app.route("/signup", methods=["GET", "POST"])
@@ -1295,7 +1430,7 @@ def signup():
         	db.session.commit()
         	flash("Signed in successfully.")
         	session['userProfile'] = getUserProfileDisplay(g.user)
-        	return redirect(url_for("resultSearch"))	
+        	return redirect(url_for("manage"))	
     	flash("The username already exists Please try again.")
     return render_template("signup.html", signupform=signupform)
 
@@ -1313,7 +1448,7 @@ def logout():
 	for each in keys:
 		session.pop(each, None)
 	logout_user()
-	return redirect(url_for('index'))
+	return redirect(url_for('login'))
 
 
 # TESTING Create dynamic form

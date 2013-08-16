@@ -10,9 +10,18 @@
 	<body>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="{{url_for('static', filename= 'js/remove.js') }}"></script>
-    	<div>NutriData: <a href="/search">Home</a>
-      	 | <a href="{{ url_for('resultSearch') }}" >Search More Food</a>
-    	| <a href="{{ url_for('logout') }}" >Log out</a>
+    	<div>DietPlanner:
+    	{% if g.user.is_authenticated()%}
+    		 <a href="{{ url_for('profile') }}" >Home</a>
+    		| <a href="{{ url_for('manage') }}" >Manage Diet Needs</a>
+    		| <a href="{{ url_for('resultSearch') }}" >Select Foods</a>
+    		| <a href="{{ url_for('optimize') }}" >Get Diet Plan</a>
+    		{%if g.user.role == 0 %}
+    		| <a href="{{ url_for('logout') }}" >Log out</a>
+			{% elif g.user.role == 1 %}
+			| <a href="{{ url_for('signup') }}" >Sign up</a>
+			{%endif%}
+		{%endif%}
     	{%if userProfile%}
     	| {{ userProfile }}
     	{%endif%}
@@ -40,7 +49,7 @@
 	<div id = search style="display: table;">
     	<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
 			<div style=" #position: relative; #top: -50%">
-				<div class = "center">
+				<div class = "subHeading">
     				<strong>{{titleFindFood}}</strong>
  				</div>
 			</div>
@@ -101,41 +110,17 @@
     			
     	
 <!-- Box Below -->
-    	
-    <div id = boxBelow style="display: table;">
-    	{%if mainCat%}
-    	<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
-			<div style=" #position: relative; #top: -50%">
-				<div class = "center">
-    				Choose Food by Main Types:<br>
-    			</div>
-				<div class = "centcap">
-    				{%set index = 0 %}
-					{%for eachCat in mainCat%}
-						<a href="{{ url_for('mainCat', mainCatChosen = index) }}" style="text-decoration: none" > {{eachCat}} </a>
-						{%set index = index+ 1 %}
-						{% if index is divisibleby (4)%}
-    					<br>
-    					{%else%}
-    					|
-    					{%endif%}
-    				{% endfor%}
-				</div>
-			</div>
-		</div>
+
+	<div id = boxBelow>
+		<div class = subHeading>
+		<strong>Satisfy these Nutrients for Balanced Diet:</strong>
 	</div>
-	
-	<div id = boxBelow style="display: table;">
-    	{%elif lackingNut%}
-    	<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
-    		<div style=" #position: relative; #top: -50%">
-    			<div class = "center">
-    				Choose Nutrients for Balanced Diet:<br>
-    			</div>
-    			<div class = "centcap">
+		<p>
+    	{%if lackingNut%}
     				{%set index = 0 %}
     				{%for eachNut in lackingNut%}
-    					<a href="{{ url_for('selectNut', chosenNut = index) }}" style="text-decoration: none" > {{eachNut}}</a>
+    					
+    					<a href="{{ url_for('selectNut', chosenNut = index) }}" style="text-decoration: none; text-transform:capitalize;" > {{eachNut}}</a>
     					{%set index = index+ 1 %}
     					{% if index is divisibleby (4)%}
 						<br>
@@ -143,10 +128,8 @@
 						|
 						{%endif%}
     				{% endfor%}
-    			</div>
     	{%endif%}
-			</div>
-		</div>
+    	</p>
     </div>
   </div>
   
@@ -235,6 +218,87 @@
 	</table>
 		{%endfor%}
 	{%endif%}
+{%if foodsItemsILike%}
+	{%for food in foodsItemsILike%}
+		<table id = "tabNut{{food.id}}" style= "display:none" class="nutrition" summary="This table summarizes nutritional information">
+	<tr>
+		<th colspan="2">Nutrition Facts</th>
+	</tr>
+	<tr id="servings">
+		<td colspan="2">Serving Size {{food.value(5)}} {{food.value(6)}} ({{food.value(7)|round()|int}}g)</td>
+	</tr>
+	<tr>
+		<td colspan="2">Amount Per Serving</td>
+	</tr>
+	<tr id="calories">
+		<td><strong>Calories</strong> {{food.value(8)}}</td>
+		<td>Calories from Fat {{food.value(9)}} </td>
+	</tr>
+	<tr>
+		<td></td>
+		<td class="dv">% Daily Value *</td>
+	</tr>
+	<tr>
+		<td><strong>Total Fat</strong> {{food.value(10)}}g</td>
+		<td class="dv">{{food.value(11)}}%</td>
+	</tr>
+	<tr>
+		<td class="sub">Saturated Fat {{food.value(12)}}g</td>
+		<td class="dv">{{(100*food.value(12)/20)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td class="sub">Monounsaturated Fat {{food.value(13)}}g</td>
+		<td class="dv"></td>
+	</tr>
+	<tr>
+		<td class="sub">Polyunsaturated Fat {{food.value(14)}}g</td>
+		<td class="dv"></td>
+	</tr>
+
+	<tr>
+		<td><strong>Cholesterol</strong> {{food.value(15)}}g</td>
+		<td class="dv">{{(100*food.value(15)/300)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td><strong>Sodium</strong> {{food.value(16)}}mg</td>
+		<td class="dv">{{(100*food.value(16)/2400)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td><strong>Total Carbohydrate</strong> {{food.value(17)}}g</td>
+		<td class="dv">{{(100*food.value(17)/300)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td class="sub">Dietary Fiber {{food.value(18)}}g</td>
+		<td class="dv">{{(100*food.value(18)/25)|round()|int}}%</td>
+	</tr>
+	<tr>
+		<td class="sub">Sugars {{food.value(19)}}g</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><strong>Protein</strong> {{food.value(20)}}g</td>
+		<td class="dv">{{(100*food.value(20)/50)|round()|int}}%</td>
+	</tr>
+	<tr id="minerals">
+		<td>Vitamin A</td>
+		<td class="dv">{{food.value(21)}}%</td>
+	</tr>
+	<tr>
+		<td>Vitamin C</td>
+		<td class="dv">{{food.value(22)}}%</td>
+	</tr>
+	<tr>
+		<td>Calcium</td>
+		<td class="dv">{{food.value(23)}}%</td>
+	</tr>
+	<tr>
+		<td>Iron</td>
+		<td class="dv">{{food.value(24)}}%</td>
+	</tr>
+	<caption>{{food.food}} {{food.detail}} ({{food.source}})</caption>
+</table>
+	{%endfor%}
+{%endif%}
 </div>
 
     
@@ -261,7 +325,7 @@
     					{%for field in foodsILike %}
     						{%if indexField >= 4%}
         						{{ field(value=True)}}
-        						<a href="{{ url_for('selectFoodInfoSuggest', foodIDInfo = field.name) }}" style="text-decoration: none">
+        						<a id = {{field.name}}>
         						{{foodNamesArg[indexField-4]}}
         						</a>
         						<br>

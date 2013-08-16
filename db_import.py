@@ -259,9 +259,9 @@ def createDict():
 	
 
 def addAllFood(session,dict):
-	j_result = -22
+	j_result = -23
 	dict = createDict()
-	while (j_result <= -22) :
+	while (j_result <= -23) :
 		print j_result
 		result = open('result'+str(j_result),'r')
 		for eachInfo_list in result:

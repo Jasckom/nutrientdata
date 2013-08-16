@@ -46,14 +46,33 @@ $(function () {
 			}
 	});
 
+//when load profile page
+	if ($('input[name=unitSystem]').filter(':checked').val() == "Metric"){
+		$('#MetricUnit').show();
+		$('#USUnit').hide();
+		$('#MetricUnitH').show();
+		$('#USUnitH').hide();
+		$('#USUnitHI').hide();
+		}
+	else if ($('input[name=unitSystem]').filter(':checked').val() == "US"){
+		$('#USUnit').show();
+		$('#MetricUnit').hide();
+		$('#MetricUnitH').hide();
+		$('#USUnitH').show();
+		$('#USUnitHI').show();
+			}
 
 //Change nutrient plan on change
 	$("input[name=nutrientPlan]").change(function(){
         if ($('input[name=nutrientPlan]').filter(':checked').val() == 1){
         	$("input[name^='Full']").parent().parent().hide();
+        	$("#FullNutrientScroll").hide();
+
 			}
        else if ($('input[name=nutrientPlan]').filter(':checked').val() == 0){
 			$("input[name^='Full']").parent().parent().show();
+			$("#FullNutrientScroll").show();
+
 			}
 	});
 
@@ -61,18 +80,14 @@ $(function () {
 //Make nutrient plan first remain as basic
 	if ($('input[name=nutrientPlan]').filter(':checked').val() == 1){
 		$("input[name^='Full']").parent().parent().hide();
+		$("#FullNutrientScroll").hide();
 		}
    else if ($('input[name=nutrientPlan]').filter(':checked').val() == 0){
 		$("input[name^='Full']").parent().parent().show();
+		$("#FullNutrientScroll").show();
+
 		}
 
-//Make nutrient plan first remain as basic
-	if ($('input[id=nutrientPlan-0]').prop('checked') == 0){
-		if ($('input[id=nutrientPlan-1]').prop('checked') == 0){
-			$('input[id=nutrientPlan-0]').prop('checked', true);
-			$("input[name^='Full']").parent().parent().hide();
-			}
-		}
    
 //If the nutrients are selected but use other plans - make them unchecked
 	$("input[name=opt_nut]").change(function(){
@@ -116,4 +131,12 @@ $(function () {
 		});
 	});
 	
+// 	$('html,body').animate({ scrollTop: $("#findFood").offset().top });
+
+	$("div[id^='nutExceed']").each(function(){
+		$(this).on("click",function(){
+		var toShow = "li[id='"+$(this).attr('id')+"']";
+		$(toShow).toggle();
+		});
+	});
 });

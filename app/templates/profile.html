@@ -1,0 +1,72 @@
+{% extends "admin.html" %}
+
+{% block content %}
+
+    <div id = sections style="display: table;">
+		<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+			<div style=" #position: relative; #top: -50%">
+					<div id class = heading><strong>
+						{{username}}
+					</strong></div>
+				</a>
+<table id = displayProfile>
+<form action="" method="post" name="login">
+<tr>
+	<td class = tdAccount>Age:</td> <td>{{editProfile.age(size=20)}}</td>
+</tr>
+<tr>
+	<td class = tdAccount>Gender:</td>
+	<td>
+		{%for subfield in editProfile.gender%} 
+			{{subfield}}{{subfield.label}}
+		{%endfor%}
+	</td>
+</tr>
+<tr>
+	<td class = tdAccount>Condition:</td> <td>{{editProfile.conditions}}</td>
+</tr>
+<tr>
+	<td class = tdAccount> Unit System:</td> 
+	<td>
+		{%for subfield in editProfile.unitSystem%}
+			{{subfield}}{{subfield.label}}
+		{%endfor%}			
+	</td>
+</tr>
+
+
+	<tr id= "USUnit" class = "hide" >
+		<td class = tdAccount> Weight(lb):</td> <td>{{editProfile.weight}}</td>
+	</tr>
+	<tr id= "USUnitH" class = "hide">
+		<td class = tdAccount>Height(ft):</td> <td>{{editProfile.heightFeet}}</td>
+	</tr>
+	<tr id= "USUnitHI" class = "hide">
+		<td class = tdAccount>Height(in):</td> <td>{{editProfile.heightInch}}</td>
+	</tr>
+
+
+
+<tr id = 'MetricUnit' class = "hide">
+	<td class = tdAccount>Weight(kg):</td> <td>{{editProfile.weightKg}}</td>
+</tr>
+<tr id = 'MetricUnitH' class = "hide">
+	<td class = tdAccount>Height(cm):</td> <td>{{editProfile.heightCm}}</td>
+</tr>
+
+</div>
+
+<tr>
+	<td class = tdAccount>Activity Level:</td> <td>{{editProfile.activity}}</td>
+</tr>
+</table>
+{{editProfile.saveChange}}
+</form>				
+			</div>
+		</div>
+	</div>		
+
+	
+
+
+{% endblock %}

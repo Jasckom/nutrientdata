@@ -2,17 +2,20 @@
 	<head>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/mystyle.css') }}">
     	{% if title %}
-    	<title>{{title}} - NutriData </title>
+    	<title>{{title}} - DietPlanner  </title>
     	{% else %}
-    	<title>NutriData</title>
+    	<title>DietPlanner</title>
     	{% endif %}
 	</head>
 	<body>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="{{url_for('static', filename= 'js/remove.js') }}"></script>
-    	<div>NutriData:
+	<div>DietPlanner:
     	{% if g.user.is_authenticated()%}
-    		| <a href="{{ url_for('resultSearch') }}" >Search Food</a>
+    		 <a href="{{ url_for('profile') }}" >Home</a>
+    		| <a href="{{ url_for('manage') }}" >Manage Diet Needs</a>
+    		| <a href="{{ url_for('resultSearch') }}" >Select Foods</a>
+    		| <a href="{{ url_for('optimize') }}" >Get Diet Plan</a>
     		{%if g.user.role == 0 %}
     		| <a href="{{ url_for('logout') }}" >Log out</a>
 			{% elif g.user.role == 1 %}
@@ -40,10 +43,14 @@
 
 <!-- Search Box -->
 
-    	<div id = firstPage>
+    	
+    	
     	{% if form%}
     		<div id = findFood>
+
     			<div id = search>
+    			<div id class = subHeading><strong>Select Foods</strong></div>
+
 				<table>
 				<form action="" method="post" name="searchEntry">
 				{{form.hidden_tag()}}
@@ -504,6 +511,7 @@
 <!-- Box 3-->
     {%if foodsILike%}
     	<div id = "myFood">
+    	
     			<form action="" method="post" name="foodsILike">
     				{{foodsILike.hidden_tag()}}
     			<div id = "submitMyFood" style="display: table;">
@@ -527,8 +535,7 @@
         						<a id = {{field.name}}>
         						{{foodNamesArg[indexField-4]}}
         						</a>
-        						<br>
-        					
+        						<br>   					
         					{%endif%}
         					{% set indexField = indexField + 1%}
         				{%endfor%}
@@ -563,7 +570,7 @@
         		</div>
         	{%endif%}
     </div>
-    </div>
+
   	</body>
 
 </html>

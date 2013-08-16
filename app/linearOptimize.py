@@ -105,8 +105,8 @@ def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsG
 		nutriObjective = objectiveNu[j]
 		prob += lpSum([(large_dict[nutriObjective])[i]*food_vars[i] for i in listFood])
 	
-#  	for i in listFood:
-#  		prob += (food_vars[i]) <= 1.1
+ 	for i in listFood:
+ 		prob += (food_vars[i]) <= 8
 
 	# Adding constraints to the problem
 	for j in range(len(constraints)):

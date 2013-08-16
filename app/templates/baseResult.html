@@ -2,17 +2,20 @@
 	<head>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/mystyle.css') }}">
     	{% if title %}
-    	<title>{{title}} - NutriData </title>
+    	<title>{{title}} - DietPlanner </title>
     	{% else %}
-    	<title>NutriData</title>
+    	<title>DietPlanner</title>
     	{% endif %}
 	</head>
 	<body>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="{{url_for('static', filename= 'js/remove.js') }}"></script>
-    	<div>NutriData:
+    	<div>DietPlanner:
     	{% if g.user.is_authenticated()%}
-    		| <a href="{{ url_for('resultSearch') }}" >Search Food</a>
+    		 <a href="{{ url_for('profile') }}" >Home</a>
+    		| <a href="{{ url_for('manage') }}" >Manage Diet Needs</a>
+    		| <a href="{{ url_for('resultSearch') }}" >Select Foods</a>
+    		| <a href="{{ url_for('optimize') }}" >Get Diet Plan</a>
     		{%if g.user.role == 0 %}
     		| <a href="{{ url_for('logout') }}" >Log out</a>
 			{% elif g.user.role == 1 %}

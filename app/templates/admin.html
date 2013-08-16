@@ -2,9 +2,9 @@
 	<head>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/mystyle.css') }}">
     	{% if title %}
-    	<title>{{title}} - NutriData </title>
+    	<title>{{title}} - DietPlanner </title>
     	{% else %}
-    	<title>NutriData</title>
+    	<title>DiertPlanner</title>
     	{% endif %}
 	</head>
 	<body>
@@ -26,8 +26,46 @@
     	{% if head_1%}
     	{% endif%}
     
-{% block content %}{%endblock%}
+		{% block content %}{%endblock%}
+		
 
+
+				
+    <div id = sections style="display: table;">
+		<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+			<div style=" #position: relative; #top: -50%">
+				<a href="{{ url_for('manage') }}" style="text-decoration: none; font-size : small"> 
+					<div id class = heading><strong>
+						Manage Diet Needs
+					</strong></div>
+				</a>
+			</div>
+		</div>
+	</div>	
+		
+    <div id = sections style="display: table;">
+		<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+			<div style=" #position: relative; #top: -50%">
+				<a href="{{ url_for('resultSearch') }}" style="text-decoration: none; font-size : small"> 
+					<div id class = heading><strong>
+						Select Foods
+					</strong></div>
+				</a>
+			</div>
+		</div>
+	</div>			
+
+    <div id = sections style="display: table;">
+		<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+			<div style=" #position: relative; #top: -50%">
+				<a href="{{ url_for('optimize') }}" style="text-decoration: none; font-size : small"> 
+					<div id class = heading><strong>
+						Get Diet Plan
+					</strong></div>
+				</a>
+			</div>
+		</div>
+	</div>	
 
   	</body>
 </html>

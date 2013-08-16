@@ -2,7 +2,6 @@
 
 {% block content %}
 	
-	<div id = profileForm_objective>
     	{% if minMaxForm %}
 			<form action="" method="post" name="Contraints">
 					{{minMaxForm.hidden_tag()}}
@@ -88,6 +87,8 @@
 	
     {% if outputFood %}
     <div id = resultLP>
+    <div class = subHeading><strong>My Diet Plan</strong></div><br>
+
  	{% if status != "Undefined"%}
     <p>Your Recommended Diet:</p>
     {% for i in range(outputFood|length)%}
@@ -97,8 +98,12 @@
     {%else%}
     Cannot Satisfy the Nutritional Constraints.</br>
     {%endif%}
+    </div>
 
 	{% if nutExceedStatement or nullNut%}
+	    <div id = resultLP>
+		 <div class = subHeading><strong>Remarks</strong></div>
+
 	{% if status == "Optimal"%}
 	However, <br>
 	{%endif%}
@@ -107,28 +112,29 @@
 	{% set index = 0%}
     {% if nutExceedStatement%}
     	{%for eachExceed in nutExceedStatement%}
-    	<FONT COLOR="FF0000">{{eachExceed}}</FONT><br>
+    		<div id = nutExceed{{index}}><FONT COLOR="FF0000">{{eachExceed}}</FONT><br></div>
     		{%for eachNutExceedWhichFood in nutExceedWhichFood [index]%}
-    			{{eachNutExceedWhichFood[0]}}% from {{eachNutExceedWhichFood[1].food}}<br>
+    			<li id = FoodnutExceed{{index}} style= "display:none" >{{eachNutExceedWhichFood[0]}}% from {{eachNutExceedWhichFood[1].food}}<br></li>
     		{%endfor%}
     		{%set index = index +1%}
     	{%endfor%}
-    
+    </div>
     {%endif%}
     <br>
+    
     {%if nullNut%}
     	<a href="{{ url_for('resultSuggest') }}" style="text-decoration: none" >Compliment with these Nutrients:</a><br>
     	{%for eachNullNut in nullNut%}
     	{{eachNullNut}}<br>
     	{%endfor%}
     	<br>
-    	or Adjust the Constraints
+    	or <a href="{{ url_for('manage') }}" style="text-decoration: none" >Adjust the Constraints</a>
+    </div>
     {%endif%}
     	
     
     
     
-    </div>
     {%endif%}
     
 {% endblock %}

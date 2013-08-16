@@ -39,9 +39,12 @@ width:130px;
 
 .heading{
 font-size:xx-large;
+text-align:center;
 }
 
-
+.subHeading{
+font-size:x-large;
+}
 
 
 
@@ -83,7 +86,7 @@ border-color: white;
 #search {
 float: left;
 width: 534px;
-height: 50px;
+height: 83px;
 border:5px solid gray;
 margin:10px;
 margin-top: 10px;
@@ -92,11 +95,10 @@ position: relative;
 border: solid;
 border-color: white;
 }
-
 #submitMyFood {
 float: left;
 width: 326px;
-height: 50px;
+height: 83px;
 border:5px solid gray;
 margin:10px;
 margin-top: 10px;
@@ -105,9 +107,6 @@ position: relative;
 border: solid;
 border-color: white;
 }
-
-
-
 
 #boxBelow{
 float: left;
@@ -119,31 +118,6 @@ border: solid;
 margin-left: 10px;
 margin-right: 10px;
 border-color: white;
-}
-
-#all_categories{
-float: left;
-width: 710;
-height: 606px;
-margin:10px;
-position: relative;
-overflow:auto;
-}
-
-#category {
-float: left;
-width: 250px;
-height: 280px;
-border:5px solid gray;
-margin:10px;
-position: relative;
-border: solid;
-}
-
-#list_category {
-width: 250px;
-height: 200px;
-overflow:auto;
 }
 
 /*All uses same head style*/
@@ -224,9 +198,19 @@ bottom:20px;
 }
 
 /* box3 */
+
+#myFood{
+width: 334;
+height: 540px;
+float: left;
+margin:10px;
+position: relative;
+padding:10px;
+border: solid
+}
 #box3FoodsILike {
 float: left;
-width: 326px;
+width: 306px;
 height: 280px;
 border:5px solid gray;
 margin:10px;
@@ -236,29 +220,37 @@ border: solid;
 }
 
 #box3FoodsILikeList {
-width: 326px;
+width: 306px;
 height: 220px;
 overflow:auto;
 padding-top: 10px;
 }
 
 #box3FoodsILikeListHead {
-width: 326px;
+width: 306px;
 height: 40px;
-
 }
 
+#editMyFood {
+float: left;
+width: 306px;
+height: 26px;
+border:5px solid gray;
+margin:10px;
+position: relative;
+border: solid;
+border-color: white;
+}
 
 /*All find food*/
 #findFood{
-float: left;
 width: 550;
-height: 500px;
+height: 540px;
+float: left;
+margin:10px;
 position: relative;
-overflow:auto;
-border: solid;
-margin: 10px;
-margin-left: 0px;
+padding:10px;
+border: solid
 }
 
 #foodDetails{
@@ -273,140 +265,112 @@ border-color: white;
 }
 
 
-/*Box2*/
-#result_category {
-float: left;
-width: 450px;
-height: 280px;
-border:5px solid gray;
-margin:10px;
-position: relative;
-border: solid;
-}
-
-/*Lis in Box 2*/
-#list_result_category {
-width: 458px;
-height: 200px;
-overflow:auto;
-}
-/*Foods I Like*/
-#foodILike {
-float: left;
-width: 450px;
-height: 350px;
-border:5px solid gray;
-margin:10px;
-position: relative;
-}
-
-/* List in Food iLike */
-#listFoodILike {
-width: 458px;
-height: 280px;
-overflow:auto;
-}
 
 
-/*All find food*/
-#myFood{
-float: left;
-width: 354;
-height: 500px;
-position: relative;
-overflow:auto;
-border: solid;
-margin: 10px;
-margin-left: 0px;
-}
 
 #firstPage{
 width: 1280px;
 height: 500px;
 position: relative;
-margin: auto;}
-
-
-#editMyFood {
-float: left;
-width: 326px;
-height: 26px;
-border:5px solid gray;
-margin:10px;
-position: relative;
-border: solid;
-border-color: white;
-}
-
-#submitMyFood {
-float: left;
-width: 326px;
-height: 50px;
-border:5px solid gray;
-margin:10px;
-margin-top: 10px;
-margin-bottom: -5px;
-position: relative;
-border: solid;
-border-color: white;
+margin: auto;
 }
 
 
-#profileForm {
+#sections{
 float: left;
-width: 210px;
-height: 250px;
+width: 280px;
+height: 280px;
+margin:10px;
+position: relative;
+border: solid
+}
+
+#sectionsInLong{
+float: left;
+width: 280px;
+height: 280px;
+position: relative;
+margin-bottom: 20px;
+border: solid
+
+}
+
+#sectionsLong{
+float: left;
+width: 286px;
+height: 586px;
+margin:10px;
 position: relative;
 }
 
-#profileForm_objective {
+
+
+#dietPlan {
 float: left;
-width: 210px;
-height: 480px;
+width: 260px;
+height: 380px;
 margin:10px;
 position: relative;
-padding:10px;
+padding:20px;
+border: solid
+}
+#nutrientPlan {
+float: left;
+width: 260px;
+height: 380px;
+margin:10px;
+position: relative;
+padding:20px;
 border: solid
 }
 
 #chooseDefault{
 float: left;
-width: 200px;
+width: 250px;
 height: 60px;
 position: relative;
 border: solid;
+border-color: #D3D3D3;
+margin-top: 10px;
+margin-bottom:10px;
 }
 #chooseminMax{
 float: left;
-width: 200px;
-height: 190px;
+width: 250px;
+height: 230px;
 position: relative;
 border: solid;
-}
-#listobj{
-width: 180px;
-height: 150px;
-position:absolute;
-bottom:10px;
-right:0px;
-overflow:auto;
+border-color: #D3D3D3;
+margin-top:10px
+
 }
 
 #choosePlan{
 float: left;
-width: 200px;
+width: 250px;
 height: 40px;
 position: relative;
 border: solid;
+border-color: #D3D3D3;
+margin-top:10px;
+}
+
+#listobj{
+width: 220px;
+height: 190px;
+position:absolute;
+bottom:0px;
+right:0px;
+overflow:auto;
 }
 
 #minMaxForm{
 float: left;
-width: 500px;
-height: 480px;
+width: 520px;
+height: 380px;
 margin:10px;
 position: relative;
-padding:10px;
+padding:20px;
 border: solid;
 overflow:auto;
 }
@@ -417,13 +381,31 @@ height: 60px;
 position: relative;
 border: sold;
 }
+
+
+#FullNutrientScroll {
+width: 6px;
+height: 20px;
+position:absolute;
+bottom:30px;
+right:10px;
+}
+
+#submitManage {
+
+position: absolute;
+right: 24px;
+top: 24px;
+}
+
+
 #resultLP{
 float: left;
 width: 400px;
 height: 480px;
 margin:10px;
 position: relative;
-padding:10px;
+padding:20px;
 border: solid;
 overflow:auto;
 }
@@ -527,4 +509,7 @@ table.nutrition {
   */
 .nutrition strong {
 	font-weight : x-bolder;
-}		  
+}
+
+
+		  
