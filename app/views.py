@@ -50,7 +50,6 @@ foodTypes = [['apple pies', 'bagels', 'banana muffins', 'banana pumpkin breads',
 # 	
 # (mainCategories, foodTypes) = getCat()
 
-
 def getSearchEntry(brandEntry,searchEntry):
 	##print "in search, brand is: ", brandEntry, searchEntry, 
 	if len(brandEntry) != 0:
@@ -197,8 +196,13 @@ def resultSearch(page = 1):
 	
 	foodIdsArg = session[g.user.get_id()]
 	foodNamesArg = session["foodItem"]
-
 	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)
+	
+	if foodIdsArg:
+		foodsItemsILike = Food.query.filter(Food.id.in_(foodIdsArg)).all()
+	else:
+		foodsItemsILike = []
+
 	#Validate form
 	if foodsILike.validate_on_submit() and (foodsILike.submit.data or  foodsILike.remove.data or foodsILike.toggle.data):
 		check = []
@@ -266,7 +270,6 @@ def resultSearch(page = 1):
 	
 	session["box1Head"] = "Search Results - Categories"
 	session["box1Cat"] = matchingCat
-	(info, food) = getInfo()
 	
 	return render_template('resultSearch.html',
 		title = 'Search your food',
@@ -279,9 +282,8 @@ def resultSearch(page = 1):
 		box2Head = box2Head,
 		resultSearch = resultSearch,
 		foodNamesArg = foodNamesArg,
-		infoSearch = info,
-		food = food,
-		userProfile=session["userProfile"])
+		userProfile=session["userProfile"],
+		foodsItemsILike = foodsItemsILike)
 
 @login_required
 @app.route('/resultCategory/<categoryChosen>', methods = ['GET', 'POST'])
@@ -443,15 +445,14 @@ def selectFoodFromSearch(foodIDFromSearch):
 @login_required
 @app.route('/selectFoodFromSuggest/<foodIDFromSuggest>')
 def selectFoodFromSuggest(foodIDFromSuggest):
-	#print "IN SELECT FOODD", foodIDFromSuggest, type(foodIDFromSuggest)
+
 	if foodIDFromSuggest == "updateAfterRemove":
-		#print "i'm hereeEEEEE" , foodIDFromSuggest
 		(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(g.user.nutri[0],1)
 		constraints = []
 		for i in range(len(check)):
 			if check[i]:
 				constraints.append(i+25)
-		
+	
 		foodItems = []
 		for i in range(len(session[g.user.get_id()])):
 			foodItems.append(Food.query.filter(Food.id ==session[g.user.get_id()][i]).first())
@@ -479,9 +480,7 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 		else:
 			#print "Here" ,nutRatioUnmet
 			return redirect(url_for('resultSuggest'))
-
 	
-		
 	if not foodIDFromSuggest in session[g.user.get_id()]:
 		#print "i'm heree3" , foodIDFromSuggest	
 		session[g.user.get_id()].insert(0,foodIDFromSuggest)
@@ -613,10 +612,6 @@ def reportRatio2(constraints, foodItems, nutri):
 			nutRatioMin.append(minRatio)
 			failedBestFood.append(nutRatio)
 			#print eachCon, nutRatio, "<=", minRatio
-
-	#print "Report Ratio"
-# 	for i in range(len(nutRatioUnmet)):
-		#print nutRatioUnmet[i], full_ext_nutrient[nutRatioUnmet[i]-25],  "minRatios: ", nutRatioMin[i], "BestFood: ", failedBestFood[i]
 	
 	return givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
 
@@ -1227,8 +1222,7 @@ def login():
 				newUser.weight = weight
 				newUser.heightFeet = height
 				newUser.heightInch = None
-			
-			
+				
 			# Get calories value
 			
 			newNutri = Nutri(type=1)
