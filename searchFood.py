@@ -38,7 +38,7 @@ def searchFood(searchTerm, brandTerm, Food, toOrder):
 	
 	print "done in searchFood" 
 	
-	return q
+	return q, foodIDs
 	
 def searchFoodBrand(brandTerm, Food, toOrder):
 	brandTermList = brandTerm.split()

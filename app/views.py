@@ -1259,6 +1259,7 @@ def profile():
 		if valid == 0:
 			return redirect(url_for('profile'))
 		else:
+			print "saving"
 			# Save profile of the user
 			currentUser = g.user
 			currentUser.age = age

@@ -132,13 +132,13 @@ def Profile(user):
 
 	if user.heightInch is None: #metric
 		defaultSystem = "Metric"
-		defaultHeight = [user.heightFeet, None, None, None]
-		defaultWeight = [user.weight, None]
+		defaultHeight = [int(user.heightFeet), None, None, None]
+		defaultWeight = [int(user.weight), None]
 		
 	else:
 		defaultSystem = "US"
-		defaultHeight = [None, None,user.heightFeet, user.heightInch ]
-		defaultWeight = [None, user.weight]
+		defaultHeight = [None, None,int(user.heightFeet), int(user.heightInch) ]
+		defaultWeight = [None, int(user.weight)]
 
 
 	profile.age = IntegerField('age',validators = [Required()], default = int(user.age))
