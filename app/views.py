@@ -866,6 +866,7 @@ def optimize():
 	
 	if "optimize" not in session.keys():
 		if session[g.user.get_id()]:
+			print "Sent back to choose Food"
 			session["optimize"] = session[g.user.get_id()]
 		else:
 			flash('You have not selected any foods')

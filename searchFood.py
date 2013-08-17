@@ -9,10 +9,10 @@ def searchFood(searchTerm, brandTerm, Food, toOrder):
 # 	orSearchTerm = orTerm.join(searchTermList)
 # 	orSearchTerm.rstrip("|")
 	
-# 	brandTermList = brandTerm.split()
-# 	orTerm = "|"
-# 	brandTerm = orTerm.join(brandTermList)
-# 	brandTerm.rstrip("|")
+	brandTermList = brandTerm.split()
+	orTerm = "|"
+	brandTerm = orTerm.join(brandTermList)
+	brandTerm.rstrip("|")
 	
 	#to be changed to tags
 	if andSearchTerm == "":
