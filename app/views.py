@@ -186,10 +186,12 @@ def resultSearch(page = 1):
 	global mainCategories
 	global foodTypes
 	global full_ext_nutrient
-	
+	print"here1"
 	#Search Function
 	form = SearchForm()
 	if form.validate_on_submit() and ( (len(form.searchEntry.data) != 0) or (len(form.brandEntry.data) != 0) ):
+		print"here2"
+
 		searchEntry = form.searchEntry.data
 		brandEntry = form.brandEntry.data
 		searchEntry = getSearchEntry(brandEntry,searchEntry)		
@@ -201,7 +203,7 @@ def resultSearch(page = 1):
 	foodIdsArg = session[g.user.get_id()]
 	foodNamesArg = session["foodItem"]
 	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)
-	
+	print"here3"
 	if foodIdsArg:
 		foodsItemsILike = Food.query.filter(Food.id.in_(foodIdsArg)).all()
 	else:
@@ -209,6 +211,7 @@ def resultSearch(page = 1):
 
 	#Validate form
 	if foodsILike.validate_on_submit() and (foodsILike.submit.data or  foodsILike.remove.data or foodsILike.toggle.data):
+		print"here4"
 		check = []
 		checkedFood = []
 		fieldIndex = 0
@@ -231,6 +234,7 @@ def resultSearch(page = 1):
 				session["foodItem"].pop(indexToDelete)
 		return redirect(url_for('resultSearch'))
 	
+	print"here5"
 	# Filter form
 	if "filter" in session.keys():
 		selectFilter = SelectFilter(session["filter"])
@@ -241,6 +245,7 @@ def resultSearch(page = 1):
 			filterNut = selectFilter.filterNut.data
 			session["filter"] = filterNut
 	
+	print"here6"
 	#Store search term
 	searchEntry = session["result"]
 	searchEntryList = searchEntry.split(":")
@@ -251,7 +256,7 @@ def resultSearch(page = 1):
 	
 	#Get potential 
 	matchingCat = getMatchingCat(searchEntry,foodTypes)
-	
+	print"here7"
 	if searchEntry == "brandOnly":
 		print "Brand search term: ",brandEntry
  		(results, resultsOrdered) = searchFoodBrand(brandEntry, Food)
@@ -263,7 +268,7 @@ def resultSearch(page = 1):
 	box2Head = "Search Results - Foods"	
 	# Filter to persist but if not then it goes to nutrient
 	if "filter" in session.keys() and results:
-		
+	print"here8"	
 		filterNut = session["filter"]
 		if filterNut != 24:			
 			if filterNut in toReduce:
@@ -272,7 +277,7 @@ def resultSearch(page = 1):
 			else:
 				resultSearch = results.order_by(desc(instrumentAttribute[filterNut])).paginate(page, RESULTS_PER_PAGE, False)
 				box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
-
+	print"here9"
 	session["box1Head"] = "Search Results - Categories"
 	session["box1Cat"] = matchingCat
 	
