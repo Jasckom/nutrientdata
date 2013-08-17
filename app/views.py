@@ -286,7 +286,7 @@ def resultSearch(page = 1):
 			else:
 				results = searchFood(searchEntry, brandEntry, Food, "ordered")
 		
-		resultSearch = results.paginate(page, RESULTS_PER_PAGE, False)
+		resultSearch = results.paginate(page, 20, False)
 	
 
 
