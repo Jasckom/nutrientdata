@@ -186,11 +186,9 @@ def resultSearch(page = 1):
 	global mainCategories
 	global foodTypes
 	global full_ext_nutrient
-	print "here1"
 	#Search Function
 	form = SearchForm()
 	if form.validate_on_submit() and ( (len(form.searchEntry.data) != 0) or (len(form.brandEntry.data) != 0) ):
-		print "here2"
 
 		searchEntry = form.searchEntry.data
 		brandEntry = form.brandEntry.data
@@ -203,7 +201,6 @@ def resultSearch(page = 1):
 	foodIdsArg = session[g.user.get_id()]
 	foodNamesArg = session["foodItem"]
 	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)
-	print "here3"
 	if foodIdsArg:
 		foodsItemsILike = Food.query.filter(Food.id.in_(foodIdsArg)).all()
 	else:
@@ -211,7 +208,6 @@ def resultSearch(page = 1):
 
 	#Validate form
 	if foodsILike.validate_on_submit() and (foodsILike.submit.data or  foodsILike.remove.data or foodsILike.toggle.data):
-		print "here4"
 		check = []
 		checkedFood = []
 		fieldIndex = 0
@@ -234,22 +230,16 @@ def resultSearch(page = 1):
 				session["foodItem"].pop(indexToDelete)
 		return redirect(url_for('resultSearch'))
 	
-	print "here5"
 	# Filter form
 	if "filter" in session.keys():
-		print "here5.1"
 		selectFilter = SelectFilter(session["filter"])
 	else:
-		print "here5.2"
 		selectFilter = SelectFilter(24)
 	if request.method == 'POST':
-		print "here5.3"
 		if selectFilter.filter.data and request.form['filter'] == 'Go!':
 			filterNut = selectFilter.filterNut.data
 			session["filter"] = filterNut
-			print "here5.4"
 	
-	print "here6"
 	#Store search term
 	searchEntry = session["result"]
 	searchEntryList = searchEntry.split(":")
@@ -260,28 +250,36 @@ def resultSearch(page = 1):
 	
 	#Get potential 
 	matchingCat = getMatchingCat(searchEntry,foodTypes)
-	print "here7"
-	if searchEntry == "brandOnly":
-		print "Brand search term: ",brandEntry
- 		(results, resultsOrdered) = searchFoodBrand(brandEntry, Food)
-	else:
-		print "In normal search: "
- 		(results, resultsOrdered) = searchFood(searchEntry, brandEntry, Food)
-	resultSearch = resultsOrdered.paginate(page, RESULTS_PER_PAGE, False)
-
+	
 	box2Head = "Search Results - Foods"	
-	# Filter to persist but if not then it goes to nutrient
-	if "filter" in session.keys() and results:
-		print "here8"	
+	if "filter" in session.keys():
 		filterNut = session["filter"]
-		if filterNut != 24:			
+		if filterNut != 24:
+			if searchEntry == "brandOnly":
+				results = searchFoodBrand(brandEntry, Food, "unordered")
+			else:
+				results = searchFood(searchEntry, brandEntry, Food, "unordered")
+				
 			if filterNut in toReduce:
-				resultSearch = results.order_by(asc(instrumentAttribute[filterNut])).paginate(page, RESULTS_PER_PAGE, False)
+				results = results.order_by(asc(instrumentAttribute[filterNut]))
 				box2Head += " with Lowest " + full_ext_nutrient[filterNut-25]
 			else:
-				resultSearch = results.order_by(desc(instrumentAttribute[filterNut])).paginate(page, RESULTS_PER_PAGE, False)
+				results = results.order_by(desc(instrumentAttribute[filterNut]))
 				box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
-	print"here9"
+		else:
+			if searchEntry == "brandOnly":
+				results = searchFoodBrand(brandEntry, Food, "ordered")
+			else:
+				results = searchFood(searchEntry, brandEntry, Food, "ordered")
+	else:
+		if searchEntry == "brandOnly":
+			results = searchFoodBrand(brandEntry, Food, "ordered")
+		else:
+			results = searchFood(searchEntry, brandEntry, Food, "ordered")
+		
+	resultSearch = results.paginate(page, RESULTS_PER_PAGE, False)
+
+
 	session["box1Head"] = "Search Results - Categories"
 	session["box1Cat"] = matchingCat
 	
