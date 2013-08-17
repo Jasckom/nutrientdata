@@ -266,17 +266,21 @@ def resultSearch(page = 1):
 					results = searchFood(searchEntry, brandEntry, Food, "unordered")
 				
 				if filterNut in toReduce:
+					print "rank from lowest"
 					results = results.order_by(asc(instrumentAttribute[filterNut]))
 					box2Head += " with Lowest " + full_ext_nutrient[filterNut-25]
 				else:
+					print "rank from highest"
 					results = results.order_by(desc(instrumentAttribute[filterNut]))
 					box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
 			else:
+				print "no rank"
 				if searchEntry == "brandOnly":
 					results = searchFoodBrand(brandEntry, Food, "ordered")
 				else:
 					results = searchFood(searchEntry, brandEntry, Food, "ordered")
 		else:
+			print "filter not in"
 			if searchEntry == "brandOnly":
 				results = searchFoodBrand(brandEntry, Food, "ordered")
 			else:
