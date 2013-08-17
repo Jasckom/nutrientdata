@@ -278,6 +278,7 @@ def resultSearch(page = 1):
 			results = searchFood(searchEntry, brandEntry, Food, "ordered")
 		
 	resultSearch = results.paginate(page, RESULTS_PER_PAGE, False)
+	
 
 
 	session["box1Head"] = "Search Results - Categories"

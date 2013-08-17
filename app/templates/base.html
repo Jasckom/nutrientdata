@@ -125,9 +125,6 @@
     				<strong>{{box2Head}}</strong>
     			</div>
     			<div id = box2ResultList>
-    				{%if resultSearch[0] == "Foods have no desired nutrients"%}
-    					Foods Have No Desired Nutrient
-    				{%else%}
     				{%for eachFood in resultSearch.items%}
     				<li><a id= {{eachFood.id}} href="{{ url_for('selectFoodFromSearch', foodIDFromSearch = eachFood.id) }}" style="text-decoration: none">
 					{{eachFood.food}} {{eachFood.detail}} ({{eachFood.source}}) </a></li>
