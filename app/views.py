@@ -237,13 +237,17 @@ def resultSearch(page = 1):
 	print "here5"
 	# Filter form
 	if "filter" in session.keys():
+		print "here5.1"
 		selectFilter = SelectFilter(session["filter"])
 	else:
+		print "here5.2"
 		selectFilter = SelectFilter(24)
 	if request.method == 'POST':
+		print "here5.3"
 		if selectFilter.filter.data and request.form['filter'] == 'Go!':
 			filterNut = selectFilter.filterNut.data
 			session["filter"] = filterNut
+			print "here5.4"
 	
 	print "here6"
 	#Store search term
