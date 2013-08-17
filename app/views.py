@@ -250,34 +250,39 @@ def resultSearch(page = 1):
 	
 	#Get potential 
 	matchingCat = getMatchingCat(searchEntry,foodTypes)
+	print "Search Term:", searchEntry, type(searchEntry), len(searchEntry)
+	print  "brand term:", brandEntry, type(brandEntry), len(brandEntry)
 	
 	box2Head = "Search Results - Foods"	
-	if "filter" in session.keys():
-		filterNut = session["filter"]
-		if filterNut != 24:
-			if searchEntry == "brandOnly":
-				results = searchFoodBrand(brandEntry, Food, "unordered")
-			else:
-				results = searchFood(searchEntry, brandEntry, Food, "unordered")
+	if searchEntry == "" and brandEntry == "":
+		resultSearch = []
+	else:
+		if "filter" in session.keys():
+			filterNut = session["filter"]
+			if filterNut != 24:
+				if searchEntry == "brandOnly":
+					results = searchFoodBrand(brandEntry, Food, "unordered")
+				else:
+					results = searchFood(searchEntry, brandEntry, Food, "unordered")
 				
-			if filterNut in toReduce:
-				results = results.order_by(asc(instrumentAttribute[filterNut]))
-				box2Head += " with Lowest " + full_ext_nutrient[filterNut-25]
+				if filterNut in toReduce:
+					results = results.order_by(asc(instrumentAttribute[filterNut]))
+					box2Head += " with Lowest " + full_ext_nutrient[filterNut-25]
+				else:
+					results = results.order_by(desc(instrumentAttribute[filterNut]))
+					box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
 			else:
-				results = results.order_by(desc(instrumentAttribute[filterNut]))
-				box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
+				if searchEntry == "brandOnly":
+					results = searchFoodBrand(brandEntry, Food, "ordered")
+				else:
+					results = searchFood(searchEntry, brandEntry, Food, "ordered")
 		else:
 			if searchEntry == "brandOnly":
 				results = searchFoodBrand(brandEntry, Food, "ordered")
 			else:
 				results = searchFood(searchEntry, brandEntry, Food, "ordered")
-	else:
-		if searchEntry == "brandOnly":
-			results = searchFoodBrand(brandEntry, Food, "ordered")
-		else:
-			results = searchFood(searchEntry, brandEntry, Food, "ordered")
 		
-	resultSearch = results.paginate(page, RESULTS_PER_PAGE, False)
+		resultSearch = results.paginate(page, RESULTS_PER_PAGE, False)
 	
 
 

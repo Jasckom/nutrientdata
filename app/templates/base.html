@@ -116,10 +116,10 @@
 					</div>
 				</div>
     		</div>
-    			{% endif %}
+    			
     		
     		
-    	    	{% if resultSearch %}
+    	    	{% elif resultSearch %}
     	    <div id = box2Result>
     			<div id = box2ResultListHead>
     				<strong>{{box2Head}}</strong>
@@ -129,7 +129,6 @@
     				<li><a id= {{eachFood.id}} href="{{ url_for('selectFoodFromSearch', foodIDFromSearch = eachFood.id) }}" style="text-decoration: none">
 					{{eachFood.food}} {{eachFood.detail}} ({{eachFood.source}}) </a></li>
     				{% endfor%}
-    				{%endif%}
     			</div>
     			{%if resultSearch.items|length >= 15 %}
     				<div id = box2Scroll>⇩</div>
@@ -141,7 +140,10 @@
 						{% if resultSearch.has_next %}<a href="{{ url_for('resultSearch',page = resultSearch.next_num)  }}">next >></a>{% else %}next >>{% endif %}
 					</div>
 				</div>
-    		</div> 
+    		</div>
+    		 
+    		 {%else%}
+    		 <div id = box2Result></div>
     			{% endif %}
 
 <!-- Box Below -->
