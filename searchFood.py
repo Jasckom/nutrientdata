@@ -15,19 +15,26 @@ def searchFood(searchTerm, brandTerm, Food):
 	brandTerm.rstrip("|")
 	
 	#to be changed to tags
+	if andSearchTerm == "":
+		andSearchTerm = "xyz"
 	
+	print "searchTerm", andSearchTerm
 	q = Food.query.filter("Food.tag @@ to_tsquery(:searchTerm)").params(searchTerm=andSearchTerm)
-	qOrdered = q.order_by(desc("ts_rank_cd(to_tsvector(Food.tag) , to_tsquery(:searchTerm))")).params(searchTerm=andSearchTerm)
+	qOrdered = q.order_by(desc("ts_rank_cd(to_tsvector(Food.tag) , to_tsquery(:searchTerm))"))
 	if q.count() == 0:
+		print "No results from food name"
 		q = Food.query.filter("Food.tag @@ to_tsquery(:searchTerm)").params(searchTerm=orSearchTerm)
-		qOrdered = q.order_by(desc("ts_rank_cd(to_tsvector(Food.tag) , to_tsquery(:searchTerm))")).params(searchTerm=orSearchTerm)
-	
-	qWithBrands = q.filter("Food.source @@ to_tsquery(:brandTerm)").params(brandTerm=brandTerm)
-	qWithBrandsOrdered = qOrdered.filter("Food.source @@ to_tsquery(:brandTerm)").params(brandTerm=brandTerm)
+		qOrdered = q.order_by(desc("ts_rank_cd(to_tsvector(Food.tag) , to_tsquery(:searchTerm))"))
+		
+	if brandTerm != "":
+		print "brand Term is:", brandTerm
+		qWithBrands = q.filter("Food.source @@ to_tsquery(:brandTerm)").params(brandTerm=brandTerm)
+		qWithBrandsOrdered = qOrdered.filter("Food.source @@ to_tsquery(:brandTerm)")
+		print "Filter with the brand"
 
-	if qWithBrands.count() != 0:
-		q = qWithBrands
-		qOrdered = qWithBrandsOrdered 
+		if qWithBrands.count() != 0:
+			q = qWithBrands
+			qOrdered = qWithBrandsOrdered 
 	
 	return q, qOrdered
 	
