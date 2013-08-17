@@ -16,7 +16,7 @@ def searchFood(searchTerm, brandTerm, Food):
 	
 	#to be changed to tags
 	if andSearchTerm == "":
-		andSearchTerm = "xyz"
+		andSearchTerm = "banana"
 	
 	print "searchTerm", andSearchTerm
 	q = Food.query.filter("Food.tag @@ to_tsquery(:searchTerm)").params(searchTerm=andSearchTerm)
@@ -34,7 +34,8 @@ def searchFood(searchTerm, brandTerm, Food):
 
 		if qWithBrands.count() != 0:
 			q = qWithBrands
-			qOrdered = qWithBrandsOrdered 
+			qOrdered = qWithBrandsOrdered
+	print "done in searchFood" 
 	
 	return q, qOrdered
 	
