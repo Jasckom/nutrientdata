@@ -110,40 +110,6 @@ def getMatchingCat(searchEntry,foodTypes):
 	return matchingCat
 
 @login_required
-@app.route('/search', methods = ['GET', 'POST'])
-@login_required
-def search():
-	form = SearchForm()
-	
-	if form.validate_on_submit() and ( (len(form.searchEntry.data) != 0) or (len(form.brandEntry.data) != 0) ):
-		searchEntry = form.searchEntry.data
-		brandEntry = form.brandEntry.data
-		searchEntry = getSearchEntry(brandEntry,searchEntry)		
-		session["result"] = searchEntry
-		if "filter" in session.keys():
-			session.pop("filter")
-		return redirect(url_for('resultSearch'))
-	
-	(categories,foodTypes) = getCat()
-	return render_template('search.html',
-		title = 'Search your food',
-		form = form,
-		myPreferedFood = [Food.query.filter(Food.id == i).first() for i in session[g.user.get_id()]],
-		categories = categories,
-		foodTypes = foodTypes)
-
-@login_required
-@app.route('/mainCatFromSearch/<mainCatChosen>/<foodChosen>')
-def mainCatFromSearch(mainCatChosen,foodChosen):
-	global mainCategories
-	global foodTypes
-	
-	session["box1Head"] = mainCatChosen
-	session["box1Cat"] = foodTypes[mainCategories.index(mainCatChosen)]
-
-	return redirect(url_for('resultCategory', categoryChosen =mainCatChosen+":"+foodChosen))
-
-@login_required
 @app.route('/mainCat/<mainCatChosen>')
 def mainCat(mainCatChosen):
 	global mainCategories
@@ -189,11 +155,11 @@ def resultSearch(page = 1):
 	#Search Function
 	form = SearchForm()
 	if form.validate_on_submit() and ( (len(form.searchEntry.data) != 0) or (len(form.brandEntry.data) != 0) ):
-
 		searchEntry = form.searchEntry.data
 		brandEntry = form.brandEntry.data
 		searchEntry = getSearchEntry(brandEntry,searchEntry)		
-		session["result"] = searchEntry
+		session["resultNew"] = searchEntry
+		print "in search box: ", session["resultNew"]
 		if "filter" in session.keys():
 			session.pop("filter")
 		return redirect(url_for('resultSearch'))
@@ -239,57 +205,66 @@ def resultSearch(page = 1):
 		if selectFilter.filter.data and request.form['filter'] == 'Go!':
 			filterNut = selectFilter.filterNut.data
 			session["filter"] = filterNut
-	
+		
 	#Store search term
-	searchEntry = session["result"]
-	searchEntryList = searchEntry.split(":")
-	brandEntry = ""
-	if len(searchEntryList) > 1:
-		brandEntry = searchEntryList[1]		
-	searchEntry = searchEntryList[0]
+	print "fromserchBox:", session["resultNew"]
+	print "current :", session["result"]
+	if session["result"] != session["resultNew"]:
+		session["result"] = session["resultNew"]
+		print "Find new result", session["resultNew"]
+		searchEntry = session["resultNew"]
+		#operate on this new search term
+		searchEntryList = searchEntry.split(":")
+		brandEntry = ""
+		if len(searchEntryList) > 1:
+			brandEntry = searchEntryList[1]		
+		searchEntry = searchEntryList[0]
+		
+		if searchEntry == "" and brandEntry == "":
+			results= []
+		else:
+			if searchEntry == "brandOnly":
+				results = searchFoodBrand(brandEntry, Food, "unordered")
+			else:
+				results = searchFood(searchEntry, brandEntry, Food, "unordered")
+			session["resultID"] = results
+	else:
+		print "Find old term", session["result"]
+		#Just to get potential categories
+		searchEntry = session["result"]
+		searchEntryList = searchEntry.split(":")
+		brandEntry = ""
+		if len(searchEntryList) > 1:
+			brandEntry = searchEntryList[1]		
+		searchEntry = searchEntryList[0]
+		
+		results = session["resultID"]
 	
 	#Get potential 
 	matchingCat = getMatchingCat(searchEntry,foodTypes)
-	print "Search Term:", searchEntry, type(searchEntry), len(searchEntry)
-	print  "brand term:", brandEntry, type(brandEntry), len(brandEntry)
 	
-	box2Head = "Search Results - Foods"	
-	if searchEntry == "" and brandEntry == "":
-		resultSearch = []
+	#Standard query
+	if results:
+		results = Food.query.filter(Food.id.in_(results))
 	else:
-		if "filter" in session.keys():
-			filterNut = session["filter"]
-			if filterNut != 24:
-				if searchEntry == "brandOnly":
-					results = searchFoodBrand(brandEntry, Food, "unordered")
-				else:
-					results = searchFood(searchEntry, brandEntry, Food, "unordered")
-				
-				if filterNut in toReduce:
-					print "rank from lowest"
-					results = results.order_by(asc(instrumentAttribute[filterNut]))
-					box2Head += " with Lowest " + full_ext_nutrient[filterNut-25]
-				else:
-					print "rank from highest"
-					results = results.order_by(desc(instrumentAttribute[filterNut]))
-					box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
-			else:
-				print "no rank"
-				if searchEntry == "brandOnly":
-					results = searchFoodBrand(brandEntry, Food, "ordered")
-				else:
-					results = searchFood(searchEntry, brandEntry, Food, "ordered")
-		else:
-			print "filter not in"
-			if searchEntry == "brandOnly":
-				results = searchFoodBrand(brandEntry, Food, "ordered")
-			else:
-				results = searchFood(searchEntry, brandEntry, Food, "ordered")
-		
-		resultSearch = results.paginate(page, 20, False)
+		results = Food.query.filter(Food.id==0)
 	
+	box2Head = "Search Results - Foods"
 
-
+	if "filter" in session.keys():
+		filterNut = session["filter"]
+		if filterNut != 24:
+			if filterNut in toReduce:
+				print "rank from lowest"
+				results = results.order_by(asc(instrumentAttribute[filterNut]))
+				box2Head += " with Lowest " + full_ext_nutrient[filterNut-25]
+			else:
+				print "rank from highest"
+				results = results.order_by(desc(instrumentAttribute[filterNut]))
+				box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
+	
+	resultSearch = results.paginate(page, 20, False)
+	
 	session["box1Head"] = "Search Results - Categories"
 	session["box1Cat"] = matchingCat
 	
@@ -326,13 +301,14 @@ def resultCategory(categoryChosen, page = 1):
 		searchEntry = form.searchEntry.data
 		brandEntry = form.brandEntry.data
 		searchEntry = getSearchEntry(brandEntry,searchEntry)		
-		session["result"] = searchEntry
+		session["resultNew"] = searchEntry
+		print "in search box: ", session["resultNew"]
 		if "filter" in session.keys():
 			session.pop("filter")
 		return redirect(url_for('resultSearch'))
 	
-	#Store search term
-	session["result"] = categoryChosen
+	#Store category term
+	session["resultCategory"] = categoryChosen
 	
 	foodIdsArg = session[g.user.get_id()]
 	foodNamesArg = session["foodItem"]
@@ -342,7 +318,6 @@ def resultCategory(categoryChosen, page = 1):
 		foodsItemsILike = Food.query.filter(Food.id.in_(foodIdsArg)).all()
 	else:
 		foodsItemsILike = []
-
 
 	if foodsILike.validate_on_submit() and (foodsILike.submit.data or  foodsILike.remove.data or foodsILike.toggle.data):
 		check = []
@@ -457,7 +432,7 @@ def selectFood(foodChosen):
 		session[g.user.get_id()].insert(0,foodChosen)
 		food = Food.query.filter(Food.id==foodChosen).first()
 		session[("foodItem")].insert(0,food.food+ " "+ food.detail+ " (" +  food.source+")")
-	categoryChosen = session["result"]
+	categoryChosen = session["resultCategory"]
 	return redirect(url_for('resultCategory',categoryChosen =categoryChosen ))
 
 @login_required
@@ -766,7 +741,6 @@ def manage():
 	else:
 		firstDefault = session["basicPlan"]
 	
-	
 	# Get lower/upper bounds from the curent user - this is not overriding but based on what is recommended	
 	currentNutri = g.user.nutri[0]
 	(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(currentNutri,1)
@@ -894,8 +868,8 @@ def optimize():
 			if each in basicPlan:
 				newConstrainsts.append(each)
 		constraints = newConstrainsts
-
-	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut)
+	
+	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, )
 	(outputFood , outputFoodAmount , status ,objective, nullNut) = result
 	
 	#get upperbound of constraints
@@ -1214,6 +1188,8 @@ def before_request():
     	session["foodItem"] = [each.food+ " "+ each.detail+ " (" +  each.source+")" for each in g.user.food]
     	session["foodInfo"] = None
     	session["result"] = ""
+    	session["resultNew"] = ""
+    	session["resultID"] = []
  
 @lm.user_loader
 def load_user(id):

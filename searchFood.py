@@ -30,15 +30,8 @@ def searchFood(searchTerm, brandTerm, Food, toOrder):
 			q = q.filter("Food.source @@ to_tsquery(:brandTerm)").params(brandTerm=brandTerm)
 	
 	foodIDs = [each.id for each in q]
-	if foodIDs:
-		print "using ids"
-		q = Food.query.filter(Food.id.in_(foodIDs))
-	else:
-		q = Food.query.filter(Food.id == 0)
 	
-	print "done in searchFood" 
-	
-	return q
+	return foodIDs
 	
 def searchFoodBrand(brandTerm, Food, toOrder):
 	brandTermList = brandTerm.split()
