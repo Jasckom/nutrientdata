@@ -262,6 +262,12 @@ def resultSearch(page = 1):
 				print "rank from highest"
 				results = results.order_by(desc(instrumentAttribute[filterNut]))
 				box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
+		else:
+			results = results.order_by(asc(Food.food))
+
+	else:
+		results = results.order_by(asc(Food.food))
+
 	
 	resultSearch = results.paginate(page, 20, False)
 	

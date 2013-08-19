@@ -1,36 +1,12 @@
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 def searchFood(searchTerm, brandTerm, Food, toOrder):
 	searchTermList = searchTerm.split()
-	andTerm = "&"
-	andSearchTerm = andTerm.join(searchTermList)
-	andSearchTerm.rstrip("&")
 	
-# 	orTerm = "|"
-# 	orSearchTerm = orTerm.join(searchTermList)
-# 	orSearchTerm.rstrip("|")
-	
-	brandTermList = brandTerm.split()
-	orTerm = "|"
-	brandTerm = orTerm.join(brandTermList)
-	brandTerm.rstrip("|")
-	
-	#to be changed to tags
-	if andSearchTerm == "":
-		andSearchTerm = " "
-	
-	if toOrder == "ordered":
-		print "in ordered"
-		q = Food.query.filter("Food.tag @@ to_tsquery(:searchTerm)").order_by(desc("ts_rank_cd(to_tsvector(Food.tag) , to_tsquery(:searchTerm))")).params(searchTerm=andSearchTerm)
-		if brandTerm != "":
-			q = q.filter("Food.source @@ to_tsquery(:brandTerm)").params(brandTerm=brandTerm)
-	else:
-		print "not ordered"
-		q = Food.query.filter("Food.tag @@ to_tsquery(:searchTerm)").params(searchTerm=andSearchTerm)
-		if brandTerm != "":
-			q = q.filter("Food.source @@ to_tsquery(:brandTerm)").params(brandTerm=brandTerm)
-	
+	q = Food.query
+	for each in searchTermList:
+		q = q.filter(Food.tag.ilike("% "+each+" %"))
+
 	foodIDs = [each.id for each in q]
-	
 	return foodIDs
 	
 def searchFoodBrand(brandTerm, Food, toOrder):

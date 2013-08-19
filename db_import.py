@@ -13,7 +13,6 @@ def convertMixedFraction(mixedFrac):
 		output += Fraction(i)
 	return output
 def createFood(food_item_info):
-	
 	#create tag
 
 	foodName = food_item_info[2].replace('&amp;','&')
@@ -28,9 +27,13 @@ def createFood(food_item_info):
 	tag = foodName + " " + foodDetail
 	tagList = tag.split()
 	tag = list(set(tagList)) 
-	blank = " "
-	tag = blank.join(tag)
+	finalTag = ""
+	for each in tag:
+		eachExtract = each.rstrip(',')
+		eachExtract = " "+eachExtract+" "
+		finalTag += eachExtract
 	
+	tag = finalTag
 	#size of this list is 25
 	food_item = Food(mainType = food_item_info[0]
 	,type = food_item_info[1]
@@ -259,7 +262,7 @@ def createDict():
 	
 
 def addAllFood(session,dict):
-	j_result = -22
+	j_result = -23
 	dict = createDict()
 	while (j_result <= 826) :
 		print j_result
