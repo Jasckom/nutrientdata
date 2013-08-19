@@ -254,7 +254,7 @@ class Food(db.Model):
 	unit = db.Column(db.String)
 	gram = db.Column(db.Float)
 	#for search and for linking to user
-	tag =  db.Column(db.String)
+	tag =  db.Column(db.String, index = True)
 	userId = db.Column(db.Integer, db.ForeignKey('user.id'))
 	
 	cal_kcal = db.Column(db.Float)
