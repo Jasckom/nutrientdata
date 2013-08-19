@@ -145,6 +145,9 @@ def getInfo():
 @app.route('/resultSearch', methods = ['GET', 'POST'])
 @app.route('/resultSearch/<int:page>', methods = ['GET', 'POST'])
 def resultSearch(page = 1):
+
+	print "resultNew0:", session["resultNew"],  id(session["resultNew"])
+	print "reulst0:", session["result"], id(session["result"])
 	if not g.user.is_authenticated():
 		flash('Please First Sign in as a Guest')
 		return redirect(url_for('login'))
@@ -163,6 +166,8 @@ def resultSearch(page = 1):
 		if "filter" in session.keys():
 			session.pop("filter")
 		return redirect(url_for('resultSearch'))
+	print "resultNew1:", session["resultNew"],  id(session["resultNew"])
+	print "reulst1:", session["result"], id(session["result"])
 	
 	foodIdsArg = session[g.user.get_id()]
 	foodNamesArg = session["foodItem"]
@@ -196,6 +201,8 @@ def resultSearch(page = 1):
 				session["foodItem"].pop(indexToDelete)
 		return redirect(url_for('resultSearch'))
 	
+	print "resultNew2:", session["resultNew"],  id(session["resultNew"])
+	print "reulst2:", session["result"], id(session["result"])
 	# Filter form
 	if "filter" in session.keys():
 		selectFilter = SelectFilter(session["filter"])
@@ -207,10 +214,13 @@ def resultSearch(page = 1):
 			session["filter"] = filterNut
 		
 	#Store search term
-	print "fromserchBox:", session["resultNew"]
-	print "current :", session["result"]
+	print "resultNew:", session["resultNew"]
+	print "reulst:", session["result"]
 	if session["result"] != session["resultNew"]:
-		session["result"] = session["resultNew"]
+		resultNew = ""
+		for each in session["resultNew"]:
+			resultNew += each
+		session["result"] = resultNew
 		print "Find new result", session["resultNew"]
 		searchEntry = session["resultNew"]
 		#operate on this new search term
@@ -248,7 +258,8 @@ def resultSearch(page = 1):
 		results = Food.query.filter(Food.id.in_(results))
 	else:
 		results = Food.query.filter(Food.id==0)
-	
+	print "resultNew3:", session["resultNew"],  id(session["resultNew"])
+	print "reulst3:", session["result"], id(session["result"])
 	box2Head = "Search Results - Foods"
 
 	if "filter" in session.keys():
