@@ -224,9 +224,9 @@ def resultSearch(page = 1):
 			results= []
 		else:
 			if searchEntry == "brandOnly":
-				results = searchFoodBrand(brandEntry, Food, "unordered")
+				results = searchFoodBrand(brandEntry, Food)
 			else:
-				results = searchFood(searchEntry, brandEntry, Food, "unordered")
+				results = searchFood(searchEntry, brandEntry, Food)
 			session["resultID"] = results
 	else:
 		print "Find old term", session["result"]

@@ -19,6 +19,7 @@
     		{%if g.user.role == 0 %}
     		| <a href="{{ url_for('logout') }}" >Log out</a>
 			{% elif g.user.role == 1 %}
+			| <a href="{{ url_for('logout') }}" >Leave</a>
 			| <a href="{{ url_for('signup') }}" >Sign up</a>
 			{%endif%}
 		{%endif%}
