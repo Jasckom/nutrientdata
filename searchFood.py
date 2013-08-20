@@ -3,7 +3,7 @@ def searchFood(searchTerm, brandTerm, Food):
 	searchTermList = searchTerm.split()
 	q = Food.query
 	for each in searchTermList:
-		q = q.filter(Food.tag.ilike(each+" %"))
+		q = q.filter(Food.tag.ilike(" "+each+" %"))
 	
 	brandTermList = brandTerm.split()
 	orTerm = "|"
