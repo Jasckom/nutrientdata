@@ -2,7 +2,7 @@ from sqlalchemy import desc, asc
 def searchFood(searchTerm, brandTerm, Food):
 	searchTermList = searchTerm.split()
 	q = Food.query
-	q = q.filter(Food.tag.ilike(" "+each+" %"))
+	q = q.filter(Food.tag.ilike(" "+searchTerm+"%"))
 	
 	brandTermList = brandTerm.split()
 	orTerm = "|"
