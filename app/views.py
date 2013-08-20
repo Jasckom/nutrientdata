@@ -51,6 +51,7 @@ foodTypes = [['apple pies', 'bagels', 'banana muffins', 'banana pumpkin breads',
 # 	
 # (mainCategories, foodTypes) = getCat()
 
+#Determine if the entry from search box is with brand or 
 def getSearchEntry(brandEntry,searchEntry):
 	##print "in search, brand is: ", brandEntry, searchEntry, 
 	if len(brandEntry) != 0:
@@ -1192,7 +1193,6 @@ def selectTypeILike(chosenType):
 	else:
 		session[("chosenType")] = chosenType
 	return redirect(url_for('resultSuggest'))
-
 
 
 @app.before_request

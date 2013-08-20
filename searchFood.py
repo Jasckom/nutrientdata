@@ -3,7 +3,12 @@ def searchFood(searchTerm, brandTerm, Food):
 	searchTermList = searchTerm.split()
 	q = Food.query
 	for each in searchTermList:
-		q = q.filter(Food.tag.ilike("% "+each+" %"))
+		q = q.filter(Food.tag.ilike(each))
+	
+	brandTermList = brandTerm.split()
+	orTerm = "|"
+	brandTerm = orTerm.join(brandTermList)
+	brandTerm.rstrip("|")
 	if brandTerm != "":
 		q = q.filter("Food.source @@ to_tsquery(:searchTerm)").params(searchTerm=brandTerm)
 
@@ -15,6 +20,7 @@ def searchFoodBrand(brandTerm, Food):
 	orTerm = "|"
 	brandTerm = orTerm.join(brandTermList)
 	brandTerm.rstrip("|")
+	print brandTerm
 	q = Food.query.filter("Food.source @@ to_tsquery(:searchTerm)").params(searchTerm=brandTerm)
 	foodIDs = [each.id for each in q]
 	return foodIDs
