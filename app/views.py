@@ -10,7 +10,7 @@ from filterFood import *
 from sqlalchemy import asc, desc
 from sqlalchemy.orm import aliased
 from searchFood import searchFood, searchFoodBrand
-from app.models import Food, Nutri,User
+from app.models import Food, Nutri,User,FoodKey
 from config import RESULTS_PER_PAGE
 SECRET_KEY = 'you-will-never-guess'
 from flask.ext.wtf import Form, TextField, SubmitField
@@ -237,7 +237,7 @@ def resultSearch(page = 1):
 			if searchEntry == "brandOnly":
 				results = searchFoodBrand(brandEntry, Food)
 			else:
-				results = searchFood(searchEntry, brandEntry, Food)
+				results = searchFood(searchEntry, brandEntry, Food,FoodKey)
 			session["resultID"] = results
 	else:
 		print "Find old term", session["result"]

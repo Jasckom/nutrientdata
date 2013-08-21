@@ -425,5 +425,14 @@ class Food(db.Model):
 
 	def __repr__(self):
 		return "<Food('%s','%s', '%s', '%s')>" % (self.food , self.detail , self.source, self.id )
+
+class FoodKey(db.Model):
+
+	id = db.Column(db.Integer, primary_key=True)
+	keyid= db.Column(db.Integer)
+	word = db.Column(db.String, index = True)
 	
+	def __repr__(self):
+		return "<FoodKey('%s','%s')>" % (self.keyid, self.word)
+
   
