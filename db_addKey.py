@@ -9,16 +9,8 @@ for cat in mainCategories:
 	foodInCat = Food.query.filter(Food.mainType == cat)
 	for eachFood in foodInCat:
 		tag = eachFood.tag
-		keywords = []
 		tagList = tag.split()
-		for each in tagList:
-			keywords.append(each.lower())
-		tagList = list(set(keywords))
-		print tagList
 		for eachTag in tagList:
-			eachTag = eachTag.rstrip()
-			eachTag = eachTag.lstrip()
-			eachTag = eachTag.lower()
 			eachKey = FoodKey(keyid = eachFood.id, word = eachTag)
  	 		db.session.add(eachKey)
  	 	db.session.commit()

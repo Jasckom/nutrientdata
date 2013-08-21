@@ -1,5 +1,5 @@
 #!flask/bin/python
-from app.models import Food
+from app.models import Food, FoodKey
 from app import db
 from unidecode import unidecode
 from fractions import Fraction
@@ -26,14 +26,13 @@ def createFood(food_item_info):
 	
 	tag = foodName + " " + foodDetail
 	tagList = tag.split()
-	tag = list(set(tagList)) 
-	finalTag = ""
-	for each in tag:
-		eachExtract = each.rstrip(',')
-		eachExtract = " "+eachExtract+" "
-		finalTag += eachExtract
+	for i in range(len(tagList)):	
+		tagList[i] = tagList[i].lower().rstrip(',')
+	tagList = list(set(tagList))
+	space = " "
+	tag = space.join(tagList)
+	tag = " "+tag+" "
 	
-	tag = finalTag
 	#size of this list is 25
 	food_item = Food(mainType = food_item_info[0]
 	,type = food_item_info[1]
@@ -329,10 +328,18 @@ def addAllFood(session,dict):
 				eachBasicInfo[41] = float(eachBasicInfo[23])*1000/100 #calcium
 			if eachBasicInfo[24] != 0:
 				eachBasicInfo[42] = float(eachBasicInfo[24])*18/100 # iron
-				
-			session.add(createFood(eachBasicInfo))
-		
-		session.commit()
+			
+			newFood = createFood(eachBasicInfo)
+			session.add(newFood)
+			session.commit()
+			
+			####
+			tag = newFood.tag
+			tagList = tag.split()
+			for eachTag in tagList:
+				eachKey = FoodKey(keyid = newFood.id, word = eachTag)
+				session.add(eachKey)
+			
 		print "Done committing at", j_result
 		result.close()
 		j_result += 1

@@ -16,6 +16,10 @@ def searchFood(searchTerm, brandTerm, Food,FoodKey):
 	if brandTerm != "":
 		q = q.filter("Food.source @@ to_tsquery(:searchTerm)").params(searchTerm=brandTerm)
 
+# 	q = Food.query
+# 	for each in searchTermList:
+# 		q = q.filter(Food.tag.ilike("% "+each+" %"))
+
 	foodIDs = [each.id for each in q]
 	return foodIDs
 	
