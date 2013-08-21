@@ -330,15 +330,15 @@ def addAllFood(session,dict):
 			
 			newFood = createFood(eachBasicInfo)
 			session.add(newFood)
-			session.commit()
+		session.commit()
 			
 			####
-			tag = newFood.tag
-			tagList = tag.split()
-			for eachTag in tagList:
-				eachKey = FoodKey(keyid = newFood.id, word = eachTag)
-				session.add(eachKey)
-			session.commit()
+# 			tag = newFood.tag
+# 			tagList = tag.split()
+# 			for eachTag in tagList:
+# 				eachKey = FoodKey(keyid = newFood.id, word = eachTag)
+# 				session.add(eachKey)
+# 			session.commit()
 			
 		print "Done committing at", j_result
 		result.close()
