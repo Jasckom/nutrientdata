@@ -6,8 +6,10 @@ def searchFood(searchTerm, brandTerm, Food,FoodKey):
 		keywords.append(each.lower())
 # 	q = Food.query
 # 	q = q.filter(Food.tag.ilike(" "+searchTerm+"%"))
+#	this subquery generate all keys -
+#	get all keys
 	a = FoodKey.query.filter(FoodKey.word.in_(keywords)).subquery()
-	q = Food.query.filter(Food.id==a.c.keyid).group_by(Food.id).having(func.count(a.c.keyid) >= len(keywords))
+	q = Food.query.filter(Food.id==a.c.keyid).group_by(Food.id).having(func.count(a.c.keyid) == len(keywords))
 
 	brandTermList = brandTerm.split()
 	orTerm = "|"

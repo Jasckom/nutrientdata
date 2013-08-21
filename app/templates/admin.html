@@ -13,7 +13,9 @@
     	<div>DietPlanner:
     	{% if g.user.is_authenticated()%}
     		{%if g.user.role == 0 %}
+    			{% if g.user.username%}
     		| <a href="{{ url_for('logout') }}" >Log out</a>
+    			{%endif%}
 			{%endif%}
 		{%endif%}
     	{%if userProfile%}

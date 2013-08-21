@@ -1,4 +1,4 @@
-def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsGivenmax, opt_maxormin, opt_nut):
+def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsGivenmax, opt_maxormin, opt_nut, suggestedFood):
 	
 	print "constraints:"
 	for each in constraints:
@@ -80,6 +80,8 @@ def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsG
 	listFood = [str(i) for i in range(len(listFoodObject))]
 	print "listFood: ", listFood
 	
+	listSuggested = [str(each) for each in suggestedFood]
+	
 	#Put the different food selected into respective nutrients dictionary
 	for each_constr in constraints:
 		for each_food in range(len(listFood)):
@@ -105,8 +107,8 @@ def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsG
 		nutriObjective = objectiveNu[j]
 		prob += lpSum([(large_dict[nutriObjective])[i]*food_vars[i] for i in listFood])
 	
- 	for i in listFood:
- 		prob += (food_vars[i]) <= 8
+ 	for i in listSuggested:
+ 		prob += (food_vars[i]) <= 1
 
 	# Adding constraints to the problem
 	for j in range(len(constraints)):

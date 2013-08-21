@@ -7,7 +7,7 @@ from forms import SearchForm, SelectFood, LoginForm, SignupForm, createMinMaxFor
 from datetime import datetime
 from linearOptimize import linearOptimize
 from filterFood import *
-from sqlalchemy import asc, desc
+from sqlalchemy import asc, desc, func
 from sqlalchemy.orm import aliased
 from searchFood import searchFood, searchFoodBrand
 from app.models import Food, Nutri,User,FoodKey
@@ -275,11 +275,10 @@ def resultSearch(page = 1):
 				results = results.order_by(desc(instrumentAttribute[filterNut]))
 				box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
 		else:
-			results = results.order_by(asc(Food.food))
+			results = results.order_by(asc(func.char_length(Food.tag)))
 
 	else:
-		results = results.order_by(asc(Food.food))
-
+		results = results.order_by(asc(func.char_length(Food.tag)))
 	
 	resultSearch = results.paginate(page, 20, False)
 	
@@ -468,6 +467,7 @@ def selectFoodFromSearch(foodIDFromSearch):
 def selectFoodFromSuggest(foodIDFromSuggest):
 
 	if foodIDFromSuggest == "updateAfterRemove":
+		
 		(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(g.user.nutri[0],1)
 		constraints = []
 		for i in range(len(check)):
@@ -502,7 +502,9 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 			return redirect(url_for('resultSuggest'))
 	
 	if not foodIDFromSuggest in session[g.user.get_id()]:
-		#print "i'm heree3" , foodIDFromSuggest	
+		#print "i'm heree3" , foodIDFromSuggest
+		session["suggested"].insert(0,foodIDFromSuggest)
+		print session["suggested"]
 		session[g.user.get_id()].insert(0,foodIDFromSuggest)
 		food = Food.query.filter(Food.id==foodIDFromSuggest).first()
 		session[("foodItem")].insert(0,food.food+ " "+ food.detail+ " (" +  food.source+")")
@@ -895,7 +897,17 @@ def optimize():
 				newConstrainsts.append(each)
 		constraints = newConstrainsts
 	
-	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, )
+	suggestedFood = []
+	print "session", session.keys()
+	if "suggested" in session.keys():
+		print "There's sugest"
+		for each in session["suggested"]:
+			if each in session["optimize"]:
+				suggestedFood.append(session["optimize"].index(each))
+	print "suggestFood", suggestedFood
+		
+	
+	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, suggestedFood )
 	(outputFood , outputFoodAmount , status ,objective, nullNut) = result
 	
 	#get upperbound of constraints
@@ -915,14 +927,14 @@ def optimize():
 					if each > pace:
 						stat == "Undefined"
 				openUpperBound = [pace for i in range(len(defaultGenupperBound))]
-				(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut)
+				(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
 				reportTotal(constraints, outputFoodAmount, listFoodObject)
 			#print "Open Bounded Solution"
 			(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
 		else:
 			#print "Open Bounded Solution"
 			openUpperBound = [5000 for i in range(len(defaultGenupperBound))]
-			(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut)
+			(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
 			#reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
 	global full_ext_nutrient
@@ -1035,6 +1047,8 @@ def resultSuggest(page = 1):
 				flash('Please select the foods you like')
 		elif foodsILike.remove.data == 1:
 			for i in checkedFood:
+				if i in session["suggested"]:
+					session["suggested"].remove(i)
 				indexToDelete = session[g.user.get_id()].index(i)
 				session[g.user.get_id()].pop(indexToDelete)
 				session["foodItem"].pop(indexToDelete)
@@ -1214,6 +1228,7 @@ def before_request():
     	session["result"] = ""
     	session["resultNew"] = ""
     	session["resultID"] = []
+    	session["suggested"] = []
  
 @lm.user_loader
 def load_user(id):

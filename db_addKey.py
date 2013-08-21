@@ -3,7 +3,7 @@
 from app.models import Food, FoodKey
 from app import db
 
-j_result = -23
+j_result = -13
 while (j_result <= 826) :
 	print j_result
 	result = open('result'+str(j_result),'r')
@@ -25,8 +25,6 @@ while (j_result <= 826) :
 		for eachTag in tagList:
 			eachKey = FoodKey(keyid = eachFood.id, word = eachTag)
  	 		db.session.add(eachKey)
- 	 	db.session.commit()
- 	 	print eachKey
  	db.session.commit()
  	
 	print "Done committing at", j_result
