@@ -14,6 +14,7 @@ for cat in mainCategories:
 		for each in tagList:
 			keywords.append(each.lower())
 		tagList = list(set(keywords))
+		print tagList
 		for eachTag in tagList:
 			eachTag = eachTag.rstrip()
 			eachTag = eachTag.lstrip()
