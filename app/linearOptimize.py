@@ -120,12 +120,9 @@ def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsG
 		print "upperbound:", constraintsGivenmax[nutriConst-25],
 		print "lowerbound:", constraintsGivenmin[nutriConst-25]
 	
-		
 		prob += lpSum([large_dict[nutriConst][i]*food_vars[i] for i in listFood]) <= float(constraintsGivenmax[nutriConst-25])
 		prob += lpSum([large_dict[nutriConst][i]*food_vars[i] for i in listFood]) >= float(constraintsGivenmin[nutriConst-25])
-		
-	
-	
+			
 		#if limit > 0: #Should consume less than
 		#	prob += lpSum([large_dict[nutriConst][i]*food_vars[i] for i in listFood]) <= limit
 		#else: # Should consume more than

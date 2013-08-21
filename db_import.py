@@ -339,6 +339,7 @@ def addAllFood(session,dict):
 			for eachTag in tagList:
 				eachKey = FoodKey(keyid = newFood.id, word = eachTag)
 				session.add(eachKey)
+			session.commit()
 			
 		print "Done committing at", j_result
 		result.close()
