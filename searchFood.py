@@ -2,9 +2,9 @@ from sqlalchemy import desc, asc, func
 def searchFood(searchTerm, brandTerm, Food,FoodKey):
 	searchTermList = searchTerm.split()
 	keywords = []
+	q = Food.query
 	for each in searchTermList:
 		keywords.append(each.lower())
-		q = Food.query
 		q = q.filter(Food.tag.ilike("% "+each+" %"))
 #	this subquery generate all keys -
 #	get all keys
