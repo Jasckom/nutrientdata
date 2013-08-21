@@ -487,7 +487,6 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 						newConstrainsts.append(each)
 				constraints = newConstrainsts
 			
-		
 		(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, foodItems, g.user.nutri[0])
 						
 		if nutRatioMin:
@@ -848,6 +847,11 @@ def manage():
 @login_required
 @app.route('/optimize', methods = ['GET', 'POST'])
 def optimize():
+	
+	#Verify all the states of user before optimizing
+	#1. User has be to signed in
+	#2. The objective is chosen - (nutrient plan is set default at basic)
+	#3. User has clicked checkout in one of the result
 	if not g.user.is_authenticated():
 		flash('Please First Sign in as a Guest or Sign up')
 		return redirect(url_for('login'))
@@ -864,18 +868,22 @@ def optimize():
 			flash('You have not selected any foods')
 			return redirect(url_for('resultSearch'))
 			
-	# Get save food that user select into Database
+	# Save food that user select into Database
 	userFood = [Food.query.filter(Food.id==int(each)).first() for each in session[g.user.get_id()]]
 	if userFood:
 		g.user.food = userFood
 		db.session.commit()
 
-	listFoodObject = [Food.query.filter(Food.id == i).first() for i in session["optimize"] ]	
+	# Get food items from the ids to pass to LP function
+	listFoodObject = [Food.query.filter(Food.id == i).first() for i in session["optimize"] ]
+	# Get contraints to pass to LP function	
 	(check, nutriField, defaultGenlowerBound, defaultGenupperBound) = getKeysBounds(g.user.nutri[0],1)
+	# Modify the constraints - if it is basic plan removed all that have been checked
 	constraints = []
 	for i in range(len(check)):
 		if check[i]:
 			constraints.append(i+25)
+	# Get max/min and which objective
 	opt_maxormin = session["opt_maxormin"]
 	opt_nut = session["opt_nut"]
 	
@@ -917,7 +925,6 @@ def optimize():
 			(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut)
 			#reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
-
 	global full_ext_nutrient
 	#Find items that have too much
 	#Get total of the food to be compared with upperbound

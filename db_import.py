@@ -261,7 +261,7 @@ def createDict():
 	
 
 def addAllFood(session,dict):
-	j_result = -23
+	j_result = 167
 	dict = createDict()
 	while (j_result <= 826) :
 		print j_result
