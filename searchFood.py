@@ -12,9 +12,6 @@ def searchFood(searchTerm, brandTerm, Food,FoodKey):
 	
 	q = Food.query.filter(Food.id==a.c.keyid).group_by(Food.id).having(func.count(distinct(a.c.word)) == len(keywords))	
 	
-	if len(keywords) == 1:
-		q = q.order_by(asc(func.char_length(Food.tag))).limit(40)
-
 	brandTermList = brandTerm.split()
 	orTerm = "|"
 	brandTerm = orTerm.join(brandTermList)
@@ -22,9 +19,8 @@ def searchFood(searchTerm, brandTerm, Food,FoodKey):
 	if brandTerm != "":
 		q = q.filter("Food.source @@ to_tsquery(:searchTerm)").params(searchTerm=brandTerm)
 
-# 	q = Food.query
-# 	for each in searchTermList:
-# 		q = q.filter(Food.tag.ilike("% "+each+" %"))
+	if len(keywords) == 1:
+		q = q.order_by(asc(func.char_length(Food.tag))).limit(40)
 
 	foodIDs = [each.id for each in q]
 	return foodIDs
