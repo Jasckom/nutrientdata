@@ -650,7 +650,7 @@ def reportTotal(constraints, outputFoodAmount, foodItems):
 			totalEachNut.append(outputFoodAmount[j]*eachFoodNut)
 		TotalNut.append(sum(totalEachNut))			
 # 	for i in range(len(TotalNut)):
-		#print full_ext_nutrient[constraints[i]-25], TotalNut[i]
+# 		#print full_ext_nutrient[constraints[i]-25], TotalNut[i]
 	return TotalNut
 
 # XXreturn dictionary of each lacking nutrient and how much
@@ -910,8 +910,10 @@ def optimize():
 	
 	#get upperbound of constraints
 	upperBoundConst = []
+	lowerBoundConst = []
 	for each in constraints:
 		upperBoundConst.append(defaultGenupperBound[each-25])
+		lowerBoundConst.append(defaultGenlowerBound[each-25])
 	
 	if status == "Undefined":
 		#print "LEAVE BOUND OPEN \n\n\n"
@@ -940,6 +942,8 @@ def optimize():
 	#Get total of the food to be compared with upperbound
 	totalNut = reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
+	eachTotalStatement = []
+	
 	nutExceed = []
 	nutExceedVal = []
 	nutExceedStatement = []
@@ -952,7 +956,12 @@ def optimize():
 			upper = (upperBoundConst[i].split('.'))[0]
 		
 			nutExceedStatement.append("Too Much "+full_ext_nutrient[constraints[i]-25] +" " +str(int(round(totalNut[i])))+"/"+ upper + " "+full_ext_nutrient_unit[constraints[i]-25])
-	
+		lower = lowerBoundConst[i]
+		upper = upperBoundConst[i]
+		eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+"|"+str(lower)+":"+str(upper)+ " "+ str(int(round(totalNut[i]))))
+# 	for each in eachTotalStatement:
+# 		print each
+
 	# nested list - inside is a tuple with percent value and the food by decreasing order
 	nutExceedWhichFood = []
 	for i in range(len(nutExceed)):
@@ -1008,7 +1017,8 @@ def optimize():
 		check = check,
 		nutExceedStatement = nutExceedStatement,
 		nutExceedWhichFood =nutExceedWhichFood,
-		userProfile = session['userProfile'])
+		userProfile = session['userProfile'],
+		eachTotalStatement = eachTotalStatement)
 				
 @app.route('/resultSuggest', methods=['GET', 'POST'])
 @app.route('/resultSuggest/<int:page>', methods = ['GET', 'POST'])
