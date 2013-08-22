@@ -9,7 +9,8 @@ def searchFood(searchTerm, brandTerm, Food,FoodKey):
 #	this subquery generate all keys -
 #	get all keys
 	a = FoodKey.query.filter(FoodKey.word.in_(keywords)).subquery()
-	q = Food.query.filter(Food.id==a.c.keyid).group_by(Food.id).having(func.count(distinct(a.c.word)) == len(keywords))	print "use extra table"
+	q = Food.query.filter(Food.id==a.c.keyid).group_by(Food.id).having(func.count(distinct(a.c.word)) == len(keywords))	
+	print "use extra table"
 	brandTermList = brandTerm.split()
 	orTerm = "|"
 	brandTerm = orTerm.join(brandTermList)
