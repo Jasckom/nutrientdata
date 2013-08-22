@@ -135,6 +135,9 @@
     {%endif%}
     {%if eachTotalStatement%}
     <div id = resultLP>
+    {%for each in eachTotalStatement%}
+    {{each}}
+    {%endfor%}
     </div>
     {%endif%}
 {% endblock %}
