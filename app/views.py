@@ -147,8 +147,6 @@ def getInfo():
 @app.route('/resultSearch/<int:page>', methods = ['GET', 'POST'])
 def resultSearch(page = 1):
 
-	print "resultNew0:", session["resultNew"],  id(session["resultNew"])
-	print "reulst0:", session["result"], id(session["result"])
 	if not g.user.is_authenticated():
 		flash('Please First Sign in as a Guest')
 		return redirect(url_for('login'))
@@ -1372,6 +1370,7 @@ def login():
 					#print "Cal ",cal
 					
 		if valid == 0:
+			flash ("Please fill in all the information")
 			return redirect(url_for('login'))
 		else:
 			# Save profile of the user
