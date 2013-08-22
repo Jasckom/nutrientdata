@@ -989,7 +989,7 @@ def optimize():
 			percent = 100*(nutRatioMin[i]-sumNutUnmet[i])/(nutRatioMin[i])
 			if percent == 0:
 				continue
-			lackNut.append("Lacking "+ full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0]) 
+			lackNut.append("Low "+ full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0]) 
 # 				lackNut.append("Lacking about " +"%0.2f" %percent+ "% of Required " + full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0]) 
 	
 	nullNut = lackNut+zeroNut
