@@ -65,36 +65,36 @@ def getSearchEntry(brandEntry,searchEntry):
 	return searchEntry
 
 
-@login_required
-@app.route('/index', methods = ['GET', 'POST'])
-def index():
-	##print session
-	#If first page they decided to search - give anonymous user
-	first = True
-	form = SearchForm()
-	if form.validate_on_submit():
-		if not g.user.is_authenticated():
-			guestID = (datetime.utcnow()-datetime(1970,1,1)).total_seconds()
-			guestID = (str(guestID)).split('.')
-			guestID = int((guestID[0]+guestID[1]))
-			guestUser = User(username = str(guestID), role = 2)
-			db.session.add(guestUser)
-			db.session.commit()
-			login_user(guestUser)
-			##print guestUser
-		searchEntry = form.searchEntry.data
-		brandEntry = form.brandEntry.data
-		#print "in search, brand is: ", brandEntry
-		if not brandEntry is None:
-			searchEntry += ":"+brandEntry
-		session["result"] = searchEntry
-		#print session
-		#print "sending to result"
-		return redirect(url_for('resultSearch'))
-	return render_template('search.html',
-		title = 'Search your food',
-		form = form,
-		first = first)
+# @login_required
+# @app.route('/index', methods = ['GET', 'POST'])
+# def index():
+# 	##print session
+# 	#If first page they decided to search - give anonymous user
+# 	first = True
+# 	form = SearchForm()
+# 	if form.validate_on_submit():
+# 		if not g.user.is_authenticated():
+# 			guestID = (datetime.utcnow()-datetime(1970,1,1)).total_seconds()
+# 			guestID = (str(guestID)).split('.')
+# 			guestID = int((guestID[0]+guestID[1]))
+# 			guestUser = User(username = str(guestID), role = 2)
+# 			db.session.add(guestUser)
+# 			db.session.commit()
+# 			login_user(guestUser)
+# 			##print guestUser
+# 		searchEntry = form.searchEntry.data
+# 		brandEntry = form.brandEntry.data
+# 		#print "in search, brand is: ", brandEntry
+# 		if not brandEntry is None:
+# 			searchEntry += ":"+brandEntry
+# 		session["result"] = searchEntry
+# 		#print session
+# 		#print "sending to result"
+# 		return redirect(url_for('resultSearch'))
+# 	return render_template('search.html',
+# 		title = 'Search your food',
+# 		form = form,
+# 		first = first)
     
 def getMatchingCat(searchEntry,foodTypes):
 	matchingCat = []
@@ -1339,6 +1339,14 @@ def profile():
 	return render_template("profile.html", username = username, editProfile = editProfile)
 
 @app.route('/', methods = ['GET', 'POST'])
+def index():	
+	keys = session.keys()
+	for each in keys:
+		session.pop(each, None)
+	logout_user()
+	return redirect(url_for('login'))
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 	# check if user is logged in
