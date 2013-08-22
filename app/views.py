@@ -915,7 +915,7 @@ def optimize():
 		upperBoundConst.append(defaultGenupperBound[each-25])
 		lowerBoundConst.append(defaultGenlowerBound[each-25])
 	
-	if status == "Undefined" or status == "Infeasible":
+	if status == "Undefined":
 		#print "LEAVE BOUND OPEN \n\n\n"
 		if opt_maxormin:
 			stat = "Optimal"
