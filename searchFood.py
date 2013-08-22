@@ -2,14 +2,15 @@ from sqlalchemy import desc, asc, func
 def searchFood(searchTerm, brandTerm, Food,FoodKey):
 	searchTermList = searchTerm.split()
 	keywords = []
-	q = Food.query
+# 	q = Food.query
 	for each in searchTermList:
 		keywords.append(each.lower())
-		q = q.filter(Food.tag.ilike("% "+each+" %"))
+# 		q = q.filter(Food.tag.ilike("% "+each+" %"))
 #	this subquery generate all keys -
 #	get all keys
-# 	a = FoodKey.query.filter(FoodKey.word.in_(keywords)).subquery()
-# 	q = Food.query.filter(Food.id==a.c.keyid).group_by(Food.id).having(func.count(a.c.keyid) >= len(keywords))
+	a = FoodKey.query.filter(FoodKey.word.in_(keywords)).subquery()
+	q = Food.query.filter(Food.id==a.c.keyid).group_by(Food.id).having(func.count(a.c.keyid) >= len(keywords))
+	print "use extra table"
 
 	brandTermList = brandTerm.split()
 	orTerm = "|"
