@@ -978,12 +978,12 @@ def optimize():
 	nutExceedStatement = []
 	global full_ext_nutrient_unit
 	for i in range(len(totalNut)):
-		if (totalNut[i]- upperBoundConst[i]) > 0:
+		if (totalNut[i]- upperBoundConst[i]) > 0.1:
 			nutExceed.append(constraints[i])
 			nutExceedVal.append(totalNut[i])
 			upper = str(int(upperBoundConst[i]))
 			nutExceedStatement.append("Too Much "+full_ext_nutrient[constraints[i]-25] +" " +str(int(round(totalNut[i])))+"/"+ upper + " "+full_ext_nutrient_unit[constraints[i]-25])
-		elif (lowerBoundConst[i]-totalNut[i]) > 0:
+		elif (lowerBoundConst[i]-totalNut[i]) > 0.1:
 			nutLack.append(constraints[i])
 			nutLackVal.append(totalNut[i])
 			lower = str(int(lowerBoundConst[i]))
