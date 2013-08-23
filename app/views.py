@@ -917,6 +917,7 @@ def optimize():
 	
 	originObj = opt_maxormin
 	if status == "Infeasible":
+		print "minimizing - changed to max"
 		if opt_maxormin == 0:
 			#When infeasible solution - make objective maximize will make it better
 			opt_maxormin = 1
