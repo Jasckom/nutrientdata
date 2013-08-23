@@ -633,7 +633,17 @@ def reportRatio2(constraints, foodItems, nutri):
 			failedBestFood.append(nutRatio)
 			#print eachCon, nutRatio, "<=", minRatio
 	
-	return givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
+	nutRatioMinNew = []
+	nutRatioUnmetNew = []
+	print "nutLack", session["nutLack"]
+	print "nutUnmet", nutRatioUnmet
+	for each in session["nutLack"]:
+		if each in nutRatioUnmet:
+			indexNut = nutRatioUnmet.index(each)
+			nutRatioMinNew.append(nutRatioMin[indexNut])
+			nutRatioUnmetNew.append(nutRatioUnmet[indexNut])
+	
+	return givenCal, failedBestFood, nutRatioMinNew, nutRatioUnmetNew
 
 
 # XX return dictionary of each lacking nutrient and how much
@@ -929,6 +939,7 @@ def optimize():
 			opt_maxormin = 1
 			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, suggestedFood )
 			(outputFood , outputFoodAmount , status ,objective, nullNut) = result
+	
 # 	if status == "Undefined" or  status =="Infeasible":
 # 		#print "LEAVE BOUND OPEN \n\n\n"
 # 		if opt_maxormin:
@@ -990,8 +1001,11 @@ def optimize():
 		exceedPercent = showExceed(nutExceed[i], nutExceedVal[i], outputFoodAmount, listFoodObject)
 		nutExceedWhichFood.append(exceedPercent)
 	
+	session["nutLack"] = nutLack
+	session["nutLackVal"] = nutLackVal
 	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])
 #		givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
+	
 
 	session["sumCal"] = sumCal
 	session["sumNutUnmet"] = sumNutUnmet
