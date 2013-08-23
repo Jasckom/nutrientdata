@@ -922,7 +922,7 @@ def optimize():
 			#When infeasible solution - make objective maximize will make it better
 			opt_maxormin = 1
 			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, suggestedFood )
-		
+			(outputFood , outputFoodAmount , status ,objective, nullNut) = result
 # 	if status == "Undefined":
 # 		#print "LEAVE BOUND OPEN \n\n\n"
 # 		if opt_maxormin:
@@ -1023,6 +1023,7 @@ def optimize():
 			noFood.append(outputFood[i])
 	outputFood = yesFood+noFood
 	outputFoodAmount = yesFoodAmount+noFoodAmount
+	print nutLackStatement
 	
 	return render_template("optimize.html",
 		outputFood = outputFood,
