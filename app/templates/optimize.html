@@ -99,7 +99,7 @@
     
     </div>
 
-	{% if nutExceedStatement or nullNut%}
+	{% if nutExceedStatement or nutLackStatement%}
 	    <div id = resultLP>
 		 <div class = subHeading><strong>Remarks</strong></div><br>
 		 <p></p>
@@ -117,29 +117,20 @@
     {%endif%}
     <br>
 
+    
     {% if nutLackStatement%}
+        <a href="{{ url_for('resultSuggest') }}" style="text-decoration: none" >Compliment with these Nutrients:</a><br>
     	{%for eachLack in nutLackStatement%}
 			{{eachLack}}<br>
     	{%endfor%}
     {%endif%}
     <br>
     
-    
-    {%if nullNut%}
-    	<a href="{{ url_for('resultSuggest') }}" style="text-decoration: none" >Compliment with these Nutrients:</a><br>
-    	{%for eachNullNut in nullNut%}
-    	{{eachNullNut}}<br>
-    	{%endfor%}
-    	<br>
-    	or <a href="{{ url_for('manage') }}" style="text-decoration: none" >Adjust the Constraints</a>
-    {%endif%}
+    or <a href="{{ url_for('manage') }}" style="text-decoration: none" >Adjust the Constraints</a>
     
 		</div>	
 	{%endif %}
     	
-    
-    
-    
     {%endif%}
     {%if eachTotalStatement%}
     <div id = resultLP>
