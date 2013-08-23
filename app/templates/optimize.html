@@ -116,6 +116,14 @@
     	{%endfor%}
     {%endif%}
     <br>
+
+    {% if nutLackStatement%}
+    	{%for eachLack in nutLackStatement%}
+			{{eachLack}}
+    	{%endfor%}
+    {%endif%}
+    <br>
+    
     
     {%if nullNut%}
     	<a href="{{ url_for('resultSuggest') }}" style="text-decoration: none" >Compliment with these Nutrients:</a><br>
