@@ -921,35 +921,35 @@ def optimize():
 		else:
 			lowerBoundConst.append(float(defaultGenlowerBound[each-25]))
 
-	originObj = opt_maxormin
-	if status == "Infeasible":
-		print "minimizing - changed to max"
-		if opt_maxormin == 0:
-			#When infeasible solution - make objective maximize will make it better
-			opt_maxormin = 1
-			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, suggestedFood )
-			(outputFood , outputFoodAmount , status ,objective, nullNut) = result
-# 	if status == "Undefined":
-# 		#print "LEAVE BOUND OPEN \n\n\n"
-# 		if opt_maxormin:
-# 			stat = "Optimal"
-# 			pace = 5000
-# 			while stat == "Optimal":
-# 				(outputFoodPre, outputFoodAmountPre, statPre, objective, nullNut) = (outputFood, outputFoodAmount, stat, objective, nullNut)
-# 				pace -= 100
-# 				for each in upperBoundConst:
-# 					if each > pace:
-# 						stat == "Undefined"
-# 				openUpperBound = [pace for i in range(len(defaultGenupperBound))]
-# 				(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
-# 				reportTotal(constraints, outputFoodAmount, listFoodObject)
-# 			#print "Open Bounded Solution"
-# 			(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
-# 		else:
-# 			#print "Open Bounded Solution"
-# 			openUpperBound = [5000 for i in range(len(defaultGenupperBound))]
-# 			(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
-# 			#reportTotal(constraints, outputFoodAmount, listFoodObject)
+# 	originObj = opt_maxormin
+# 	if status == "Infeasible":
+# 		print "minimizing - changed to max"
+# 		if opt_maxormin == 0:
+# 			#When infeasible solution - make objective maximize will make it better
+# 			opt_maxormin = 1
+# 			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, suggestedFood )
+# 			(outputFood , outputFoodAmount , status ,objective, nullNut) = result
+	if status == "Undefined" or  status =="Infeasible":
+		#print "LEAVE BOUND OPEN \n\n\n"
+		if opt_maxormin:
+			stat = "Optimal"
+			pace = 5000
+			while stat == "Optimal":
+				(outputFoodPre, outputFoodAmountPre, statPre, objective, nullNut) = (outputFood, outputFoodAmount, stat, objective, nullNut)
+				pace -= 100
+				for each in upperBoundConst:
+					if each > pace:
+						stat == "Infeasible"
+				openUpperBound = [pace for i in range(len(defaultGenupperBound))]
+				(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
+				reportTotal(constraints, outputFoodAmount, listFoodObject)
+			#print "Open Bounded Solution"
+			(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
+		else:
+			#print "Open Bounded Solution"
+			openUpperBound = [5000 for i in range(len(defaultGenupperBound))]
+			(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
+			#reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
 	global full_ext_nutrient
 	#Find items that have too much
