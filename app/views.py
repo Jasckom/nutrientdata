@@ -912,9 +912,15 @@ def optimize():
 	upperBoundConst = []
 	lowerBoundConst = []
 	for each in constraints:
-		upperBoundConst.append(defaultGenupperBound[each-25])
-		lowerBoundConst.append(defaultGenlowerBound[each-25])
-	
+		if defaultGenupperBound[each-25] == "ND":
+			upperBoundConst.append(10000)
+		else:
+			upperBoundConst.append(float(defaultGenupperBound[each-25]))
+		if defaultGenlowerBound[each-25] == "ND":
+			lowerBoundConst.append(0)
+		else:
+			lowerBoundConst.append(float(defaultGenlowerBound[each-25]))
+
 	originObj = opt_maxormin
 	if status == "Infeasible":
 		print "minimizing - changed to max"
@@ -961,16 +967,16 @@ def optimize():
 	nutExceedStatement = []
 	global full_ext_nutrient_unit
 	for i in range(len(totalNut)):
-		if (totalNut[i]- float(upperBoundConst[i])) >= 1:
+		if (totalNut[i]- upperBoundConst[i]) >= 1:
 			nutExceed.append(constraints[i])
 			nutExceedVal.append(totalNut[i])
-			upper = (str(upperBoundConst[i]).split('.'))[0]
+			upper = str(int(upperBoundConst[i]))
 			nutExceedStatement.append("Too Much "+full_ext_nutrient[constraints[i]-25] +" " +str(int(round(totalNut[i])))+"/"+ upper + " "+full_ext_nutrient_unit[constraints[i]-25])
-		elif (float(lowerBoundConst[i])-totalNut[i]) >= 1:
+		elif (lowerBoundConst[i]-totalNut[i]) >= 1:
 			nutLack.append(constraints[i])
 			nutLackVal.append(totalNut[i])
-			lower = (str(lowerBoundConst[i]).split('.'))[0]
-			nutLackStatement.append("Low on "+full_ext_nutrient[constraints[i]-25] +" " +str(int(round(totalNut[i])))+"/"+ upper + " "+full_ext_nutrient_unit[constraints[i]-25])
+			lower = str(int(lowerBoundConst[i]))
+			nutLackStatement.append("Low on "+full_ext_nutrient[constraints[i]-25] +" " +str(int(round(totalNut[i])))+"/"+ lower + " "+full_ext_nutrient_unit[constraints[i]-25])
 			
 		lower = lowerBoundConst[i]
 		upper = upperBoundConst[i]
