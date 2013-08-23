@@ -991,7 +991,7 @@ def optimize():
 			
 		lower = lowerBoundConst[i]
 		upper = upperBoundConst[i]
-		eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(int(round(totalNut[i]))))
+		eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(int(round(totalNut[i]))) + " "+full_ext_nutrient_unit[constraints[i]-25])
 # 	for each in eachTotalStatement:
 # 		print each
 
