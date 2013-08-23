@@ -89,14 +89,14 @@
     <div id = resultLP>
     <div class = subHeading><strong>My Diet Plan</strong></div><br>
 
-	{% if status != "Undefined"%}
+	{% if status == "Infeasible"%}
+		<p>Cannot Satisfy all the Nutritional Constraints.</p>
+	{%endif%}
+
     	{% for i in range(outputFood|length)%}
     		<p>{{ outputFoodAmount[i]}} {{outputFood[i]}} </p>
     	{% endfor %}
     
-    {%else%}
-    	<p>Cannot Satisfy the Nutritional Constraints.</p>
-    {%endif%}
     </div>
 
 	{% if nutExceedStatement or nullNut%}
