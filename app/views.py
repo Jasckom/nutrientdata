@@ -915,27 +915,34 @@ def optimize():
 		upperBoundConst.append(defaultGenupperBound[each-25])
 		lowerBoundConst.append(defaultGenlowerBound[each-25])
 	
-	if status == "Undefined":
-		#print "LEAVE BOUND OPEN \n\n\n"
-		if opt_maxormin:
-			stat = "Optimal"
-			pace = 5000
-			while stat == "Optimal":
-				(outputFoodPre, outputFoodAmountPre, statPre, objective, nullNut) = (outputFood, outputFoodAmount, stat, objective, nullNut)
-				pace -= 100
-				for each in upperBoundConst:
-					if each > pace:
-						stat == "Undefined"
-				openUpperBound = [pace for i in range(len(defaultGenupperBound))]
-				(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
-				reportTotal(constraints, outputFoodAmount, listFoodObject)
-			#print "Open Bounded Solution"
-			(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
-		else:
-			#print "Open Bounded Solution"
-			openUpperBound = [5000 for i in range(len(defaultGenupperBound))]
-			(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
-			#reportTotal(constraints, outputFoodAmount, listFoodObject)
+	originObj = opt_maxormin
+	if status == "Infeasible":
+		if opt_maxormin == 0:
+			#When infeasible solution - make objective maximize will make it better
+			opt_maxormin = 1
+			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, suggestedFood )
+		
+# 	if status == "Undefined":
+# 		#print "LEAVE BOUND OPEN \n\n\n"
+# 		if opt_maxormin:
+# 			stat = "Optimal"
+# 			pace = 5000
+# 			while stat == "Optimal":
+# 				(outputFoodPre, outputFoodAmountPre, statPre, objective, nullNut) = (outputFood, outputFoodAmount, stat, objective, nullNut)
+# 				pace -= 100
+# 				for each in upperBoundConst:
+# 					if each > pace:
+# 						stat == "Undefined"
+# 				openUpperBound = [pace for i in range(len(defaultGenupperBound))]
+# 				(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
+# 				reportTotal(constraints, outputFoodAmount, listFoodObject)
+# 			#print "Open Bounded Solution"
+# 			(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
+# 		else:
+# 			#print "Open Bounded Solution"
+# 			openUpperBound = [5000 for i in range(len(defaultGenupperBound))]
+# 			(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
+# 			#reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
 	global full_ext_nutrient
 	#Find items that have too much
@@ -943,6 +950,10 @@ def optimize():
 	totalNut = reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
 	eachTotalStatement = []
+		
+	nutLack = []
+	nutLackVal = []
+	nutLackStatement = []
 	
 	nutExceed = []
 	nutExceedVal = []
@@ -950,12 +961,16 @@ def optimize():
 	global full_ext_nutrient_unit
 	for i in range(len(totalNut)):
 		if (totalNut[i]- float(upperBoundConst[i])) >= 1:
-			#print full_ext_nutrient[constraints[i]-25], "Upper Bound: ", upperBoundConst[i], "Total recommended", totalNut[i]
 			nutExceed.append(constraints[i])
 			nutExceedVal.append(totalNut[i])
 			upper = (upperBoundConst[i].split('.'))[0]
-		
 			nutExceedStatement.append("Too Much "+full_ext_nutrient[constraints[i]-25] +" " +str(int(round(totalNut[i])))+"/"+ upper + " "+full_ext_nutrient_unit[constraints[i]-25])
+		elif (float(lowerBoundConst[i])-totalNut[i]) >= 1:
+			nutLack.append(constraints[i])
+			nutLackVal.append(totalNut[i])
+			lower = (upperBoundConst[i].split('.'))[0]
+			nutLackStatement.append("Low on "+full_ext_nutrient[constraints[i]-25] +" " +str(int(round(totalNut[i])))+"/"+ upper + " "+full_ext_nutrient_unit[constraints[i]-25])
+			
 		lower = lowerBoundConst[i]
 		upper = upperBoundConst[i]
 		eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+"|"+str(lower)+":"+str(upper)+ " "+ str(int(round(totalNut[i]))))
@@ -1018,7 +1033,8 @@ def optimize():
 		nutExceedStatement = nutExceedStatement,
 		nutExceedWhichFood =nutExceedWhichFood,
 		userProfile = session['userProfile'],
-		eachTotalStatement = eachTotalStatement)
+		eachTotalStatement = eachTotalStatement,
+		nutLackStatement = nutLackStatement)
 				
 @app.route('/resultSuggest', methods=['GET', 'POST'])
 @app.route('/resultSuggest/<int:page>', methods = ['GET', 'POST'])
