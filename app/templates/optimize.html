@@ -126,6 +126,12 @@
     {%endif%}
     <br>
     
+    {% if nutExceedStatement%}
+    	{% if nutLackStatement|length == 0%}
+    		<a href="{{ url_for('resultSearch') }}" style="text-decoration: none" >Please Add More Foods</a>
+    	{%endif%}
+    {%endif%}
+    
     or <a href="{{ url_for('manage') }}" style="text-decoration: none" >Adjust the Constraints</a>
     
 		</div>	
