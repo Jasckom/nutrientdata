@@ -633,8 +633,10 @@ def reportRatio2(constraints, foodItems, nutri):
 			failedBestFood.append(nutRatio)
 			#print eachCon, nutRatio, "<=", minRatio
 	
-	if not session["nutLack"]:
-		return givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
+# 	if not session["nutLack"]:
+# 		return givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
+	
+	
 		
 	nutRatioMinNew = []
 	nutRatioUnmetNew = []
@@ -931,6 +933,13 @@ def optimize():
 	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, suggestedFood )
 	(outputFood , outputFoodAmount , status ,objective, nullNut) = result
 	
+	if status == "Infeasible":
+		print "minimizing - changed to max"
+		if opt_maxormin == 0:
+			#When infeasible solution - make objective maximize will make it better
+			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, 1, opt_nut, suggestedFood )
+			(outputFood , outputFoodAmount , status ,objective, nullNut) = result
+			
 	#get upperbound of constraints
 	upperBoundConst = []
 	lowerBoundConst = []
@@ -943,16 +952,15 @@ def optimize():
 			lowerBoundConst.append(0)
 		else:
 			lowerBoundConst.append(float(defaultGenlowerBound[each-25]))
+	 	
+	nutLack = []		
+	for i in range(len(totalNut)):
+		if (lowerBoundConst[i]-totalNut[i]) > 0.1:
+			nutLack.append(constraints[i])
 
-	if status == "Infeasible":
-		print "minimizing - changed to max"
-		if opt_maxormin == 0:
-			#When infeasible solution - make objective maximize will make it better
-			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, 1, opt_nut, suggestedFood )
-			(outputFood , outputFoodAmount , status ,objective, nullNut) = result
-	
-	session["nutLack"] = []
-	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])
+	session["nutLack"] = nutLack
+	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])	
+		
 	if not nutRatioMin and status == "Infeasible":
 		if opt_maxormin:
 			stat = "Optimal"
@@ -1006,8 +1014,7 @@ def optimize():
 		eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(int(round(totalNut[i]))) + " "+full_ext_nutrient_unit[constraints[i]-25])
 # 	for each in eachTotalStatement:
 # 		print each
-
-	# nested list - inside is a tuple with percent value and the food by decreasing order
+	# nested list - inside is a tuple with percent value and the food by decreasing order	
 	nutExceedWhichFood = []
 	for i in range(len(nutExceed)):
 		exceedPercent = showExceed(nutExceed[i], nutExceedVal[i], outputFoodAmount, listFoodObject)
