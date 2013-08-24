@@ -952,7 +952,8 @@ def optimize():
 			lowerBoundConst.append(0)
 		else:
 			lowerBoundConst.append(float(defaultGenlowerBound[each-25]))
-	 	
+	
+	totalNut = reportTotal(constraints, outputFoodAmount, listFoodObject)
 	nutLack = []		
 	for i in range(len(totalNut)):
 		if (lowerBoundConst[i]-totalNut[i]) > 0.1:
