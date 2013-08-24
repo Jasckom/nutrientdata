@@ -89,10 +89,6 @@
     <div id = resultLP>
     <div class = subHeading><strong>My Diet Plan</strong></div><br>
 
-	{% if status == "Infeasible"%}
-		<p>Cannot Satisfy Every Nutritional Constraint - Cannot Optimize Your Diet</p>
-	{%endif%}
-
     	{% for i in range(outputFood|length)%}
     		<p>{{ outputFoodAmount[i]}} {{outputFood[i]}} </p>
     	{% endfor %}
@@ -104,6 +100,23 @@
 		 <div class = subHeading><strong>Remarks</strong></div><br>
 		 <p></p>
 	
+	
+	{% if nutExceedStatement%}
+    	{% if status == "Optimal"%}
+    		<p>
+    		Diet Optimized<br>
+    		Minimum Constraints Met<br>
+    		However,<br>
+    		</p>
+    	{%endif%}
+    {%endif%}
+	
+	{% if status == "Infeasible"%}
+		<p>
+		Diet Not Optimized<br>
+		Following Constraints Unmet<br>
+		</p>
+	{%endif%}
 	{% set index = 0%}
     {% if nutExceedStatement%}
     	{%for eachExceed in nutExceedStatement%}
@@ -116,7 +129,6 @@
     	{%endfor%}
     {%endif%}
     <br>
-
     
     {% if nutLackStatement%}
         <a href="{{ url_for('resultSuggest') }}" style="text-decoration: none" >Compliment with these Nutrients:</a><br>
@@ -125,12 +137,6 @@
     	{%endfor%}
     {%endif%}
     <br>
-    
-    {% if nutExceedStatement%}
-    	{% if nutLackStatement|length == 0%}
-    		<a href="{{ url_for('resultSearch') }}" style="text-decoration: none" >Please Add More Foods</a><br>
-    	{%endif%}
-    {%endif%}
     
     or <a href="{{ url_for('manage') }}" style="text-decoration: none" >Adjust the Constraints</a>
     
