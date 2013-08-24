@@ -139,4 +139,9 @@ $(function () {
 		$(toShow).show();
 		});
 	});
+	
+	$(window).onload(function(){
+		$('#dvLoading').fadeOut(2000);
+	});
+
 });
