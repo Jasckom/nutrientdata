@@ -538,10 +538,13 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 			session[("chosenNut")] = 0
 			return redirect(url_for('resultSuggest'))
 		else:
-			session["sumCal"] = sumCal
-			session["sumNutUnmet"] = sumNutUnmet
-			session["nutRatioMin"] = nutRatioMin
-			session["nutRatioUnmet"] = nutRatioUnmet
+			if session["nutLack"]: 
+				session["sumCal"] = sumCal
+				session["sumNutUnmet"] = sumNutUnmet
+				for each in session["nutLack"]:
+					nutRatioMin.append(g.user.nutri[0].nutCalRatio(each))
+				session["nutRatioMin"] = nutRatioMin
+				session["nutRatioUnmet"] = session["nutLack"] 
 			return redirect(url_for('resultSuggest'))
 		
 	else:
@@ -642,15 +645,6 @@ def reportRatio2(constraints, foodItems, nutri):
 			indexNut = nutRatioUnmet.index(each)
 			nutRatioMinNew.append(nutRatioMin[indexNut])
 			nutRatioUnmetNew.append(nutRatioUnmet[indexNut])
-	
-	if not nutRatioMinNew and not nutRatioUnmetNew:
-		if session["nutLack"]:
-			nutRatioUnmetNew = session["nutLack"]
-			for i in range(len(session["nutLack"])):
-				eachCon = session["nutLack"][i]
-				minRatio= nutri.nutCalRatio(eachCon)
-				nutRatioMinNew.append(minRatio)
-		
 	
 	return givenCal, failedBestFood, nutRatioMinNew, nutRatioUnmetNew
 
