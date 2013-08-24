@@ -514,7 +514,7 @@ table.nutrition {
 
 #dvLoading
 {
-background:#000 url(img/loadingimage.gif) no-repeat center center;
+background:url("static/img/loadingimage.gif") no-repeat center center;
 height: 100px;
 width: 100px;
 position: fixed;

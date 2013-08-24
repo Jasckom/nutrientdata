@@ -140,8 +140,6 @@ $(function () {
 		});
 	});
 	
-	$(window).onload(function(){
-		$('#dvLoading').fadeOut(2000);
-	});
+
 
 });

@@ -1592,10 +1592,10 @@ def create_form():
 def test():
 	form = manyButtons()
 	form2 = manyButtons()
-	a = session.keys()
-	#print "currentUser: ", g.user.get_id()
-	for each in a:
-		session.pop(each)
+# 	a = session.keys()
+# 	#print "currentUser: ", g.user.get_id()
+# 	for each in a:
+# 		session.pop(each)
 # 		#print "eachID: ", each , id(session[each])
 # 		#print session[each]
 # 		#print "\n\n"
