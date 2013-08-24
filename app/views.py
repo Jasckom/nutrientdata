@@ -786,7 +786,7 @@ def manage():
 	# Get lower/upper bounds from the curent user - this is not overriding but based on what is recommended	
 	currentNutri = g.user.nutri[0]
 	(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(currentNutri,1)
-	minMaxForm = createMinMaxForm(check,firstDefault)
+	minMaxForm = createMinMaxForm(check,firstDefault,2,None)
 	minMaxForm.lowerBound = defaultGenlowerBound
 	minMaxForm.upperBound = defautGenupperBound	
 	
