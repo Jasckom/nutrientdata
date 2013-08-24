@@ -930,9 +930,11 @@ def optimize():
 	print "suggestFood", suggestedFood
 		
 	
+	# Step 1 - normal LP
 	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, suggestedFood )
 	(outputFood , outputFoodAmount , status ,objective, nullNut) = result
 	
+	# Step 2 - If infeasible - see what's the current situation like to see which food is lacking
 	if status == "Infeasible":
 		print "minimizing - changed to max"
 		if opt_maxormin == 0:
@@ -940,7 +942,7 @@ def optimize():
 			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, 1, opt_nut, suggestedFood )
 			(outputFood , outputFoodAmount , status ,objective, nullNut) = result
 			
-	#get upperbound of constraints
+	#Get lower bounds and upper bounds convert string from Nutri to float for calculations
 	upperBoundConst = []
 	lowerBoundConst = []
 	for each in constraints:
@@ -953,15 +955,19 @@ def optimize():
 		else:
 			lowerBoundConst.append(float(defaultGenlowerBound[each-25]))
 	
+	# Get results of all the nutrients and see what are lacking
 	totalNut = reportTotal(constraints, outputFoodAmount, listFoodObject)
 	nutLack = []		
 	for i in range(len(totalNut)):
 		if (lowerBoundConst[i]-totalNut[i]) > 0.1:
 			nutLack.append(constraints[i])
-
+	
+	# Nutlack is only empty when optimal or all the lower constraints are satisfied
+	# Meaning if it gives infeasible the problem lies only with the upper bounds.
 	session["nutLack"] = nutLack
 	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])	
-		
+	
+	# Step 3 - when the problem is upper bound 	
 	if not nutRatioMin and status == "Infeasible":
 		stat = "Optimal"
 		pace = 5000
@@ -978,21 +984,22 @@ def optimize():
 		(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
 		#reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
-	global full_ext_nutrient
-	#Find items that have too much
+	# At the end here, we should get a desirable output
+
+	# Report details
 	#Get total of the food to be compared with upperbound
 	totalNut = reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
-	eachTotalStatement = []
-		
+	eachTotalStatement = []		
 	nutLack = []
 	nutLackVal = []
-	nutLackStatement = []
-	
+	nutLackStatement = []	
 	nutExceed = []
 	nutExceedVal = []
 	nutExceedStatement = []
 	global full_ext_nutrient_unit
+	global full_ext_nutrient
+
 	for i in range(len(totalNut)):
 		if (totalNut[i]- upperBoundConst[i]) > 0.1:
 			nutExceed.append(constraints[i])
@@ -1008,8 +1015,7 @@ def optimize():
 		lower = lowerBoundConst[i]
 		upper = upperBoundConst[i]
 		eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(int(round(totalNut[i]))) + " "+full_ext_nutrient_unit[constraints[i]-25])
-# 	for each in eachTotalStatement:
-# 		print each
+
 	# nested list - inside is a tuple with percent value and the food by decreasing order	
 	nutExceedWhichFood = []
 	for i in range(len(nutExceed)):
@@ -1019,7 +1025,7 @@ def optimize():
 	session["nutLack"] = nutLack
 	session["nutLackVal"] = nutLackVal
 	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])
-#		givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
+	#givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
 	
 
 	session["sumCal"] = sumCal
