@@ -963,25 +963,20 @@ def optimize():
 	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])	
 		
 	if not nutRatioMin and status == "Infeasible":
-		if opt_maxormin:
-			stat = "Optimal"
-			pace = 5000
-			while stat == "Optimal":
-				(outputFoodPre, outputFoodAmountPre, statPre, objective, nullNut) = (outputFood, outputFoodAmount, stat, objective, nullNut)
-				pace -= 100
-				for each in upperBoundConst:
-					if each > pace:
-						stat == "Infeasible"
-				openUpperBound = [pace for i in range(len(defaultGenupperBound))]
-				(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
-				reportTotal(constraints, outputFoodAmount, listFoodObject)
-			#print "Open Bounded Solution"
-			(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
-		else:
-			#print "Open Bounded Solution"
-			openUpperBound = [5000 for i in range(len(defaultGenupperBound))]
-			(outputFood , outputFoodAmount , status ,objective, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
-			#reportTotal(constraints, outputFoodAmount, listFoodObject)
+		stat = "Optimal"
+		pace = 5000
+		while stat == "Optimal":
+			(outputFoodPre, outputFoodAmountPre, statPre, objective, nullNut) = (outputFood, outputFoodAmount, stat, objective, nullNut)
+			pace -= 100
+			for each in upperBoundConst:
+				if each > pace:
+					stat == "Infeasible"
+			openUpperBound = [pace for i in range(len(defaultGenupperBound))]
+			(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
+			reportTotal(constraints, outputFoodAmount, listFoodObject)
+		#print "Open Bounded Solution"
+		(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
+		#reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
 	global full_ext_nutrient
 	#Find items that have too much
