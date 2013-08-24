@@ -117,6 +117,7 @@
 		Following Constraints Unmet<br>
 		</p>
 	{%endif%}
+	
 	{% set index = 0%}
     {% if nutExceedStatement%}
     	{%for eachExceed in nutExceedStatement%}
@@ -137,9 +138,7 @@
     	{%endfor%}
     {%endif%}
     <br>
-    
-    or <a href="{{ url_for('manage') }}" style="text-decoration: none" >Adjust the Constraints</a>
-    
+        
 		</div>	
 	{%endif %}
     	
