@@ -643,12 +643,13 @@ def reportRatio2(constraints, foodItems, nutri):
 			nutRatioMinNew.append(nutRatioMin[indexNut])
 			nutRatioUnmetNew.append(nutRatioUnmet[indexNut])
 	
-	nutRatioMinNew = []
-	nutRatioUnmetNew = session["nutLack"]
-	for i in range(len(session["nutLack"])):
-		eachCon = session["nutLack"][i]
-		minRatio= nutri.nutCalRatio(eachCon)
-		nutRatioMinNew.append(minRatio)
+	if not nutRatioMinNew and not nutRatioUnmetNew:
+		if session["nutLack"]:
+			nutRatioUnmetNew = session["nutLack"]
+			for i in range(len(session["nutLack"])):
+				eachCon = session["nutLack"][i]
+				minRatio= nutri.nutCalRatio(eachCon)
+				nutRatioMinNew.append(minRatio)
 		
 	
 	return givenCal, failedBestFood, nutRatioMinNew, nutRatioUnmetNew
