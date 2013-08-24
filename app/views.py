@@ -643,6 +643,14 @@ def reportRatio2(constraints, foodItems, nutri):
 			nutRatioMinNew.append(nutRatioMin[indexNut])
 			nutRatioUnmetNew.append(nutRatioUnmet[indexNut])
 	
+	nutRatioMinNew = []
+	nutRatioUnmetNew = session["nutLack"]
+	for i in range(len(session["nutLack"])):
+		eachCon = session["nutLack"][i]
+		minRatio= nutri.nutCalRatio(eachCon)
+		nutRatioMinNew.append(minRatio)
+		
+	
 	return givenCal, failedBestFood, nutRatioMinNew, nutRatioUnmetNew
 
 
@@ -1145,10 +1153,7 @@ def resultSuggest(page = 1):
 	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
 	(info, food) = getInfo()
 	#print "Test2: ",nutRatioUnmet, sumNutUnmet, nutRatioMin
-	if "nutLack" not in session.keys():
-		return redirect(url_for('resultSearch'))
-		
-	if not nutRatioUnmet and not session["nutLack"]:
+	if not nutRatioUnmet:
 		titleFindFood = "Your Food Items Are More Balanced"
 		return render_template('resultBalanced.html',
 		foodsILike = foodsILike,
