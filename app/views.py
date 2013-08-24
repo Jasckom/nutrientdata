@@ -1145,7 +1145,10 @@ def resultSuggest(page = 1):
 	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
 	(info, food) = getInfo()
 	#print "Test2: ",nutRatioUnmet, sumNutUnmet, nutRatioMin
-	if not nutRatioUnmet:
+	if "nutLack" not in session.keys():
+		return redirect(url_for('resultSearch'))
+		
+	if not nutRatioUnmet and not session["nutLack"]:
 		titleFindFood = "Your Food Items Are More Balanced"
 		return render_template('resultBalanced.html',
 		foodsILike = foodsILike,
