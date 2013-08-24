@@ -138,6 +138,13 @@
     	{%endfor%}
     {%endif%}
     <br>
+    
+    {% if nutExceedStatement%}
+    	{% if status == "Optimal"%}
+    		Please Add More Food<br>
+    	{%endif%}
+    {%endif%}
+    
         
 		</div>	
 	{%endif %}
