@@ -785,8 +785,25 @@ def manage():
 	
 	# Get lower/upper bounds from the curent user - this is not overriding but based on what is recommended	
 	currentNutri = g.user.nutri[0]
+	
 	(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(currentNutri,1)
-	minMaxForm = createMinMaxForm(check,firstDefault,2,None)
+	
+	optMaxMin = 2
+	optNut = None
+	if "opt_maxormin" in session.keys():
+		opt_maxormin = session["opt_maxormin"]
+		opt_nut = session["opt_nut"]
+		if opt_maxormin ==  0 and opt_nut== 26:
+			optMaxMin = 2
+		elif opt_maxormin == 0and opt_nut== 28:
+			optMaxMin = 3
+		elif opt_maxormin == 1and opt_nut== 28:
+			optMaxMin = 4
+		else:
+			optMaxMin = opt_maxormin
+			optNut = opt_nut
+		
+	minMaxForm = createMinMaxForm(check,firstDefault,optMaxMin,optNut)
 	minMaxForm.lowerBound = defaultGenlowerBound
 	minMaxForm.upperBound = defautGenupperBound	
 	
