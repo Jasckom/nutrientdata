@@ -165,9 +165,9 @@ $(function () {
 	
 	$('#loading').hide();
 	
-	$("input[value='Proceed to Select Foods']").css('font-size','70px');
+	$("input[value='Proceed to Select Foods']").css('font-size','30px');
 	
-	$("input[value='Generate My Diet']").css('font-size','70px');	
+	$("input[value='Generate My Diet']").css('font-size','30px');	
 	
 });
 
