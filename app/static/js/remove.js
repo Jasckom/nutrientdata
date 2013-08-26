@@ -144,7 +144,7 @@ $(function () {
 		$('#dvLoading').fadeOut(2000);
 	});
 	
-	
+	$("input[type=submit]")
 	
 });
 
