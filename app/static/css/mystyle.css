@@ -304,7 +304,6 @@ position: relative;
 }
 
 
-
 #dietPlan {
 float: left;
 width: 260px;
@@ -512,9 +511,8 @@ table.nutrition {
 }
 
 
-#dvLoading
+#loading
 {
-background:url("static/img/loadingimage.gif") no-repeat center center;
 height: 100px;
 width: 100px;
 position: fixed;

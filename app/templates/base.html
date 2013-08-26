@@ -11,14 +11,12 @@
 	<body>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="{{url_for('static', filename= 'js/remove.js') }}"></script>
-	<script>
-		$(window).load(function(){
-		$('#dvLoading').fadeOut(2000);
-		});
-	</script>
+
 	<div id="dvLoading">Please Wait While Loading</div>
 
-	
+	<div id = loading>
+	<img src="static/img/loadingimage.gif">
+	</div>
 	<div>DietPlanner:
     	{% if g.user.is_authenticated()%}
     		 <a href="{{ url_for('profile') }}" >Home</a>

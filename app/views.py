@@ -146,6 +146,7 @@ def getInfo():
 @app.route('/resultSearch', methods = ['GET', 'POST'])
 @app.route('/resultSearch/<int:page>', methods = ['GET', 'POST'])
 def resultSearch(page = 1):
+	
 
 	if not g.user.is_authenticated():
 		flash('Please First Sign in as a Guest')
@@ -1422,7 +1423,6 @@ def index():
 	logout_user()
 	return redirect(url_for('login'))
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
 	# check if user is logged in
@@ -1587,11 +1587,24 @@ def create_form():
 	for name in list_nut:
 		setattr(F, name, TextField(name))
 	k = F()
-	return k	
+	return k
+	
+from flask import jsonify
+
+
+def testajax():
+    return jsonify({ 
+        'text': "lala" })
+	
+		
 @app.route('/test', methods=['GET', 'POST'])
 def test():
+	testajax()
 	form = manyButtons()
 	form2 = manyButtons()
+	for i in range(100000):
+		print i
+	
 # 	a = session.keys()
 # 	#print "currentUser: ", g.user.get_id()
 # 	for each in a:
@@ -1599,22 +1612,8 @@ def test():
 # 		#print "eachID: ", each , id(session[each])
 # 		#print session[each]
 # 		#print "\n\n"
+	return render_template('test.html')
+# 	return redirect(url_for('test'))
 	
-# 	session.pop(each)
-	if request.method == 'POST':
-		if form.validate_on_submit() and request.form['submit1'] == u'Submit1':
-			#print "Reqest.form1111", request.form
-# 			for field in form:
-				#print field.label, field.data
-			return redirect(url_for('test', form = form, form2=form2))
-		elif form2.validate_on_submit():
-			#print "Reqest.form2222", request.form2['text']
-# 			for field in form2:
-				#print field.label, field.data
-			return redirect(url_for('test', form = form, form2=form2))
-	elif request.method == 'GET':
-		
-		#print "Form GET"
-		return render_template('test.html', form1=form, form2=form2)
-	return render_template('test.html', form1=form, form2=form2)
+
     
