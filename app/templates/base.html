@@ -16,7 +16,7 @@
 
 	<div id = loading>
 	Please Wait
-	<img src="/static/img/loadingimage.gif" />
+	<img src="{{url_for('static', filename= 'img/dog.jpeg') }}" />
 	</div>
 	<div>DietPlanner:
     	{% if g.user.is_authenticated()%}
