@@ -15,7 +15,7 @@
 	<div id="dvLoading">Please Wait While Loading</div>
 
 	<div id = loading>
-	<img src="static/img/loadingimage.gif">
+	<img src=  "{{url_for('static', filename= 'img/loadingimage.gif') }}">
 	</div>
 	<div>DietPlanner:
     	{% if g.user.is_authenticated()%}
