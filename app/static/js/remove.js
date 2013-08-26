@@ -150,7 +150,6 @@ $(function () {
 		$("#loading").show();
 	});
 	
-	
 	$("#box1CatList a").on("click",function(){
 		$("#loading").show();
 	});

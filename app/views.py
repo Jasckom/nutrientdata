@@ -900,7 +900,7 @@ def optimize():
 	#2. The objective is chosen - (nutrient plan is set default at basic)
 	#3. User has clicked checkout in one of the result
 	if not g.user.is_authenticated():
-		flash('Please First Sign in as a Guest or Sign up')
+		flash('Please First Sign in as a Guest')
 		return redirect(url_for('login'))
 
 	if "opt_maxormin" not in session.keys():
