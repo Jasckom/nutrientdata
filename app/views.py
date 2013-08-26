@@ -804,7 +804,7 @@ def manage():
 			optMaxMin = opt_maxormin
 			optNut = opt_nut
 		
-	minMaxForm = createMinMaxForm(check,firstDefault,optMaxMin,optNut)
+	minMaxForm = createMinMaxForm(check,firstDefault,optMaxMin,optNut,'Proceed to Select Foods')
 	minMaxForm.lowerBound = defaultGenlowerBound
 	minMaxForm.upperBound = defautGenupperBound	
 	
@@ -1084,6 +1084,110 @@ def optimize():
 	outputFoodAmount = yesFoodAmount+noFoodAmount
 	print nutLackStatement
 	
+	
+	if "basicPlan" not in session.keys():
+		firstDefault = 1
+	else:
+		firstDefault = session["basicPlan"]
+	
+	# Get lower/upper bounds from the curent user - this is not overriding but based on what is recommended	
+	currentNutri = g.user.nutri[0]
+	
+	(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(currentNutri,1)
+	
+	optMaxMin = 2
+	optNut = None
+	if "opt_maxormin" in session.keys():
+		opt_maxormin = session["opt_maxormin"]
+		opt_nut = session["opt_nut"]
+		if opt_maxormin ==  0 and opt_nut== 26:
+			optMaxMin = 2
+		elif opt_maxormin == 0and opt_nut== 28:
+			optMaxMin = 3
+		elif opt_maxormin == 1and opt_nut== 28:
+			optMaxMin = 4
+		else:
+			optMaxMin = opt_maxormin
+			optNut = opt_nut
+		
+	minMaxForm = createMinMaxForm(check,firstDefault,optMaxMin,optNut,'Generate My Diet')
+	minMaxForm.lowerBound = defaultGenlowerBound
+	minMaxForm.upperBound = defautGenupperBound	
+	
+	# Form is submitted
+	if minMaxForm.is_submitted() and request.form['submit'] == 'Generate My Diet' and (u'y' in request.form.values()):
+		#print "Imhere 1"
+		if ((minMaxForm.opt_maxormin.data == 0) or (minMaxForm.opt_maxormin.data == 1)):
+			#print "Im here2"
+			if minMaxForm.opt_nut.data is None:
+				#print "Ime here 3"
+				return redirect(url_for('manage'))
+			else:
+				opt_maxormin = minMaxForm.opt_maxormin.data
+				opt_nut = minMaxForm.opt_nut.data
+		
+		elif minMaxForm.opt_maxormin.data == 2:
+			opt_maxormin = 0
+			opt_nut = 26
+			minMaxForm.opt_nut.data = None
+		elif minMaxForm.opt_maxormin.data == 3:
+			opt_maxormin = 0
+			opt_nut = 28
+			minMaxForm.opt_nut.data = None
+		elif minMaxForm.opt_maxormin.data == 4:
+			opt_maxormin = 1
+			opt_nut = 28
+			minMaxForm.opt_nut.data = None
+		elif minMaxForm.opt_maxormin.data is None:
+			return redirect(url_for('manage'))
+		constraints = []
+		constraintslowerBound = []
+		constraintsupperBound = []
+		#print ("Form taken")
+		i = 0
+		for field in minMaxForm:
+			if i >= 421:
+				break
+			elif i != 0:
+				if (i-1) %3 == 0:
+#					#print (i-1)//3, field.name, field.data, type(field.data)
+					if field.data == True:
+						constraints.append(25+(i-1)//3)
+				elif (i-2)%3 == 0:
+#					#print (i-2)//3, field.name, field.data, type(field.data)
+					constraintslowerBound.append(field.data)
+				elif (i-3)%3 == 0:
+#					#print (i-3)//3, field.name, field.data, type(field.data)
+					constraintsupperBound.append(field.data)
+			i += 1
+
+		#session["currentCheck"] = currentCheck		
+		#Save the nutritional constraints
+		#print "Save nutritional"
+		currentCheck = [0 for i in range(len(constraintsupperBound))]
+		for eachCon in constraints:
+			currentCheck[eachCon-25] = 1
+		modifyNut = g.user.nutri[0]
+		newCon = [field for field in modifyNut.__table__.columns.keys()]
+		for ic in range(len(constraintslowerBound)):
+			if constraintslowerBound[ic] is None:
+				lower = "ND"
+			else:
+				lower = str(constraintslowerBound[ic])
+			if constraintsupperBound[ic] is None:
+				upper = "ND"
+			else:
+				upper = str(constraintsupperBound[ic])
+			val = lower+":"+upper+":"+str(currentCheck[ic])
+			setattr(modifyNut,newCon[ic+23],val)
+			
+		session["basicPlan"] = 	minMaxForm.nutrientPlan.data
+		session["opt_maxormin"] = opt_maxormin
+		session["opt_nut"] = opt_nut
+		db.session.commit()
+		
+		return redirect(url_for('optimize'))
+	
 	return render_template("optimize.html",
 		outputFood = outputFood,
 		outputFoodAmount = outputFoodAmount,
@@ -1095,7 +1199,8 @@ def optimize():
 		nutExceedWhichFood =nutExceedWhichFood,
 		userProfile = session['userProfile'],
 		eachTotalStatement = eachTotalStatement,
-		nutLackStatement = nutLackStatement)
+		nutLackStatement = nutLackStatement,
+		minMaxForm = minMaxForm)
 				
 @app.route('/resultSuggest', methods=['GET', 'POST'])
 @app.route('/resultSuggest/<int:page>', methods = ['GET', 'POST'])

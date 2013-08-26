@@ -2,10 +2,84 @@
 
 {% block content %}
 	
+<div id = optimizeResultLP>	
+    {% if outputFood %}
+		<div id = resultLP>
+		<div class = subHeading><strong>My Diet Plan</strong></div><br>
+			{% for i in range(outputFood|length)%}
+				<p>{{ outputFoodAmount[i]}} {{outputFood[i]}} </p>
+			{% endfor %}
+	
+		</div>
+
+		{% if nutExceedStatement or nutLackStatement%}
+			<div id = remarksLP>
+				<div class = subHeading><strong>Remarks</strong></div><br>
+				<p></p>
+	
+			{% if nutExceedStatement%}
+				{% if status == "Optimal"%}
+					<p>
+					Diet Optimized<br>
+					Minimum Constraints Met<br>
+					However,<br>
+					</p>
+				{%endif%}
+			{%endif%}
+	
+			{% if status == "Infeasible"%}
+				<p>
+				Diet Not Optimized<br>
+				Following Constraints Unmet<br>
+				</p>
+			{%endif%}
+	
+			{% set index = 0%}
+			{% if nutExceedStatement%}
+				{%for eachExceed in nutExceedStatement%}
+			
+					<div id = nutExceed{{index}}><FONT COLOR="FF0000">{{eachExceed}}</FONT><br></div>
+					{%for eachNutExceedWhichFood in nutExceedWhichFood [index]%}
+						<li id = FoodnutExceed{{index}} style= "display:none" >{{eachNutExceedWhichFood[0]}}% from {{eachNutExceedWhichFood[1].food}}<br></li>
+					{%endfor%}
+					{%set index = index +1%}
+				{%endfor%}
+			{%endif%}
+			<br>
+	
+			{% if nutLackStatement%}
+				<a href="{{ url_for('resultSuggest') }}" style="text-decoration: none" >Compliment with these Nutrients:</a><br>
+				{%for eachLack in nutLackStatement%}
+					{{eachLack}}<br>
+				{%endfor%}
+			{%endif%}
+			<br>
+	
+			{% if nutExceedStatement%}
+				{% if status == "Optimal"%}
+					Please Add More Food<br>
+				{%endif%}
+			{%endif%}
+			</div>
+		{%endif %}
+	{%endif%}
+
+    {%if eachTotalStatement%}
+    <div id = reportLP>
+    		 <div class = subHeading><strong>Nutritional Report</strong></div><br>
+
+    {%for each in eachTotalStatement%}
+    {{each}}<br>
+    {%endfor%}
+    </div>
+    {%endif%}
+</div>    
+    
+    <div id = dietPlan>
     	{% if minMaxForm %}
 			<form action="" method="post" name="Contraints">
 					{{minMaxForm.hidden_tag()}}
-					1. Choose Diet Plan<br>
+					<div class = subHeading><strong>Choose Diet Plan</strong></div>
 					<div id = chooseDefault>
 						{%for subfield in minMaxForm.opt_maxormin%}
 							{%if loop.index0 >=2%}
@@ -27,18 +101,22 @@
 						</div>
 						<div id = box2Scroll>⇩</div>
 					</div>
-					2. Choose Nutritional Plan<br>
+	</div>
+	<div id = nutrientPlan>
+					<div class = subHeading><strong>Choose Nutrient Plan</strong></div>
 					<div id= choosePlan>
 						{%for subfield in minMaxForm.nutrientPlan%}
 							{{subfield}}{{subfield.label}}<br>
 						{%endfor%}
 					</div>
-					
-					{{minMaxForm.submit}}<br>
 	</div>
 	
 	<div id = minMaxForm>
-		3. Manage Nutritional Constraints<br>
+	    <div id = submitManage>
+    	{{minMaxForm.submit}}
+    </div>
+	
+		<div class = subHeading><strong>Manage Nutrient Constraints</strong></div>
     	<table >
     		
     		<tr>
@@ -54,9 +132,9 @@
 				{% if (i-1) is divisibleby(3)%}
 					<tr><td class="tdConstraints">{{field}}{{minMaxForm.heading[(i-1)//3]}}</td>
 				{% elif (i-2) is divisibleby(3)%}
-					<td>{{field(size=15,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
+					<td>{{field(size=18,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
 				{%else%}
-					<td>{{field(size=15,value=minMaxForm.upperBound[(i-3)//3])}}</td>
+					<td>{{field(size=18,value=minMaxForm.upperBound[(i-3)//3])}}</td>
 					</tr>
 				{%endif%}
 			
@@ -70,9 +148,9 @@
 				{% if (i-1) is divisibleby(3)%}
 					<tr> <td class="tdConstraints">{{field}}{{minMaxForm.heading[(i-1)//3]}}</td>
 				{% elif (i-2) is divisibleby(3)%}
-					<td>{{field(size=15,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
+					<td>{{field(size=18,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
 				{%else%}
-					<td>{{field(size=15,value=minMaxForm.upperBound[(i-3)//3])}}</td>
+					<td>{{field(size=18,value=minMaxForm.upperBound[(i-3)//3])}}</td>
 					</tr>
 				{%endif%}
 			
@@ -80,83 +158,15 @@
 			{% set i = i+1%}
 		{%endfor%}
 		</table>
+		<div id = FullNutrientScroll>⇩</div>
 	</div>
-    </form>	
+   
     {% endif %}
-	
-	
-    {% if outputFood %}
-    <div id = resultLP>
-    <div class = subHeading><strong>My Diet Plan</strong></div><br>
 
-    	{% for i in range(outputFood|length)%}
-    		<p>{{ outputFoodAmount[i]}} {{outputFood[i]}} </p>
-    	{% endfor %}
+     </form>
     
-    </div>
-
-	{% if nutExceedStatement or nutLackStatement%}
-	    <div id = resultLP>
-		 <div class = subHeading><strong>Remarks</strong></div><br>
-		 <p></p>
-	
-	
-	{% if nutExceedStatement%}
-    	{% if status == "Optimal"%}
-    		<p>
-    		Diet Optimized<br>
-    		Minimum Constraints Met<br>
-    		However,<br>
-    		</p>
-    	{%endif%}
-    {%endif%}
-	
-	{% if status == "Infeasible"%}
-		<p>
-		Diet Not Optimized<br>
-		Following Constraints Unmet<br>
-		</p>
-	{%endif%}
-	
-	{% set index = 0%}
-    {% if nutExceedStatement%}
-    	{%for eachExceed in nutExceedStatement%}
-    		
-    		<div id = nutExceed{{index}}><FONT COLOR="FF0000">{{eachExceed}}</FONT><br></div>
-    		{%for eachNutExceedWhichFood in nutExceedWhichFood [index]%}
-    			<li id = FoodnutExceed{{index}} style= "display:none" >{{eachNutExceedWhichFood[0]}}% from {{eachNutExceedWhichFood[1].food}}<br></li>
-    		{%endfor%}
-    		{%set index = index +1%}
-    	{%endfor%}
-    {%endif%}
-    <br>
     
-    {% if nutLackStatement%}
-        <a href="{{ url_for('resultSuggest') }}" style="text-decoration: none" >Compliment with these Nutrients:</a><br>
-    	{%for eachLack in nutLackStatement%}
-			{{eachLack}}<br>
-    	{%endfor%}
-    {%endif%}
-    <br>
     
-    {% if nutExceedStatement%}
-    	{% if status == "Optimal"%}
-    		Please Add More Food<br>
-    	{%endif%}
-    {%endif%}
     
-        
-		</div>	
-	{%endif %}
-    	
-    {%endif%}
-    {%if eachTotalStatement%}
-    <div id = resultLP>
-    		 <div class = subHeading><strong>Nutritional Report</strong></div><br>
-
-    {%for each in eachTotalStatement%}
-    {{each}}<br>
-    {%endfor%}
-    </div>
-    {%endif%}
+    
 {% endblock %}

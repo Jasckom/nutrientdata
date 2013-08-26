@@ -402,12 +402,42 @@ top: 24px;
 float: left;
 width: 400px;
 height: 480px;
-margin:10px;
+margin-right:20px;
 position: relative;
 padding:20px;
 border: solid;
 overflow:auto;
 }
+
+#remarksLP{
+float: left;
+width: 320px;
+height: 480px;
+margin-right:20px;
+position: relative;
+padding:20px;
+border: solid;
+overflow:auto;
+}
+
+#reportLP{
+float: left;
+width: 320px;
+height: 480px;
+position: relative;
+padding:20px;
+border: solid;
+overflow:auto;
+}
+
+#optimizeResultLP{
+float: left;
+width: 1218px;
+height: 526px;
+margin:10px;
+position: relative;
+}
+
 
 #account {
 float: left;
@@ -521,6 +551,7 @@ z-index: 1000;
 left: 50%;
 top: 50%;
 margin: -25px 0 0 -25px;
+
 }
 
 
