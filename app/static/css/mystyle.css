@@ -543,6 +543,7 @@ table.nutrition {
 
 #loading
 {
+background-color:rgba(255,255,255,1);
 display: None;
 height: 100px;
 width: 100px;
@@ -551,6 +552,7 @@ z-index: 1000;
 left: 50%;
 top: 50%;
 margin: -25px 0 0 -25px;
+border-radius: 15px;
 
 }
 

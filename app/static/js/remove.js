@@ -145,9 +145,13 @@ $(function () {
 	});
 	
 	$("input[type=submit]").on("click",function(){
+		if ($(this).attr('name') != "toggle"){
 		$("#loading").show();
 		console.log("lala");
-	});	
+		}
+	});
+	
+	$('#loading').hide();	
 	
 });
 
