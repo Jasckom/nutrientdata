@@ -169,6 +169,8 @@ $(function () {
 	
 	$("input[value='Generate My Diet']").css('font-size','30px');	
 	
+	$("input[id='submitSignUp']").hide();
+	
 });
 
 // $(function testajax(sourceLang, destLang, sourceId, destId, loadingId) {
