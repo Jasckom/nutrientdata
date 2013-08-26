@@ -140,18 +140,34 @@ $(function () {
 		});
 	});
 	
-	$(window).load(function(){
-		$('#dvLoading').fadeOut(2000);
-	});
-	
 	$("input[type=submit]").on("click",function(){
 		if ($(this).attr('name') != "toggle"){
 		$("#loading").show();
-		console.log("lala");
 		}
 	});
 	
-	$('#loading').hide();	
+	$("#mainCat a").on("click",function(){
+		$("#loading").show();
+	});
+	
+	
+	$("#box1CatList a").on("click",function(){
+		$("#loading").show();
+	});
+	
+	$("#box2ResultList li a").on("click",function(){
+		$("#loading").show();
+	});
+	
+	$("#boxBelow a").on("click",function(){
+		$("#loading").show();
+	});
+	
+	$('#loading').hide();
+	
+	$("input[value='Proceed to Select Foods']").css('font-size','70px');
+	
+	$("input[value='Generate My Diet']").css('font-size','70px');	
 	
 });
 

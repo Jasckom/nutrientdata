@@ -304,24 +304,16 @@ position: relative;
 }
 
 
-#dietPlan {
+#manageDietPlan {
 float: left;
 width: 260px;
-height: 380px;
+height: 485px;
 margin:10px;
 position: relative;
 padding:20px;
 border: solid
 }
-#nutrientPlan {
-float: left;
-width: 260px;
-height: 380px;
-margin:10px;
-position: relative;
-padding:20px;
-border: solid
-}
+
 
 #chooseDefault{
 float: left;
@@ -354,6 +346,14 @@ border-color: #D3D3D3;
 margin-top:10px;
 }
 
+#emptyPlan{
+float: left;
+width: 250px;
+height: 10px;
+position: relative;
+margin-top:10px;
+}
+
 #listobj{
 width: 220px;
 height: 190px;
@@ -363,16 +363,28 @@ right:0px;
 overflow:auto;
 }
 
-#minMaxForm{
+#manageMinMaxForm{
 float: left;
 width: 520px;
-height: 380px;
+height: 485px;
 margin:10px;
 position: relative;
 padding:20px;
 border: solid;
 overflow:auto;
 }
+
+#minMaxTable{
+width: 520px;
+margin-top: 10px;
+height: 380px;
+position: relative;
+float: left;
+overflow:auto;
+
+
+}
+
 #minMaxHead{
 float: left;
 width: 500px;
@@ -391,12 +403,14 @@ right:10px;
 }
 
 #submitManage {
-
+text-align:right;
+float: right;
+width: 200px;
+height: 60px;
 position: absolute;
-right: 24px;
-top: 24px;
+bottom: 0px;
+right: 0px;
 }
-
 
 #resultLP{
 float: left;

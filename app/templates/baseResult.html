@@ -10,7 +10,17 @@
 	<body>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="{{url_for('static', filename= 'js/remove.js') }}"></script>
-    	
+    <div id = loading style="display: table;">
+    	<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
+			<div style=" #position: relative; #top: -50%">
+				<div class = "center">
+					Please Wait
+					<img src="{{url_for('static', filename= 'img/loading.gif') }}" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
     	<div>DietPlanner:
     	{% if g.user.is_authenticated()%}
     		 <a href="{{ url_for('profile') }}" >Home</a>

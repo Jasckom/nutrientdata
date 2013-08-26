@@ -75,7 +75,7 @@
     {%endif%}
 </div>    
     
-    <div id = dietPlan>
+    <div id = manageDietPlan>
     	{% if minMaxForm %}
 			<form action="" method="post" name="Contraints">
 					{{minMaxForm.hidden_tag()}}
@@ -101,65 +101,72 @@
 						</div>
 						<div id = box2Scroll>⇩</div>
 					</div>
+			
+			<div id = emptyPlan></div>
+			<div class = subHeading><strong>Choose Nutrient Plan</strong><br>
+			</div>
+			
+			<div id= choosePlan>
+				{%for subfield in minMaxForm.nutrientPlan%}
+					{{subfield}}{{subfield.label}}<br>
+				{%endfor%}
+			</div>			
 	</div>
-	<div id = nutrientPlan>
-					<div class = subHeading><strong>Choose Nutrient Plan</strong></div>
-					<div id= choosePlan>
-						{%for subfield in minMaxForm.nutrientPlan%}
-							{{subfield}}{{subfield.label}}<br>
-						{%endfor%}
-					</div>
-	</div>
+
 	
-	<div id = minMaxForm>
-	    <div id = submitManage>
-    	{{minMaxForm.submit}}
-    </div>
-	
+	<div id = manageMinMaxForm>
+	    
 		<div class = subHeading><strong>Manage Nutrient Constraints</strong></div>
-    	<table >
-    		
-    		<tr>
-    			<th>Nutrient</th>
-    			<th>Lower Bound</th>
-    			<th>Upper Bound</th>
-    		</tr>
-    		
-    	{% set i = 0%}		    		
-		{% for field in minMaxForm%}
-			{% if i != 0 and i <= 420 and check[(i-1)//3]== 1 %}
+    	<div id = minMaxTable>
+			<table >
+			
+				<tr>
+					<th>Nutrient</th>
+					<th>Lower Bound</th>
+					<th>Upper Bound</th>
+				</tr>
+			
+			{% set i = 0%}		    		
+			{% for field in minMaxForm%}
+				{% if i != 0 and i <= 420 and check[(i-1)//3]== 1 %}
 				
-				{% if (i-1) is divisibleby(3)%}
-					<tr><td class="tdConstraints">{{field}}{{minMaxForm.heading[(i-1)//3]}}</td>
-				{% elif (i-2) is divisibleby(3)%}
-					<td>{{field(size=18,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
-				{%else%}
-					<td>{{field(size=18,value=minMaxForm.upperBound[(i-3)//3])}}</td>
-					</tr>
-				{%endif%}
+					{% if (i-1) is divisibleby(3)%}
+						<tr><td class="tdConstraints">{{field}}{{minMaxForm.heading[(i-1)//3]}}</td>
+					{% elif (i-2) is divisibleby(3)%}
+						<td>{{field(size=18,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
+					{%else%}
+						<td>{{field(size=18,value=minMaxForm.upperBound[(i-3)//3])}}</td>
+						</tr>
+					{%endif%}
 			
-			{%endif%}
-			{% set i = i+1%}
-		{%endfor%}
+				{%endif%}
+				{% set i = i+1%}
+			{%endfor%}
 		
-		{% set i = 0%}		    		
-		{% for field in minMaxForm%}
-			{% if i != 0 and i <= 420 and check[(i-1)//3]== 0 %}
-				{% if (i-1) is divisibleby(3)%}
-					<tr> <td class="tdConstraints">{{field}}{{minMaxForm.heading[(i-1)//3]}}</td>
-				{% elif (i-2) is divisibleby(3)%}
-					<td>{{field(size=18,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
-				{%else%}
-					<td>{{field(size=18,value=minMaxForm.upperBound[(i-3)//3])}}</td>
-					</tr>
-				{%endif%}
+			{% set i = 0%}		    		
+			{% for field in minMaxForm%}
+				{% if i != 0 and i <= 420 and check[(i-1)//3]== 0 %}
+					{% if (i-1) is divisibleby(3)%}
+						<tr> <td class="tdConstraints">{{field}}{{minMaxForm.heading[(i-1)//3]}}</td>
+					{% elif (i-2) is divisibleby(3)%}
+						<td>{{field(size=18,value=minMaxForm.lowerBound[(i-2)//3])}}</td>
+					{%else%}
+						<td>{{field(size=18,value=minMaxForm.upperBound[(i-3)//3])}}</td>
+						</tr>
+					{%endif%}
 			
-			{%endif%}
-			{% set i = i+1%}
-		{%endfor%}
-		</table>
-		<div id = FullNutrientScroll>⇩</div>
+				{%endif%}
+				{% set i = i+1%}
+			{%endfor%}
+			</table>
+			<div id = FullNutrientScroll>⇩</div>
 	</div>
+		<div id = submitManage>
+    	{{minMaxForm.submit}} <strong>>></strong>
+    </div>
+		</div>
+
+		
    
     {% endif %}
 
