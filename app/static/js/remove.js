@@ -144,7 +144,10 @@ $(function () {
 		$('#dvLoading').fadeOut(2000);
 	});
 	
-	$("input[type=submit]")
+	$("input[type=submit]").on("click",function(){
+		$("#loading").show();
+		console.log("lala");
+	});	
 	
 });
 
