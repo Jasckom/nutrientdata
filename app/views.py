@@ -935,7 +935,15 @@ def optimize():
 		if opt_nut != constraints[i]:
 			eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(int(round(totalNut[i]))) + " "+full_ext_nutrient_unit[constraints[i]-25])
 
-	eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(objective) + " "+full_ext_nutrient_unit[constraints[i]-25])
+	if objective == None:
+		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lower)+":"+str(upper)+ ") 0 "+full_ext_nutrient_unit[constraints[i]-25])
+		eachTotalStatement.append("None of the food items contain "+ full_ext_nutrient[opt_nut-25] + " to be optimized.")
+	else:
+		objective = int(objective)
+		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lower)+":"+str(upper)+ ") 0 "+full_ext_nutrient_unit[constraints[i]-25])
+
+	
+	
 	# nested list - inside is a tuple with percent value and the food by decreasing order	
 	nutExceedWhichFood = []
 	for i in range(len(nutExceed)):
