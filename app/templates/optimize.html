@@ -57,7 +57,8 @@
 	
 			{% if nutExceedStatement%}
 				{% if status == "Optimal"%}
-					Please Add More Food<br>
+					<a href="{{ url_for('resultSearch') }}" style="text-decoration: none" >
+					Please Add More Food</a><br>
 				{%endif%}
 			{%endif%}
 			</div>

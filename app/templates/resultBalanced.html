@@ -171,9 +171,7 @@
     					{%for field in foodsILike %}
     						{%if indexField >= 4%}
         						{{ field(value=True)}}
-        						<a href="{{ url_for('selectFoodInfoSuggest', foodIDInfo = field.name) }}" style="text-decoration: none">
         						{{foodNamesArg[indexField-4]}}
-        						</a>
         						<br>
         					{%endif%}
         					{% set indexField = indexField + 1%}
