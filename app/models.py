@@ -236,7 +236,6 @@ class Nutri(db.Model):
 		
 		if cal == 0:
 			return val
-# 		print "ratio of ", full_ext_nutrient[index-25], "is", val, "/", cal, "=", val/cal
 
 		return (val/cal)
 	

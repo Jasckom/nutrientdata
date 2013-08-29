@@ -22,38 +22,10 @@ basic_nutrient = ["Calories/kcal","Calories from Fat/kcal","Total Fat/g","Fat /%
 instrumentAttribute = [Food.mainType,Food.type,Food.food,Food.detail,Food.source,Food.amount,Food.unit,Food.gram,Food.cal_kcal,Food.calFat_kcal,Food.fat_g,Food.fat_pct,Food.saturFat_g,Food.polyunFat_g,Food.monounFat_g,Food.chol_mg,Food.sodium_mg,Food.carb_g,Food.fiber_g,Food.sugar_g,Food.protein_g,Food.vitA_pct,Food.vitC_pct,Food.calcium_pct,Food.iron_pct,Food.t0Water_g,Food.t0Energy_kcal,Food.t0Energy_kj,Food.t0Protein_g,Food.t0TotalLipidFat_g,Food.t0Carbohydrate_ByDifference_g,Food.t0Fiber_TotalDietary_g,Food.t0Sugars_Total_g,Food.t0Sucrose_g,Food.t0GlucoseDextrose_g,Food.t0Fructose_g,Food.t0Lactose_g,Food.t0Maltose_g,Food.t0Galactose_g,Food.t0Starch_g,Food.t0AdjustedProtein_g,Food.t1Calcium_Ca_mg,Food.t1Iron_Fe_mg,Food.t1Magnesium_Mg_mg,Food.t1Phosphorus_P_mg,Food.t1Potassium_K_mg,Food.t1Sodium_Na_mg,Food.t1Zinc_Zn_mg,Food.t1Copper_Cu_mg,Food.t1Manganese_Mn_mg,Food.t1Selenium_Se_mcg,Food.t1Fluoride_F_mcg,Food.t2VitaminC_TotalAscorbicAcid_mg,Food.t2Thiamin_mg,Food.t2Riboflavin_mg,Food.t2Niacin_mg,Food.t2PantothenicAcid_mg,Food.t2VitaminB_6_mg,Food.t2Folate_Total_mcg,Food.t2FolicAcid_mcg,Food.t2Folate_Food_mcg,Food.t2Folate_DFE_mcg_DFE,Food.t2Choline_Total_mg,Food.t2Betaine_mg,Food.t2VitaminB_12_mcg,Food.t2VitaminB_12_Added_mcg,Food.t2VitaminA_IU_IU,Food.t2VitaminA_RAE_mcg_RAE,Food.t2Retinol_mcg,Food.t2VitaminE_alpha_tocopherol__mg,Food.t2VitaminE_Added_mg,Food.t2Tocopherol_Beta_mg,Food.t2Tocopherol_Gamma_mg,Food.t2Tocopherol_Delta_mg,Food.t2VitaminKPhylloquinone_mcg,Food.t2Carotene_Beta_mcg,Food.t2Carotene_Alpha_mcg,Food.t2Cryptoxanthin_Beta_mcg,Food.t2Lycopene_mcg,Food.t2Lutein_Zeaxanthin_mcg,Food.t2VitaminD_IU,Food.t3Stigmasterol_mg,Food.t3Phytosterols_mg,Food.t3Beta_sitosterol_mg,Food.t3Campesterol_mg,Food.t3Cholesterol_mg,Food.t3FattyAcids_TotalMonounsaturated_g,Food.t3FattyAcids_TotalPolyunsaturated_g,Food.t3FattyAcids_TotalSaturated_g,Food.t3FattyAcids_TotalTrans_monoenoic_g,Food.t3FattyAcids_TotalTrans_polyenoic_g,Food.t3FattyAcids_TotalTrans_g,Food.t3MonounsaturatedFats14_1_g,Food.t3MonounsaturatedFats15_1_g,Food.t3MonounsaturatedFats16_1C_g,Food.t3MonounsaturatedFats16_1T_g,Food.t3MonounsaturatedFats16_1Undifferentiated_g,Food.t3MonounsaturatedFats17_1_g,Food.t3MonounsaturatedFats18_1C_g,Food.t3MonounsaturatedFats18_1T_g,Food.t3MonounsaturatedFats18_1Undifferentiated_g,Food.t3MonounsaturatedFats20_1_g,Food.t3MonounsaturatedFats22_1C_g,Food.t3MonounsaturatedFats22_1T_g,Food.t3MonounsaturatedFats22_1Undifferentiated_g,Food.t3MonounsaturatedFats24_1C_g,Food.t3PolyunsaturatedFats18_2CLAs_g,Food.t3PolyunsaturatedFats18_2I_g,Food.t3PolyunsaturatedFats18_2N_6C_c_g,Food.t3PolyunsaturatedFats18_2T_t_g,Food.t3PolyunsaturatedFats18_2TNotFurtherDefined_g,Food.t3PolyunsaturatedFats18_2Undifferentiated_g,Food.t3PolyunsaturatedFats18_3N_3C_c_c_g,Food.t3PolyunsaturatedFats18_3N_6C_c_c_g,Food.t3PolyunsaturatedFats18_3Undifferentiated_g,Food.t3PolyunsaturatedFats18_3i_g,Food.t3PolyunsaturatedFats18_4_g,Food.t3PolyunsaturatedFats20_2N_6C_c_g,Food.t3PolyunsaturatedFats20_3N_3_g,Food.t3PolyunsaturatedFats20_3N_6_g,Food.t3PolyunsaturatedFats20_3Undifferentiated_g,Food.t3PolyunsaturatedFats20_4N_6_g,Food.t3PolyunsaturatedFats20_4Undifferentiated_g,Food.t3PolyunsaturatedFats20_5N_3_g,Food.t3PolyunsaturatedFats21_5_g,Food.t3PolyunsaturatedFats22_4_g,Food.t3PolyunsaturatedFats22_5N_3_g,Food.t3PolyunsaturatedFats22_6N_3_g,Food.t3SaturatedFats10_0_g,Food.t3SaturatedFats12_0_g,Food.t3SaturatedFats13_0_g,Food.t3SaturatedFats14_0_g,Food.t3SaturatedFats15_0_g,Food.t3SaturatedFats16_0_g,Food.t3SaturatedFats17_0_g,Food.t3SaturatedFats18_0_g,Food.t3SaturatedFats20_0_g,Food.t3SaturatedFats22_0_g,Food.t3SaturatedFats24_0_g,Food.t3SaturatedFats4_0_g,Food.t3SaturatedFats6_0_g,Food.t3SaturatedFats8_0_g,Food.t4Alanine_g,Food.t4Arginine_g,Food.t4AsparticAcid_g,Food.t4Cystine_g,Food.t4GlutamicAcid_g,Food.t4Glycine_g,Food.t4Histidine_g,Food.t4Hydroxyproline_g,Food.t4Isoleucine_g,Food.t4Leucine_g,Food.t4Lysine_g,Food.t4Methionine_g,Food.t4Phenylalanine_g,Food.t4Proline_g,Food.t4Serine_g,Food.t4Threonine_g,Food.t4Tryptophan_g,Food.t4Tyrosine_g,Food.t4Valine_g,Food.t5Ash_g,Food.t5Alcohol_Ethyl_g,Food.t5Caffeine_mg,Food.t5Theobromine_mg]
 toReduce = [29]+ [i for i in range(32,41)] + [46]+[i for i in range(81,142)] + [i for i in range(161,165)]
 basicPlan = [26,28,29,30,31,32,41,42,46,52,85,88]
-# mainCategories = ['baked products', 'beans legume products', 'beef products', 'beverages', 'breakfast cereals', 'cereal grains pasta', 'dairy egg products', 'ethnic foods', 'fast foods', 'fats oils', 'fish seafood products', 'fruits fruit juices', 'lamb veal game products', 'meals entrees sidedishes', 'nut seed products', 'pork products', 'poultry products', 'sausages deli meats', 'snacks', 'soups sauces gravies', 'spices herbs', 'sweets', 'vegetables']
-# foodTypes = [['apple pies', 'bagels', 'banana muffins', 'banana pumpkin breads', 'biscotti', 'biscuit breads', 'blueberry muffins', 'bran muffins', 'bread', 'bread crumbs', 'breadsticks', 'brownies', 'cakes', 'carrot cakes', 'cheese crackers', 'cheesecakes', 'cherry berry pies', 'chocolate cakes', 'chocolate chip cookies', 'chocolate chip muffins', 'cinnamon raisin bread', 'coffee cakes', 'cookies', 'corn muffins', 'cornbread', 'crackers', 'cream custard pies', 'crepes', 'crispbread crackers', 'croissants', 'croutons', 'cupcakes', 'danish pastries', 'dinner rolls', 'doughnuts', 'english muffins crumpets', 'focaccia flat pizza breads', 'french italian bread', 'french toast', 'garlic bread toast', 'ginger cookies', 'graham crackers', 'hamburger buns', 'hot dog buns', 'lemon cakes', 'matzo', 'meat savory pies', 'muffins scones', 'multigrain bread', 'multigrain crackers', 'oatmeal cookies', 'oyster crackers', 'pancakes waffles', 'pastries', 'peanut butter cookies', 'pie pastry crusts', 'pies', 'pita bread', 'pumpkin pies', 'quiches', 'rice crackers cakes', 'rolls buns', 'rye bread', 'saltine crackers', 'sandwich cookies', 'scones', 'shortbread cookies', 'sourdough bread', 'stuffings', 'sugar cookies', 'sweet buns rolls', 'tarts', 'toast', 'toaster pastries', 'tortillas tacos wraps', 'wafer cookies', 'water crackers', 'wheat bread', 'wheat crackers', 'white bread'], ['baked beans', 'bean dishes', 'black beans', 'chickpeas', 'green beans', 'hummus', 'kidney beans', 'lentils', 'lima beans', 'meat substitutes tvps', 'pinto beans', 'refried beans', 'soybeans', 'tofu tempeh', 'tofu tempeh dishes', 'white beans'], ['beef', 'beef broccoli', 'beef cold cuts', 'beef dishes', 'beef meatballs', 'beef patties', 'beef ribs', 'beef stroganoff', 'chuck steak', 'corned beef', 'country fried steak', 'flank steak', 'ground beef', 'hamburgers', 'meatloaf', 'porterhouse', 'pot roast', 'roast beef', 'roast beef sandwiches', 'salisbury steak', 'sirloin steak', 'steak', 'steak sandwiches', 'teriyaki beef'], ['alcoholic drinks', 'americano', 'beer', 'black tea', 'bloody mary', 'cafe mocha', 'cappuccino', 'caramel macchiato', 'carbonated drinks', 'chocolate smoothies', 'coconut water', 'coffee', 'cola', 'cream soda', 'dunkin donuts', 'energy drinks', 'espresso', 'fruit punch', 'fruit smoothies', 'ginger ale', 'green tea', 'herbal tea', 'hot chocolate', 'hot drinks', 'iced coffee', 'iced tea', 'juices', 'latte', 'lemon lime soda', 'lite beer', 'mai tai', 'margarita', 'martini', 'milk', 'milk substitutes', 'mixers cocktails', 'nutritional drinks', 'orange soda', 'pina colada', 'protein body building shakes', 'root beer', 'seltzer sparkling club tonic water', 'smoothies', 'sports drinks', 'starbucks', 'tea', 'vanilla smoothies', 'vodka gin rum whiskey', 'water', 'weight loss meal replacement shakes', 'white tea', 'wine', 'yogurt drinks'], ['bran flakes', 'cold cereals', 'corn flakes', 'cream wheat', 'granola muesli', 'grits', 'hot cereals', 'oats oatmeal', 'rice cereal', 'wheat cereal', 'wheat germ bran'], ['angel hair', 'barley', 'basmati rice', 'breakfast cereals', 'brown rice', 'buckwheat kasha', 'bulgur', 'chicken rice', 'corn meal', 'couscous', 'egg noodles', 'fettucini', 'flour', 'fried rice', 'gnocchi', 'grains', 'lasagna', 'linguini', 'macaroni', 'macaroni beef', 'macaroni cheese', 'noodles', 'pasta', 'pasta casserole', 'pasta dishes', 'penne', 'polenta', 'quinoa', 'ramen noodles', 'ravioli', 'rice', 'rice beans', 'rice dishes', 'rice flour', 'rice pilaf', 'rigatoni', 'risotto', 'rotini', 'soy flour', 'spaghetti', 'spaghetti meatballs', 'tortellini', 'vermicelli', 'wheat flour', 'white rice', 'whole wheat pasta', 'wild rice', 'yellow rice'], ['american cheese', 'apple yogurt', 'banana yogurt', 'blue cheese', 'blueberry yogurt', 'brie cheese', 'butter', 'cheddar cheese', 'cheese', 'chive onion cream cheese', 'chocolate flavored milk', 'coffee yogurt', 'colby cheese', 'colby jack cheese', 'condensed evaporated milk', 'cottage cheese', 'cream', 'cream cheese', 'creamer', 'egg whites substitutes', 'eggs', 'fat free cream', 'fat yogurt', 'feta cheese', 'flavored yogurt', 'fried eggs', 'frozen yogurt', 'goat cheese', 'gouda cheese', 'greek yogurt', 'half', 'hard boiled eggs', 'havarti cheese', 'honey nut cream cheese', 'jack cheese', 'lemon lime yogurt', 'light cream cheese', 'light yogurt', 'low fat milk percent', 'milk shakes', 'mozzarella cheese', 'muenster cheese', 'omelets', 'parmesan cheese', 'peach yogurt', 'poached eggs', 'provolone cheese', 'raisin cream cheese', 'reduced fat milk percent', 'ricotta cheese', 'scrambled eggs', 'skim milk fat free', 'sour cream', 'strawberry cream cheese', 'strawberry yogurt', 'string cheese', 'swiss cheese', 'vanilla yogurt', 'vegetable cream cheese', 'whipped cream', 'whole milk', 'yogurt'], ['afghani food', 'african food', 'american food', 'arabic food', 'australasian food', 'australian food', 'austrian food', 'brazilian food', 'british food', 'canadian food', 'caribbean jamaican', 'chinese food', 'east asian food', 'ethiopian food', 'european food', 'french food', 'german food', 'greek food', 'indian food', 'irish food', 'italian food', 'japanese food', 'korean food', 'kosher israeli', 'latin food', 'mexican food', 'middle eastern food', 'moroccan food', 'new zealand food', 'north american food', 'pakistani food', 'polish food', 'portuguese food', 'russian food', 'scandinavian food', 'south african food', 'south asian food', 'spanish food', 'thai food', 'turkish food', 'vietnamese food'], ['blt sandwiches', 'breakfast sandwiches', 'burger sandwiches', 'burritos', 'calzones', 'cheese pizza', 'cheeseburgers', 'chicken burgers', 'chicken sandwiches', 'chili', 'club sandwiches', 'cold cut sandwiches', 'corn dogs', 'enchiladas', 'fajitas', 'fast food side dishes', 'fish sandwiches', 'french fries potato wedges', 'fried chicken', 'grilled cheese sandwiches', 'ham sandwiches', 'hash browns', 'hawaiian pizza', 'hot dogs', 'italian sandwiches', 'meatball sandwiches', 'nachos', 'onion rings', 'pepperoni pizza', 'pizza calzones', 'pork sandwiches', 'quesadillas', 'roast chicken', 'salads', 'sandwiches wraps', 'sausage pizza', 'sausage sandwiches', 'sausages', 'spring rolls', 'tacos', 'tamales', 'tex mex food', 'tuna sandwiches melts', 'turkey sandwiches', 'veggie burgers', 'veggie pizza', 'veggie sandwiches'], ['blue cheese dressing', 'caesar dressing', 'canola oil', 'cooking spray', 'corn oil', 'fats lard shortening', 'fish oil', 'french dressing', 'grape seed oil', 'greek dressing', 'honey mustard dressing', 'italian dressing', 'margarine', 'mayonnaise aioli', 'oils', 'olive oil', 'onion dressing', 'poppyseed dressing', 'ranch dressing', 'salad dressings', 'sesame dressing', 'sesame oil', 'thousand island dressing', 'vegetable oil', 'vegetable oil spread', 'vinegar vinaigrette dressing'], ['california rolls', 'clams', 'cod', 'crab', 'fish chips', 'fish dishes', 'fish sticks cakes', 'flounder', 'gefilte fish', 'haddock', 'halibut', 'herring', 'lobster', 'manhattan clam chowder', 'new england clam chowder', 'oysters', 'pollocks', 'salmon', 'sardines', 'scallops', 'shrimp', 'sole', 'sushi rolls', 'sushi sashimi', 'tilapia', 'tuna', 'whitefish pike'], ['apple juice', 'apples', 'apricots', 'avocados', 'bananas', 'blueberries', 'cherries', 'coconuts', 'cranberries', 'cranberry juice', 'fruit', 'fruit salads', 'grape juice', 'grapefruit juice', 'grapefruits', 'grapes', 'lemonade limeade', 'mangos', 'melons cantaloupe', 'olives', 'orange juice', 'oranges tangerines mandarins', 'peaches', 'pears', 'pineapple juice', 'pineapples', 'plums', 'pumpkins', 'raisins', 'raspberries', 'strawberries', 'tomato vegetable juice'], ['lamb', 'lamb dishes', 'veal', 'veal dishes'], ['baby food', 'baby food cereal', 'baby food dinners', 'baby food juice', 'baby food meats', 'baby food snacks', 'chicken dishes', 'egg dishes', 'ethnic foods', 'fast foods', 'fruit baby food', 'infant formula', 'pork dishes', 'potato dishes', 'turkey dishes', 'vegetable baby food', 'vegetable dishes'], ['almond other nut butters', 'almonds', 'cashews', 'chestnuts', 'flaxseeds', 'hazelnuts', 'macadamia nuts', 'nut trail mixes', 'peanut butter', 'peanuts', 'pecans', 'pine nuts', 'pistachios', 'pumpkin seeds', 'sesame seeds', 'soy nuts', 'sunflower seeds', 'walnuts'], ['bacon', 'ham', 'ham cold cuts', 'pork chops', 'pork loin', 'pork ribs', 'pork roast', 'pork sausage', 'pork shoulder', 'pork tenderloin', 'pulled pork'], ['bbq chicken', 'chicken', 'chicken breasts', 'chicken cold cuts', 'chicken drumsticks', 'chicken dumplings', 'chicken nuggets tenders', 'chicken parmesan', 'chicken patties', 'chicken salad', 'chicken sausage', 'chicken soups', 'chicken thighs', 'chicken tikka masala', 'chicken wings', 'duck', 'fried chicken', 'grilled chicken', 'ground turkey', 'teriyaki chicken', 'turkey', 'turkey bacon', 'turkey breast', 'turkey chili', 'turkey cold cuts', 'turkey legs', 'turkey patties', 'turkey sausage', 'turkey soups'], ['beef sausage', 'bologna cold cuts', 'bratwurst', 'chorizo', 'italian sausage', 'jerky snack sticks', 'lunch meats', 'pastrami', 'polish sausage', 'salami pepperoni'], ['banana plantain chips', 'candy', 'cereal bars', 'cheese puffs', 'chewing gum mints', 'chips', 'corn tortilla chips', 'cracker sandwiches', 'energy protein bars', 'filled pretzels', 'flavored pretzels', 'fruit nut bars', 'fruit snacks', 'granola bars', 'meal replacement bars', 'multigrain chips', 'nutrition bars', 'oatmeal raisin bars', 'pita bagel chips', 'popcorn', 'pork skins rinds', 'potato chips', 'pretzel sticks rods', 'pretzels', 'puddings', 'puffed rice bars', 'snack bars', 'snack mixes', 'soft pretzels', 'trail mix bars'], ['alfredo sauce', 'barbecue sauce', 'bean soup', 'beef barley soup', 'beef broth stock bouillon', 'beef chili', 'beef noodle soup', 'beef soups', 'beef stew', 'bisques', 'broth stock bouillon', 'bruschetta', 'butternut squash pumpkin soup', 'cheese dip', 'cheese soups', 'chicken broth stock bouillon', 'chicken gravy', 'chicken noodle soup', 'chicken rice soup', 'chowders', 'chutney', 'cocktail sauce', 'condiments', 'corn chowder', 'cream broccoli soup', 'cream chicken soup', 'cream mushroom soup', 'cream potato soup', 'cream soups', 'cream tomato soup', 'curry sauce', 'dips spreads', 'french onion dip', 'garlic sauce', 'gravy', 'guacamole', 'gumbo', 'hot sauce chipotle', 'ketchup', 'lentil soup', 'marinades', 'marinara tomato sauce', 'minestrone soup', 'mushroom gravy', 'mushroom soup', 'mustard', 'onion soup', 'pasta pizza sauces', 'pate', 'pea soup', 'peanut sauce', 'pesto sauce', 'potato soup', 'relish', 'salsa', 'sauces', 'soups', 'soy sauce', 'spinach dip', 'steak sauce', 'stews', 'sugars syrups', 'sweet sour sauce', 'tapenade', 'tartar sauce', 'teriyaki sauce', 'tomato soup', 'tortilla soup', 'turkey gravy', 'vegetable broth bouillon', 'vegetable soups', 'vodka sauce', 'wedding soup'], ['baking soda', 'chili powder', 'coating mixes', 'curry', 'food coloring', 'garlic', 'ginger', 'onion', 'oregano', 'paprika', 'parsley', 'pepper', 'salt', 'seasoning mix', 'steak seasoning', 'vitamins'], ['apple butter', 'apple jams jellies', 'artificial sweeteners', 'brown sugar', 'candy canes christmas', 'caramel candy', 'caramel syrup', 'chocolate', 'chocolate candy', 'chocolate candy bars', 'chocolate chips morsels', 'chocolate covered candy', 'chocolate ice cream', 'chocolate pudding', 'chocolate spreads', 'chocolate syrup', 'coffee ice cream', 'cookies n cream ice', 'crisps cobblers', 'dark chocolate', 'decorating icing', 'dessert toppings', 'desserts', 'easter eggs candy', 'fat free ice cream', 'flavored syrups', 'fruit desserts compotes', 'fruit jams jellies', 'gelatin desserts', 'grape jams jellies', 'gummy snacks', 'hard candy', 'honey', 'ice cream bars', 'ice cream cakes', 'ice cream sandwiches', 'ice cream sorbet', 'ice cream sundaes', 'icing decorations', 'icings frostings', 'jellies jams preserves spreads', 'licorice', 'lite syrup', 'lollipops suckers', 'low fat ice cream', 'maple syrup', 'marmalade', 'marshmallows', 'milk chocolate', 'orange jams jellies', 'pancake syrup', 'parfaits', 'pie cake fillings', 'rice pudding', 'sauces', 'seasonal candy', 'sherbet sorbet', 'soft serve frozen yogurt', 'sour candy', 'sprinkles', 'strawberry ice cream', 'strawberry jams jellies', 'sugar free candy', 'sugar free ice cream', 'sugar free syrup', 'sugars sweeteners', 'toppings', 'valentines candy', 'vanilla', 'vanilla ice cream', 'vanilla pudding', 'whipped toppings'], ['artichokes', 'asparagus', 'au gratin potatoes', 'baked potato', 'beets', 'broccoli', 'cabbage', 'caesar salad', 'carrots', 'cauliflower', 'celery', 'chili peppers', 'coleslaw', 'collards', 'corn', 'cucumber', 'eggplant', 'fruit vegetables', 'garden salad', 'garlic', 'inflorescence vegetables', 'kale', 'leafy vegetables', 'lettuce', 'mashed potatoes', 'mixed vegetables', 'mushrooms', 'onions', 'peas', 'pickles pickled vegetables', 'potato salad', 'potatoes yams', 'pumpkin squash', 'radishes', 'root vegetables', 'scalloped potatoes', 'souffle', 'spinach', 'sprouts', 'stem vegetables', 'stir fried vegetables', 'sweet peppers', 'tomatoes', 'turnips', 'vegetable casseroles', 'zucchini']]
 
 mainCategories = ['baked products', 'beans legume products', 'beef products', 'beverages', 'breakfast cereals', 'cereal grains pasta', 'dairy products', 'egg products', 'ethnic foods', 'fast foods', 'fats oils', 'fish seafood products', 'fruits fruit juices', 'lamb veal game products', 'meals entrees sidedishes', 'nut seed products', 'pork products', 'poultry products', 'sausages deli meats', 'snacks', 'soups sauces gravies', 'spices herbs', 'sweets', 'vegetables']
 foodTypes = [['apple pies', 'bagels', 'banana muffins', 'banana pumpkin breads', 'biscotti', 'biscuit breads', 'blueberry muffins', 'bran muffins', 'bread', 'bread crumbs', 'breadsticks', 'brownies', 'cakes', 'carrot cakes', 'cheese crackers', 'cheesecakes', 'cherry berry pies', 'chocolate cakes', 'chocolate chip cookies', 'chocolate chip muffins', 'cinnamon raisin bread', 'coffee cakes', 'cookies', 'corn muffins', 'cornbread', 'crackers', 'cream custard pies', 'crepes', 'crispbread crackers', 'croissants', 'croutons', 'cupcakes', 'danish pastries', 'dinner rolls', 'doughnuts', 'english muffins crumpets', 'focaccia flat pizza breads', 'french italian bread', 'french toast', 'garlic bread toast', 'ginger cookies', 'graham crackers', 'hamburger buns', 'hot dog buns', 'lemon cakes', 'matzo', 'meat savory pies', 'muffins scones', 'multigrain bread', 'multigrain crackers', 'oatmeal cookies', 'oyster crackers', 'pancakes waffles', 'pastries', 'peanut butter cookies', 'pie pastry crusts', 'pies', 'pita bread', 'pumpkin pies', 'quiches', 'rice crackers cakes', 'rolls buns', 'rye bread', 'saltine crackers', 'sandwich cookies', 'scones', 'shortbread cookies', 'sourdough bread', 'stuffings', 'sugar cookies', 'sweet buns rolls', 'tarts', 'toast', 'toaster pastries', 'tortillas tacos wraps', 'wafer cookies', 'water crackers', 'wheat bread', 'wheat crackers', 'white bread'], ['baked beans', 'bean dishes', 'black beans', 'chickpeas', 'green beans', 'hummus', 'kidney beans', 'lentils', 'lima beans', 'meat substitutes tvps', 'pinto beans', 'refried beans', 'soybeans', 'tofu tempeh', 'tofu tempeh dishes', 'white beans'], ['beef', 'beef broccoli', 'beef cold cuts', 'beef dishes', 'beef meatballs', 'beef patties', 'beef ribs', 'beef stroganoff', 'chuck steak', 'corned beef', 'country fried steak', 'flank steak', 'ground beef', 'hamburgers', 'meatloaf', 'porterhouse', 'pot roast', 'roast beef', 'roast beef sandwiches', 'salisbury steak', 'sirloin steak', 'steak', 'steak sandwiches', 'teriyaki beef'], ['alcoholic drinks', 'americano', 'beer', 'black tea', 'bloody mary', 'cafe mocha', 'cappuccino', 'caramel macchiato', 'carbonated drinks', 'chocolate smoothies', 'coconut water', 'coffee', 'cola', 'cream soda', 'dunkin donuts', 'energy drinks', 'espresso', 'fruit punch', 'fruit smoothies', 'ginger ale', 'green tea', 'herbal tea', 'hot chocolate', 'hot drinks', 'iced coffee', 'iced tea', 'juices', 'latte', 'lemon lime soda', 'lite beer', 'mai tai', 'margarita', 'martini', 'milk', 'milk substitutes', 'mixers cocktails', 'nutritional drinks', 'orange soda', 'pina colada', 'protein body building shakes', 'root beer', 'seltzer sparkling club tonic water', 'smoothies', 'sports drinks', 'starbucks', 'tea', 'vanilla smoothies', 'vodka gin rum whiskey', 'water', 'weight loss meal replacement shakes', 'white tea', 'wine', 'yogurt drinks'], ['bran flakes', 'cold cereals', 'corn flakes', 'cream wheat', 'granola muesli', 'grits', 'hot cereals', 'oats oatmeal', 'rice cereal', 'wheat cereal', 'wheat germ bran'], ['angel hair', 'barley', 'basmati rice', 'breakfast cereals', 'brown rice', 'buckwheat kasha', 'bulgur', 'chicken rice', 'corn meal', 'couscous', 'egg noodles', 'fettucini', 'flour', 'fried rice', 'gnocchi', 'grains', 'lasagna', 'linguini', 'macaroni', 'macaroni beef', 'macaroni cheese', 'noodles', 'pasta', 'pasta casserole', 'pasta dishes', 'penne', 'polenta', 'quinoa', 'ramen noodles', 'ravioli', 'rice', 'rice beans', 'rice dishes', 'rice flour', 'rice pilaf', 'rigatoni', 'risotto', 'rotini', 'soy flour', 'spaghetti', 'spaghetti meatballs', 'tortellini', 'vermicelli', 'wheat flour', 'white rice', 'whole wheat pasta', 'wild rice', 'yellow rice'], ['american cheese', 'apple yogurt', 'banana yogurt', 'blue cheese', 'blueberry yogurt', 'brie cheese', 'butter', 'cheddar cheese', 'cheese', 'chive onion cream cheese', 'chocolate flavored milk', 'coffee yogurt', 'colby cheese', 'colby jack cheese', 'condensed evaporated milk', 'cottage cheese', 'cream', 'cream cheese', 'creamer', 'fat free cream', 'fat yogurt', 'feta cheese', 'flavored yogurt', 'frozen yogurt', 'goat cheese', 'gouda cheese', 'greek yogurt', 'half', 'havarti cheese', 'honey nut cream cheese', 'jack cheese', 'lemon lime yogurt', 'light cream cheese', 'light yogurt', 'low fat milk percent', 'milk shakes', 'mozzarella cheese', 'muenster cheese', 'omelets', 'parmesan cheese', 'peach yogurt', 'provolone cheese', 'raisin cream cheese', 'reduced fat milk percent', 'ricotta cheese', 'skim milk fat free', 'sour cream', 'strawberry cream cheese', 'strawberry yogurt', 'string cheese', 'swiss cheese', 'vanilla yogurt', 'vegetable cream cheese', 'whipped cream', 'whole milk', 'yogurt'],['egg whites substitutes', 'eggs', 'fried eggs', 'hard boiled eggs', 'poached eggs', 'scrambled eggs'],['afghani food', 'african food', 'american food', 'arabic food', 'australasian food', 'australian food', 'austrian food', 'brazilian food', 'british food', 'canadian food', 'caribbean jamaican', 'chinese food', 'east asian food', 'ethiopian food', 'european food', 'french food', 'german food', 'greek food', 'indian food', 'irish food', 'italian food', 'japanese food', 'korean food', 'kosher israeli', 'latin food', 'mexican food', 'middle eastern food', 'moroccan food', 'new zealand food', 'north american food', 'pakistani food', 'polish food', 'portuguese food', 'russian food', 'scandinavian food', 'south african food', 'south asian food', 'spanish food', 'thai food', 'turkish food', 'vietnamese food'], ['blt sandwiches', 'breakfast sandwiches', 'burger sandwiches', 'burritos', 'calzones', 'cheese pizza', 'cheeseburgers', 'chicken burgers', 'chicken sandwiches', 'chili', 'club sandwiches', 'cold cut sandwiches', 'corn dogs', 'enchiladas', 'fajitas', 'fast food side dishes', 'fish sandwiches', 'french fries potato wedges', 'fried chicken', 'grilled cheese sandwiches', 'ham sandwiches', 'hash browns', 'hawaiian pizza', 'hot dogs', 'italian sandwiches', 'meatball sandwiches', 'nachos', 'onion rings', 'pepperoni pizza', 'pizza calzones', 'pork sandwiches', 'quesadillas', 'roast chicken', 'salads', 'sandwiches wraps', 'sausage pizza', 'sausage sandwiches', 'sausages', 'spring rolls', 'tacos', 'tamales', 'tex mex food', 'tuna sandwiches melts', 'turkey sandwiches', 'veggie burgers', 'veggie pizza', 'veggie sandwiches'], ['blue cheese dressing', 'caesar dressing', 'canola oil', 'cooking spray', 'corn oil', 'fats lard shortening', 'fish oil', 'french dressing', 'grape seed oil', 'greek dressing', 'honey mustard dressing', 'italian dressing', 'margarine', 'mayonnaise aioli', 'oils', 'olive oil', 'onion dressing', 'poppyseed dressing', 'ranch dressing', 'salad dressings', 'sesame dressing', 'sesame oil', 'thousand island dressing', 'vegetable oil', 'vegetable oil spread', 'vinegar vinaigrette dressing'], ['california rolls', 'clams', 'cod', 'crab', 'fish chips', 'fish dishes', 'fish sticks cakes', 'flounder', 'gefilte fish', 'haddock', 'halibut', 'herring', 'lobster', 'manhattan clam chowder', 'new england clam chowder', 'oysters', 'pollocks', 'salmon', 'sardines', 'scallops', 'shrimp', 'sole', 'sushi rolls', 'sushi sashimi', 'tilapia', 'tuna', 'whitefish pike'], ['apple juice', 'apples', 'apricots', 'avocados', 'bananas', 'blueberries', 'cherries', 'coconuts', 'cranberries', 'cranberry juice', 'fruit', 'fruit salads', 'grape juice', 'grapefruit juice', 'grapefruits', 'grapes', 'lemonade limeade', 'mangos', 'melons cantaloupe', 'olives', 'orange juice', 'oranges tangerines mandarins', 'peaches', 'pears', 'pineapple juice', 'pineapples', 'plums', 'pumpkins', 'raisins', 'raspberries', 'strawberries', 'tomato vegetable juice'], ['lamb', 'lamb dishes', 'veal', 'veal dishes'], ['baby food', 'baby food cereal', 'baby food dinners', 'baby food juice', 'baby food meats', 'baby food snacks', 'chicken dishes', 'egg dishes', 'ethnic foods', 'fast foods', 'fruit baby food', 'infant formula', 'pork dishes', 'potato dishes', 'turkey dishes', 'vegetable baby food', 'vegetable dishes'], ['almond other nut butters', 'almonds', 'cashews', 'chestnuts', 'flaxseeds', 'hazelnuts', 'macadamia nuts', 'nut trail mixes', 'peanut butter', 'peanuts', 'pecans', 'pine nuts', 'pistachios', 'pumpkin seeds', 'sesame seeds', 'soy nuts', 'sunflower seeds', 'walnuts'], ['bacon', 'ham', 'ham cold cuts', 'pork chops', 'pork loin', 'pork ribs', 'pork roast', 'pork sausage', 'pork shoulder', 'pork tenderloin', 'pulled pork'], ['bbq chicken', 'chicken', 'chicken breasts', 'chicken cold cuts', 'chicken drumsticks', 'chicken dumplings', 'chicken nuggets tenders', 'chicken parmesan', 'chicken patties', 'chicken salad', 'chicken sausage', 'chicken soups', 'chicken thighs', 'chicken tikka masala', 'chicken wings', 'duck', 'fried chicken', 'grilled chicken', 'ground turkey', 'teriyaki chicken', 'turkey', 'turkey bacon', 'turkey breast', 'turkey chili', 'turkey cold cuts', 'turkey legs', 'turkey patties', 'turkey sausage', 'turkey soups'], ['beef sausage', 'bologna cold cuts', 'bratwurst', 'chorizo', 'italian sausage', 'jerky snack sticks', 'lunch meats', 'pastrami', 'polish sausage', 'salami pepperoni'], ['banana plantain chips', 'candy', 'cereal bars', 'cheese puffs', 'chewing gum mints', 'chips', 'corn tortilla chips', 'cracker sandwiches', 'energy protein bars', 'filled pretzels', 'flavored pretzels', 'fruit nut bars', 'fruit snacks', 'granola bars', 'meal replacement bars', 'multigrain chips', 'nutrition bars', 'oatmeal raisin bars', 'pita bagel chips', 'popcorn', 'pork skins rinds', 'potato chips', 'pretzel sticks rods', 'pretzels', 'puddings', 'puffed rice bars', 'snack bars', 'snack mixes', 'soft pretzels', 'trail mix bars'], ['alfredo sauce', 'barbecue sauce', 'bean soup', 'beef barley soup', 'beef broth stock bouillon', 'beef chili', 'beef noodle soup', 'beef soups', 'beef stew', 'bisques', 'broth stock bouillon', 'bruschetta', 'butternut squash pumpkin soup', 'cheese dip', 'cheese soups', 'chicken broth stock bouillon', 'chicken gravy', 'chicken noodle soup', 'chicken rice soup', 'chowders', 'chutney', 'cocktail sauce', 'condiments', 'corn chowder', 'cream broccoli soup', 'cream chicken soup', 'cream mushroom soup', 'cream potato soup', 'cream soups', 'cream tomato soup', 'curry sauce', 'dips spreads', 'french onion dip', 'garlic sauce', 'gravy', 'guacamole', 'gumbo', 'hot sauce chipotle', 'ketchup', 'lentil soup', 'marinades', 'marinara tomato sauce', 'minestrone soup', 'mushroom gravy', 'mushroom soup', 'mustard', 'onion soup', 'pasta pizza sauces', 'pate', 'pea soup', 'peanut sauce', 'pesto sauce', 'potato soup', 'relish', 'salsa', 'sauces', 'soups', 'soy sauce', 'spinach dip', 'steak sauce', 'stews', 'sugars syrups', 'sweet sour sauce', 'tapenade', 'tartar sauce', 'teriyaki sauce', 'tomato soup', 'tortilla soup', 'turkey gravy', 'vegetable broth bouillon', 'vegetable soups', 'vodka sauce', 'wedding soup'], ['baking soda', 'chili powder', 'coating mixes', 'curry', 'food coloring', 'garlic', 'ginger', 'onion', 'oregano', 'paprika', 'parsley', 'pepper', 'salt', 'seasoning mix', 'steak seasoning', 'vitamins'], ['apple butter', 'apple jams jellies', 'artificial sweeteners', 'brown sugar', 'candy canes christmas', 'caramel candy', 'caramel syrup', 'chocolate', 'chocolate candy', 'chocolate candy bars', 'chocolate chips morsels', 'chocolate covered candy', 'chocolate ice cream', 'chocolate pudding', 'chocolate spreads', 'chocolate syrup', 'coffee ice cream', 'cookies n cream ice', 'crisps cobblers', 'dark chocolate', 'decorating icing', 'dessert toppings', 'desserts', 'easter eggs candy', 'fat free ice cream', 'flavored syrups', 'fruit desserts compotes', 'fruit jams jellies', 'gelatin desserts', 'grape jams jellies', 'gummy snacks', 'hard candy', 'honey', 'ice cream bars', 'ice cream cakes', 'ice cream sandwiches', 'ice cream sorbet', 'ice cream sundaes', 'icing decorations', 'icings frostings', 'jellies jams preserves spreads', 'licorice', 'lite syrup', 'lollipops suckers', 'low fat ice cream', 'maple syrup', 'marmalade', 'marshmallows', 'milk chocolate', 'orange jams jellies', 'pancake syrup', 'parfaits', 'pie cake fillings', 'rice pudding', 'sauces', 'seasonal candy', 'sherbet sorbet', 'soft serve frozen yogurt', 'sour candy', 'sprinkles', 'strawberry ice cream', 'strawberry jams jellies', 'sugar free candy', 'sugar free ice cream', 'sugar free syrup', 'sugars sweeteners', 'toppings', 'valentines candy', 'vanilla', 'vanilla ice cream', 'vanilla pudding', 'whipped toppings'], ['artichokes', 'asparagus', 'au gratin potatoes', 'baked potato', 'beets', 'broccoli', 'cabbage', 'caesar salad', 'carrots', 'cauliflower', 'celery', 'chili peppers', 'coleslaw', 'collards', 'corn', 'cucumber', 'eggplant', 'fruit vegetables', 'garden salad', 'garlic', 'inflorescence vegetables', 'kale', 'leafy vegetables', 'lettuce', 'mashed potatoes', 'mixed vegetables', 'mushrooms', 'onions', 'peas', 'pickles pickled vegetables', 'potato salad', 'potatoes yams', 'pumpkin squash', 'radishes', 'root vegetables', 'scalloped potatoes', 'souffle', 'spinach', 'sprouts', 'stem vegetables', 'stir fried vegetables', 'sweet peppers', 'tomatoes', 'turnips', 'vegetable casseroles', 'zucchini']]
 
-
-# def getCat():
-# 	toSkip = [38 , 123 , 124 , 126 , 137 , 138 , 142 , 163 , 178 , 179 , 184 , 186 , 188 , 189 , 190 , 191 , 193 , 194 , 196 , 197 , 199 , 302 , 316 , 317 , 359 , 371 , 400 , 709 , 710 , 711 , 712 , 738 , 740 , 744 ]
-# 	categories = []
-# 	foodTypes = []
-# 	foodTypesinCat = []
-# 	categoryFile = open('IndexCategories','r')
-# 	for eachCat in categoryFile:
-# 		eachCatList = eachCat.split('^')
-# 		cat = int(eachCatList[0])
-# 		food = eachCatList[1]
-# 		if cat in toSkip:
-# 			continue
-# 		if cat < 0:
-# 			categories.append(food)
-# 			foodTypesinCat.sort()
-# 			foodTypes.append(foodTypesinCat)
-# 			foodTypesinCat = []
-# 		else:
-# 			foodTypesinCat.append(food)
-# 	foodTypesinCat.sort()
-# 	foodTypes.append(foodTypesinCat)
-# 	foodTypes.remove([])
-# 	return (categories, foodTypes)
-# 	
-# (mainCategories, foodTypes) = getCat()
 
 #Determine if the entry from search box is with brand or 
 def getSearchEntry(brandEntry,searchEntry):
@@ -67,38 +39,6 @@ def getSearchEntry(brandEntry,searchEntry):
 		else:
 			searchEntry = "brandOnly:"+brandEntry
 	return searchEntry
-
-
-# @login_required
-# @app.route('/index', methods = ['GET', 'POST'])
-# def index():
-# 	##print session
-# 	#If first page they decided to search - give anonymous user
-# 	first = True
-# 	form = SearchForm()
-# 	if form.validate_on_submit():
-# 		if not g.user.is_authenticated():
-# 			guestID = (datetime.utcnow()-datetime(1970,1,1)).total_seconds()
-# 			guestID = (str(guestID)).split('.')
-# 			guestID = int((guestID[0]+guestID[1]))
-# 			guestUser = User(username = str(guestID), role = 2)
-# 			db.session.add(guestUser)
-# 			db.session.commit()
-# 			login_user(guestUser)
-# 			##print guestUser
-# 		searchEntry = form.searchEntry.data
-# 		brandEntry = form.brandEntry.data
-# 		#print "in search, brand is: ", brandEntry
-# 		if not brandEntry is None:
-# 			searchEntry += ":"+brandEntry
-# 		session["result"] = searchEntry
-# 		#print session
-# 		#print "sending to result"
-# 		return redirect(url_for('resultSearch'))
-# 	return render_template('search.html',
-# 		title = 'Search your food',
-# 		form = form,
-# 		first = first)
     
 def getMatchingCat(searchEntry,foodTypes):
 	matchingCat = []
@@ -311,9 +251,7 @@ def resultCategory(categoryChosen, page = 1):
 	global mainCategories
 	global foodTypes
 	global full_ext_nutrient
-	
-	#print "Test catchosen: ",categoryChosen
-	
+		
 	# filterNut is the index of nutRatioUnmet
 	#Search Function
 	form = SearchForm()
@@ -402,8 +340,6 @@ def resultCategory(categoryChosen, page = 1):
 		box2Head = categoryChosen
 	
 	(info, food) = getInfo()
-# 	for each in foodsILike:
-		#print each.label
 	
 	return render_template('resultCategory.html',
 			title = 'Search your food',
@@ -489,6 +425,7 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 					if each in basicPlan:
 						newConstrainsts.append(each)
 				constraints = newConstrainsts
+		
 			
 		(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, foodItems, g.user.nutri[0])
 						
@@ -527,9 +464,9 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 						newConstrainsts.append(each)
 				constraints = newConstrainsts
 		
-		foodItems = []
-		for i in range(len(session[g.user.get_id()])):
-			foodItems.append(Food.query.filter(Food.id ==session[g.user.get_id()][i]).first())
+		foodItems = Food.query.filter(Food.id.in_(session[g.user.get_id()])).all()
+# 		for i in range(len(session[g.user.get_id()])):
+# 			foodItems.append(Food.query.filter(Food.id ==session[g.user.get_id()][i]).first())
 			
 		(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, foodItems, g.user.nutri[0])
 		
@@ -583,10 +520,6 @@ def getKeysBounds(nutriObject,override):
 		i += 1
 
 	db.session.commit()
-# 	#print "In f(getKeybounds) end: "
-# 	for eachkey in nutriObject.__table__.columns.keys():
-# 		nutriField.append(eachkey)
-#		#print eachkey, getattr(nutriObject, eachkey)
 	check[0] = 0
 	
 	return 	check, nutriField, defaultGenlowerBound, defautGenupperBound
@@ -594,21 +527,25 @@ def getKeysBounds(nutriObject,override):
 # tell ratios and indicate which nutrient is not satisfied
 def reportRatio2(constraints, foodItems, nutri):
 
+	# If there are no constraints and food items given
 	if (not constraints) and (not foodItems):
 		return None, [],[],[]	
 	nutRatioUnmet = []
 	nutRatioMin = []
 	nullNut = []
 	failedBestFood = []
-
+	
+	#get the calorie value that comes in nutri
 	givenCal = nutri.t0Energy_kcal.split(":")[1]
 	if givenCal == "ND":
 		givenCal = 5000
 	else:
 		givenCal = float(givenCal)
+		
 	bestFoods = []
 	bestFoodsVals = []
-
+	
+	# if food item is not given - then return only ratios and constraints
 	if not foodItems:
 		for eachCon in constraints:
 			nutRatioMin.append(nutri.nutCalRatio(eachCon))
@@ -625,8 +562,9 @@ def reportRatio2(constraints, foodItems, nutri):
 				bestFood = foodItems[j]
 		bestFoods.append(bestFood)
 		bestFoodsVals.append(maxNut)
+		if eachCon == 58:
+			print bestFood
 	
-
 	for i in range(len(constraints)):
 		eachCon = constraints[i]
 		bestFoodVal = bestFoodsVals[i]
@@ -636,13 +574,9 @@ def reportRatio2(constraints, foodItems, nutri):
 			nutRatioUnmet.append(eachCon)
 			nutRatioMin.append(minRatio)
 			failedBestFood.append(nutRatio)
-			#print eachCon, nutRatio, "<=", minRatio
+		if eachCon == 58:
+			print full_ext_nutrient[eachCon-25]
 	
-# 	if not session["nutLack"]:
-# 		return givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
-	
-	
-		
 	nutRatioMinNew = []
 	nutRatioUnmetNew = []
 	print "nutLack", session["nutLack"]
@@ -652,21 +586,11 @@ def reportRatio2(constraints, foodItems, nutri):
 			indexNut = nutRatioUnmet.index(each)
 			nutRatioMinNew.append(nutRatioMin[indexNut])
 			nutRatioUnmetNew.append(nutRatioUnmet[indexNut])
-	
-	
-# 	if not nutRatioMinNew and not nutRatioUnmetNew:
-# 		if session["nutLack"]:
-# 			nutRatioUnmetNew = session["nutLack"]
-# 			for i in range(len(session["nutLack"])):
-# 				eachCon = session["nutLack"][i]
-# 				minRatio= nutri.nutCalRatio(eachCon)
-# 				nutRatioMinNew.append(minRatio)
-		
-	
+			
 	return givenCal, failedBestFood, nutRatioMinNew, nutRatioUnmetNew
 
 
-# XX return dictionary of each lacking nutrient and how much
+# return dictionary of each lacking nutrient and how much
 def reportTotal(constraints, outputFoodAmount, foodItems):
 	#print outputFoodAmount
 	TotalNut = []
@@ -679,35 +603,7 @@ def reportTotal(constraints, outputFoodAmount, foodItems):
 			eachFoodNut = float(eachFood.value(eachCon))
 			totalEachNut.append(outputFoodAmount[j]*eachFoodNut)
 		TotalNut.append(sum(totalEachNut))			
-# 	for i in range(len(TotalNut)):
-# 		#print full_ext_nutrient[constraints[i]-25], TotalNut[i]
 	return TotalNut
-
-# XXreturn dictionary of each lacking nutrient and how much
-def addHealthy(check, lowerbound, foodItems, multiple):
-	lackingNut = []
-	amountMoreNut = []
-	global full_ext_nutrient
-	for i in range(len(check)):
-		if check[i]: # if it is one of the constraints
-			totalEachNut = []
-			for eachFood in foodItems:
-				eachFoodNut = float(eachFood.value(i+25))
-				totalEachNut.append(eachFoodNut)
-			if lowerbound[i] == "ND":
-				bound = 0
-			else:
-				bound = float(lowerbound[i])
-			#print "Total each ", full_ext_nutrient[i], bound, sum(totalEachNut)
-			if sum(totalEachNut) <= multiple*bound:
-				sumEachNut = sum(totalEachNut)
-				lackingNut.append(i)
-				amountMoreNut.append(multiple*bound-sum(totalEachNut))
-			
-#  	#print "Add healthy"
-#  	for i in range(len(lackingNut)):
-#  		#print full_ext_nutrient[lackingNut[i]], amountMoreNut[i]
-	return lackingNut, amountMoreNut
 
 # get calories based on nutri given	
 def getCal(height, height2, weight, USorMetric, gender, activity,age):
@@ -751,7 +647,6 @@ def getageGroup(age):
 	return result
 
 def showExceed(xNut, totalNut, foodAmount, foodItems):
-# 	foodItems = [Food.query.filter(Food.id==each) for each in session["optimize"] ]
 	nutrientPercent = []
 	for i in range(len(foodItems)):
 		xVal = foodItems[i].value(xNut)
@@ -859,9 +754,6 @@ def manage():
 					constraintsupperBound.append(field.data)
 			i += 1
 
-		#session["currentCheck"] = currentCheck		
-		#Save the nutritional constraints
-		#print "Save nutritional"
 		currentCheck = [0 for i in range(len(constraintsupperBound))]
 		for eachCon in constraints:
 			currentCheck[eachCon-25] = 1
@@ -1036,8 +928,14 @@ def optimize():
 			
 		lower = lowerBoundConst[i]
 		upper = upperBoundConst[i]
-		eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(int(round(totalNut[i]))) + " "+full_ext_nutrient_unit[constraints[i]-25])
+		if lower == 10000:
+			lower = "ND"
+		if upper == 10000:
+			upper = "ND"
+		if opt_nut != constraints[i]:
+			eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(int(round(totalNut[i]))) + " "+full_ext_nutrient_unit[constraints[i]-25])
 
+	eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(objective) + " "+full_ext_nutrient_unit[constraints[i]-25])
 	# nested list - inside is a tuple with percent value and the food by decreasing order	
 	nutExceedWhichFood = []
 	for i in range(len(nutExceed)):
@@ -1309,6 +1207,7 @@ def resultSuggest(page = 1):
 	
 	indexRatio = int(session[("chosenNut")])
 	ratio = nutRatioMin[indexRatio]
+	ratio = ratio*1.005
 # 	sumNut = sumNutUnmet[indexRatio]
 	nutChosen = nutRatioUnmet[indexRatio]
 	opt_maxormin =  session["opt_maxormin"]
