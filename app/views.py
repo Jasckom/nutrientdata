@@ -1251,10 +1251,10 @@ def resultSuggest(page = 1):
 			else:
 				heading2List = "In the Database:"
 		
-		if nutChosen in toReduce:
-			result = result.order_by(asc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
-		else:
-			result = result.order_by(desc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
+# 		if nutChosen in toReduce:
+# 			result = result.order_by(asc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
+# 		else:
+		result = result.order_by(desc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
 
 	else:
 		#print typesILike, MainTypeILike
@@ -1268,19 +1268,19 @@ def resultSuggest(page = 1):
 				#result None
 				heading2List = "Please See Suggested Food Types. "+heading2List+":"
 
-		if nutChosen in toReduce:
-			result = result.order_by(asc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
-		else:
-			result = result.order_by(desc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
+# 		if nutChosen in toReduce:
+# 			result = result.order_by(asc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
+# 		else:
+		result = result.order_by(desc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
 	box2Head = heading2List
 	#print "box2Head" , box2Head 
 # 	for each in result.items:
 		#print each.food, each.type, each.mainType
 		#print each.value(nutChosen)
  
- 	if nutChosen in toReduce:
-		titleFindFood = "Foods Low in "+ currentNutName
-	else:
+#  	if nutChosen in toReduce:
+# 		titleFindFood = "Foods Low in "+ currentNutName
+# 	else:
 		titleFindFood = "Foods High in "+ currentNutName
 
 	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
