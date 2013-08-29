@@ -1281,7 +1281,7 @@ def resultSuggest(page = 1):
 #  	if nutChosen in toReduce:
 # 		titleFindFood = "Foods Low in "+ currentNutName
 # 	else:
-		titleFindFood = "Foods High in "+ currentNutName
+	titleFindFood = "Foods High in "+ currentNutName
 
 	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
 	(info, food) = getInfo()
