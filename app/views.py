@@ -940,7 +940,7 @@ def optimize():
 		eachTotalStatement.append("None of the food items contain "+ full_ext_nutrient[opt_nut-25] + " to be optimized.")
 	else:
 		objective = int(objective)
-		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lower)+":"+str(upper)+ ") 0 "+full_ext_nutrient_unit[constraints[i]-25])
+		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(objective) +" "+full_ext_nutrient_unit[constraints[i]-25])
 
 	
 	
