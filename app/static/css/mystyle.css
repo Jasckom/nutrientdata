@@ -292,6 +292,17 @@ height: 280px;
 position: relative;
 margin-bottom: 20px;
 border: solid
+}
+
+#sectionsInLongText{
+float: left;
+width: 220px;
+height: 220px;
+position: relative;
+margin-bottom: 20px;
+border: solid;
+padding:30px;
+
 
 }
 

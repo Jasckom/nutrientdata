@@ -170,6 +170,17 @@ $(function () {
 	
 	$("input[id='submitSignUp']").hide();
 	
+	
+	$("div[id^='exp']")
+	
+	$("div[id^='exp']").each(function(){
+		$(this).mouseover(function(){
+			var toShow = '#text'+ $(this).attr('id');
+			$("div[id^='text']").hide();
+			$(toShow).show();
+		});
+	});
+	
 });
 
 // $(function testajax(sourceLang, destLang, sourceId, destId, loadingId) {
