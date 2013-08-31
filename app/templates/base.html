@@ -87,10 +87,10 @@
 				<tr>
 					{{selectFilter.hidden_tag()}}
 					<td>
-					Order by Nutritional Content: {{selectFilter.filterNut}}
+					Order by: {{selectFilter.filterNut}}{{selectFilter.filter}}
 					</td>
 					<td>
-					{{selectFilter.filter}}
+					
 					</td>
 				</tr>	
 				</form>
@@ -128,8 +128,20 @@
     			    	<div class = center>
     			    	<br>
     					{% if resultCategory.has_prev %}<a href="{{ url_for('resultCategory',categoryChosen =box1Head+":"+categoryChosen, page = resultCategory.prev_num) }}"><< previous</a>{% else %}<< previous{% endif %} | 
-						{% if resultCategory.has_next %}<a href="{{ url_for('resultCategory',categoryChosen =box1Head+":"+categoryChosen, page = resultCategory.next_num)  }}">next >></a>{% else %}next >>{% endif %}
-					</div>
+						
+						{% for page in resultCategory.iter_pages() %}
+							{% if page %}
+							  {% if page != resultCategory.page %}
+								<a href="{{ url_for('resultCategory',categoryChosen =box1Head+":"+categoryChosen, page = page) }}">{{ page }}</a>
+							  {% else %}
+								<strong>{{ page }}</strong>
+							  {% endif %}
+							{% else %}
+							  <span class=ellipsis>…</span>
+							{% endif %}
+						{%endfor %}
+						{% if resultCategory.has_next %}<a href="{{ url_for('resultCategory',categoryChosen =box1Head+":"+categoryChosen, page = resultCategory.next_num)  }}">| next >></a>{% else %}next >>{% endif %}
+						</div>
 				</div>
     		</div>
     			
@@ -153,7 +165,20 @@
     			    	<div class = center>
     			    	<br>
     					{% if resultSearch.has_prev %}<a href="{{ url_for('resultSearch',page = resultSearch.prev_num) }}"><< previous</a>{% else %}<< previous{% endif %} | 
-						{% if resultSearch.has_next %}<a href="{{ url_for('resultSearch',page = resultSearch.next_num)  }}">next >></a>{% else %}next >>{% endif %}
+						
+						{% for page in resultSearch.iter_pages() %}
+							{% if page %}
+							  {% if page != resultSearch.page %}
+								<a href="{{ url_for('resultSearch', page = page) }}">{{ page }}</a>
+							  {% else %}
+								<strong>{{ page }}</strong>
+							  {% endif %}
+							{% else %}
+							  <span class=ellipsis>…</span>
+							{% endif %}
+						{%endfor %}
+						
+						{% if resultSearch.has_next %}<a href="{{ url_for('resultSearch',page = resultSearch.next_num)  }}">| next >></a>{% else %}| next >>{% endif %}
 					</div>
 				</div>
     		</div>

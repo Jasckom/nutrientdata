@@ -3,7 +3,7 @@
 from flask import render_template, flash, redirect, url_for, g, session, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
-from forms import SearchForm, SelectFood, LoginForm, SignupForm, createMinMaxForm, EditPreferredList, Profile, manyButtons, createFoodsILike, SelectFilter, ProfileFull
+from forms import SearchForm, LoginForm, SignupForm, createMinMaxForm, EditPreferredList, Profile, manyButtons, createFoodsILike, SelectFilter, ProfileFull
 from datetime import datetime
 from linearOptimize import linearOptimize
 from filterFood import *
@@ -23,7 +23,8 @@ instrumentAttribute = [Food.mainType,Food.type,Food.food,Food.detail,Food.source
 toReduce = [29]+ [i for i in range(32,41)] + [46]+[i for i in range(81,142)] + [i for i in range(161,165)]
 basicPlan = [26,28,29,30,31,32,41,42,46,52,85,88]
 
-mainCategories = ['baked products', 'beans legume products', 'beef products', 'beverages', 'breakfast cereals', 'cereal grains pasta', 'dairy products', 'egg products', 'ethnic foods', 'fast foods', 'fats oils', 'fish seafood products', 'fruits fruit juices', 'lamb veal game products', 'meals entrees sidedishes', 'nut seed products', 'pork products', 'poultry products', 'sausages deli meats', 'snacks', 'soups sauces gravies', 'spices herbs', 'sweets', 'vegetables']
+# mainCategories = ['baked products', 'beans legume products', 'beef products', 'beverages', 'breakfast cereals', 'cereal grains pasta', 'dairy products', 'egg products', 'ethnic foods', 'fast foods', 'fats oils', 'fish seafood products', 'fruits fruit juices', 'lamb veal game products', 'meals entrees sidedishes', 'nut seed products', 'pork products', 'poultry products', 'sausages deli meats', 'snacks', 'soups sauces gravies', 'spices herbs', 'sweets', 'vegetables']
+mainCategories = ['baked products', 'beans, legume products', 'beef products', 'beverages', 'breakfast cereals', 'cereal, grains, pasta', 'dairy products', 'egg products', 'ethnic foods', 'fast foods', 'fats oils', 'fish, seafood products', 'fruits, fruit juices', 'lamb, veal, game products', 'meals, entrees, sidedishes', 'nut seed products', 'pork products', 'poultry products', 'sausages, deli, meats', 'snacks', 'soups, sauces, gravies', 'spices, herbs', 'sweets', 'vegetables']
 foodTypes = [['apple pies', 'bagels', 'banana muffins', 'banana pumpkin breads', 'biscotti', 'biscuit breads', 'blueberry muffins', 'bran muffins', 'bread', 'bread crumbs', 'breadsticks', 'brownies', 'cakes', 'carrot cakes', 'cheese crackers', 'cheesecakes', 'cherry berry pies', 'chocolate cakes', 'chocolate chip cookies', 'chocolate chip muffins', 'cinnamon raisin bread', 'coffee cakes', 'cookies', 'corn muffins', 'cornbread', 'crackers', 'cream custard pies', 'crepes', 'crispbread crackers', 'croissants', 'croutons', 'cupcakes', 'danish pastries', 'dinner rolls', 'doughnuts', 'english muffins crumpets', 'focaccia flat pizza breads', 'french italian bread', 'french toast', 'garlic bread toast', 'ginger cookies', 'graham crackers', 'hamburger buns', 'hot dog buns', 'lemon cakes', 'matzo', 'meat savory pies', 'muffins scones', 'multigrain bread', 'multigrain crackers', 'oatmeal cookies', 'oyster crackers', 'pancakes waffles', 'pastries', 'peanut butter cookies', 'pie pastry crusts', 'pies', 'pita bread', 'pumpkin pies', 'quiches', 'rice crackers cakes', 'rolls buns', 'rye bread', 'saltine crackers', 'sandwich cookies', 'scones', 'shortbread cookies', 'sourdough bread', 'stuffings', 'sugar cookies', 'sweet buns rolls', 'tarts', 'toast', 'toaster pastries', 'tortillas tacos wraps', 'wafer cookies', 'water crackers', 'wheat bread', 'wheat crackers', 'white bread'], ['baked beans', 'bean dishes', 'black beans', 'chickpeas', 'green beans', 'hummus', 'kidney beans', 'lentils', 'lima beans', 'meat substitutes tvps', 'pinto beans', 'refried beans', 'soybeans', 'tofu tempeh', 'tofu tempeh dishes', 'white beans'], ['beef', 'beef broccoli', 'beef cold cuts', 'beef dishes', 'beef meatballs', 'beef patties', 'beef ribs', 'beef stroganoff', 'chuck steak', 'corned beef', 'country fried steak', 'flank steak', 'ground beef', 'hamburgers', 'meatloaf', 'porterhouse', 'pot roast', 'roast beef', 'roast beef sandwiches', 'salisbury steak', 'sirloin steak', 'steak', 'steak sandwiches', 'teriyaki beef'], ['alcoholic drinks', 'americano', 'beer', 'black tea', 'bloody mary', 'cafe mocha', 'cappuccino', 'caramel macchiato', 'carbonated drinks', 'chocolate smoothies', 'coconut water', 'coffee', 'cola', 'cream soda', 'dunkin donuts', 'energy drinks', 'espresso', 'fruit punch', 'fruit smoothies', 'ginger ale', 'green tea', 'herbal tea', 'hot chocolate', 'hot drinks', 'iced coffee', 'iced tea', 'juices', 'latte', 'lemon lime soda', 'lite beer', 'mai tai', 'margarita', 'martini', 'milk', 'milk substitutes', 'mixers cocktails', 'nutritional drinks', 'orange soda', 'pina colada', 'protein body building shakes', 'root beer', 'seltzer sparkling club tonic water', 'smoothies', 'sports drinks', 'starbucks', 'tea', 'vanilla smoothies', 'vodka gin rum whiskey', 'water', 'weight loss meal replacement shakes', 'white tea', 'wine', 'yogurt drinks'], ['bran flakes', 'cold cereals', 'corn flakes', 'cream wheat', 'granola muesli', 'grits', 'hot cereals', 'oats oatmeal', 'rice cereal', 'wheat cereal', 'wheat germ bran'], ['angel hair', 'barley', 'basmati rice', 'breakfast cereals', 'brown rice', 'buckwheat kasha', 'bulgur', 'chicken rice', 'corn meal', 'couscous', 'egg noodles', 'fettucini', 'flour', 'fried rice', 'gnocchi', 'grains', 'lasagna', 'linguini', 'macaroni', 'macaroni beef', 'macaroni cheese', 'noodles', 'pasta', 'pasta casserole', 'pasta dishes', 'penne', 'polenta', 'quinoa', 'ramen noodles', 'ravioli', 'rice', 'rice beans', 'rice dishes', 'rice flour', 'rice pilaf', 'rigatoni', 'risotto', 'rotini', 'soy flour', 'spaghetti', 'spaghetti meatballs', 'tortellini', 'vermicelli', 'wheat flour', 'white rice', 'whole wheat pasta', 'wild rice', 'yellow rice'], ['american cheese', 'apple yogurt', 'banana yogurt', 'blue cheese', 'blueberry yogurt', 'brie cheese', 'butter', 'cheddar cheese', 'cheese', 'chive onion cream cheese', 'chocolate flavored milk', 'coffee yogurt', 'colby cheese', 'colby jack cheese', 'condensed evaporated milk', 'cottage cheese', 'cream', 'cream cheese', 'creamer', 'fat free cream', 'fat yogurt', 'feta cheese', 'flavored yogurt', 'frozen yogurt', 'goat cheese', 'gouda cheese', 'greek yogurt', 'half', 'havarti cheese', 'honey nut cream cheese', 'jack cheese', 'lemon lime yogurt', 'light cream cheese', 'light yogurt', 'low fat milk percent', 'milk shakes', 'mozzarella cheese', 'muenster cheese', 'omelets', 'parmesan cheese', 'peach yogurt', 'provolone cheese', 'raisin cream cheese', 'reduced fat milk percent', 'ricotta cheese', 'skim milk fat free', 'sour cream', 'strawberry cream cheese', 'strawberry yogurt', 'string cheese', 'swiss cheese', 'vanilla yogurt', 'vegetable cream cheese', 'whipped cream', 'whole milk', 'yogurt'],['egg whites substitutes', 'eggs', 'fried eggs', 'hard boiled eggs', 'poached eggs', 'scrambled eggs'],['afghani food', 'african food', 'american food', 'arabic food', 'australasian food', 'australian food', 'austrian food', 'brazilian food', 'british food', 'canadian food', 'caribbean jamaican', 'chinese food', 'east asian food', 'ethiopian food', 'european food', 'french food', 'german food', 'greek food', 'indian food', 'irish food', 'italian food', 'japanese food', 'korean food', 'kosher israeli', 'latin food', 'mexican food', 'middle eastern food', 'moroccan food', 'new zealand food', 'north american food', 'pakistani food', 'polish food', 'portuguese food', 'russian food', 'scandinavian food', 'south african food', 'south asian food', 'spanish food', 'thai food', 'turkish food', 'vietnamese food'], ['blt sandwiches', 'breakfast sandwiches', 'burger sandwiches', 'burritos', 'calzones', 'cheese pizza', 'cheeseburgers', 'chicken burgers', 'chicken sandwiches', 'chili', 'club sandwiches', 'cold cut sandwiches', 'corn dogs', 'enchiladas', 'fajitas', 'fast food side dishes', 'fish sandwiches', 'french fries potato wedges', 'fried chicken', 'grilled cheese sandwiches', 'ham sandwiches', 'hash browns', 'hawaiian pizza', 'hot dogs', 'italian sandwiches', 'meatball sandwiches', 'nachos', 'onion rings', 'pepperoni pizza', 'pizza calzones', 'pork sandwiches', 'quesadillas', 'roast chicken', 'salads', 'sandwiches wraps', 'sausage pizza', 'sausage sandwiches', 'sausages', 'spring rolls', 'tacos', 'tamales', 'tex mex food', 'tuna sandwiches melts', 'turkey sandwiches', 'veggie burgers', 'veggie pizza', 'veggie sandwiches'], ['blue cheese dressing', 'caesar dressing', 'canola oil', 'cooking spray', 'corn oil', 'fats lard shortening', 'fish oil', 'french dressing', 'grape seed oil', 'greek dressing', 'honey mustard dressing', 'italian dressing', 'margarine', 'mayonnaise aioli', 'oils', 'olive oil', 'onion dressing', 'poppyseed dressing', 'ranch dressing', 'salad dressings', 'sesame dressing', 'sesame oil', 'thousand island dressing', 'vegetable oil', 'vegetable oil spread', 'vinegar vinaigrette dressing'], ['california rolls', 'clams', 'cod', 'crab', 'fish chips', 'fish dishes', 'fish sticks cakes', 'flounder', 'gefilte fish', 'haddock', 'halibut', 'herring', 'lobster', 'manhattan clam chowder', 'new england clam chowder', 'oysters', 'pollocks', 'salmon', 'sardines', 'scallops', 'shrimp', 'sole', 'sushi rolls', 'sushi sashimi', 'tilapia', 'tuna', 'whitefish pike'], ['apple juice', 'apples', 'apricots', 'avocados', 'bananas', 'blueberries', 'cherries', 'coconuts', 'cranberries', 'cranberry juice', 'fruit', 'fruit salads', 'grape juice', 'grapefruit juice', 'grapefruits', 'grapes', 'lemonade limeade', 'mangos', 'melons cantaloupe', 'olives', 'orange juice', 'oranges tangerines mandarins', 'peaches', 'pears', 'pineapple juice', 'pineapples', 'plums', 'pumpkins', 'raisins', 'raspberries', 'strawberries', 'tomato vegetable juice'], ['lamb', 'lamb dishes', 'veal', 'veal dishes'], ['baby food', 'baby food cereal', 'baby food dinners', 'baby food juice', 'baby food meats', 'baby food snacks', 'chicken dishes', 'egg dishes', 'ethnic foods', 'fast foods', 'fruit baby food', 'infant formula', 'pork dishes', 'potato dishes', 'turkey dishes', 'vegetable baby food', 'vegetable dishes'], ['almond other nut butters', 'almonds', 'cashews', 'chestnuts', 'flaxseeds', 'hazelnuts', 'macadamia nuts', 'nut trail mixes', 'peanut butter', 'peanuts', 'pecans', 'pine nuts', 'pistachios', 'pumpkin seeds', 'sesame seeds', 'soy nuts', 'sunflower seeds', 'walnuts'], ['bacon', 'ham', 'ham cold cuts', 'pork chops', 'pork loin', 'pork ribs', 'pork roast', 'pork sausage', 'pork shoulder', 'pork tenderloin', 'pulled pork'], ['bbq chicken', 'chicken', 'chicken breasts', 'chicken cold cuts', 'chicken drumsticks', 'chicken dumplings', 'chicken nuggets tenders', 'chicken parmesan', 'chicken patties', 'chicken salad', 'chicken sausage', 'chicken soups', 'chicken thighs', 'chicken tikka masala', 'chicken wings', 'duck', 'fried chicken', 'grilled chicken', 'ground turkey', 'teriyaki chicken', 'turkey', 'turkey bacon', 'turkey breast', 'turkey chili', 'turkey cold cuts', 'turkey legs', 'turkey patties', 'turkey sausage', 'turkey soups'], ['beef sausage', 'bologna cold cuts', 'bratwurst', 'chorizo', 'italian sausage', 'jerky snack sticks', 'lunch meats', 'pastrami', 'polish sausage', 'salami pepperoni'], ['banana plantain chips', 'candy', 'cereal bars', 'cheese puffs', 'chewing gum mints', 'chips', 'corn tortilla chips', 'cracker sandwiches', 'energy protein bars', 'filled pretzels', 'flavored pretzels', 'fruit nut bars', 'fruit snacks', 'granola bars', 'meal replacement bars', 'multigrain chips', 'nutrition bars', 'oatmeal raisin bars', 'pita bagel chips', 'popcorn', 'pork skins rinds', 'potato chips', 'pretzel sticks rods', 'pretzels', 'puddings', 'puffed rice bars', 'snack bars', 'snack mixes', 'soft pretzels', 'trail mix bars'], ['alfredo sauce', 'barbecue sauce', 'bean soup', 'beef barley soup', 'beef broth stock bouillon', 'beef chili', 'beef noodle soup', 'beef soups', 'beef stew', 'bisques', 'broth stock bouillon', 'bruschetta', 'butternut squash pumpkin soup', 'cheese dip', 'cheese soups', 'chicken broth stock bouillon', 'chicken gravy', 'chicken noodle soup', 'chicken rice soup', 'chowders', 'chutney', 'cocktail sauce', 'condiments', 'corn chowder', 'cream broccoli soup', 'cream chicken soup', 'cream mushroom soup', 'cream potato soup', 'cream soups', 'cream tomato soup', 'curry sauce', 'dips spreads', 'french onion dip', 'garlic sauce', 'gravy', 'guacamole', 'gumbo', 'hot sauce chipotle', 'ketchup', 'lentil soup', 'marinades', 'marinara tomato sauce', 'minestrone soup', 'mushroom gravy', 'mushroom soup', 'mustard', 'onion soup', 'pasta pizza sauces', 'pate', 'pea soup', 'peanut sauce', 'pesto sauce', 'potato soup', 'relish', 'salsa', 'sauces', 'soups', 'soy sauce', 'spinach dip', 'steak sauce', 'stews', 'sugars syrups', 'sweet sour sauce', 'tapenade', 'tartar sauce', 'teriyaki sauce', 'tomato soup', 'tortilla soup', 'turkey gravy', 'vegetable broth bouillon', 'vegetable soups', 'vodka sauce', 'wedding soup'], ['baking soda', 'chili powder', 'coating mixes', 'curry', 'food coloring', 'garlic', 'ginger', 'onion', 'oregano', 'paprika', 'parsley', 'pepper', 'salt', 'seasoning mix', 'steak seasoning', 'vitamins'], ['apple butter', 'apple jams jellies', 'artificial sweeteners', 'brown sugar', 'candy canes christmas', 'caramel candy', 'caramel syrup', 'chocolate', 'chocolate candy', 'chocolate candy bars', 'chocolate chips morsels', 'chocolate covered candy', 'chocolate ice cream', 'chocolate pudding', 'chocolate spreads', 'chocolate syrup', 'coffee ice cream', 'cookies n cream ice', 'crisps cobblers', 'dark chocolate', 'decorating icing', 'dessert toppings', 'desserts', 'easter eggs candy', 'fat free ice cream', 'flavored syrups', 'fruit desserts compotes', 'fruit jams jellies', 'gelatin desserts', 'grape jams jellies', 'gummy snacks', 'hard candy', 'honey', 'ice cream bars', 'ice cream cakes', 'ice cream sandwiches', 'ice cream sorbet', 'ice cream sundaes', 'icing decorations', 'icings frostings', 'jellies jams preserves spreads', 'licorice', 'lite syrup', 'lollipops suckers', 'low fat ice cream', 'maple syrup', 'marmalade', 'marshmallows', 'milk chocolate', 'orange jams jellies', 'pancake syrup', 'parfaits', 'pie cake fillings', 'rice pudding', 'sauces', 'seasonal candy', 'sherbet sorbet', 'soft serve frozen yogurt', 'sour candy', 'sprinkles', 'strawberry ice cream', 'strawberry jams jellies', 'sugar free candy', 'sugar free ice cream', 'sugar free syrup', 'sugars sweeteners', 'toppings', 'valentines candy', 'vanilla', 'vanilla ice cream', 'vanilla pudding', 'whipped toppings'], ['artichokes', 'asparagus', 'au gratin potatoes', 'baked potato', 'beets', 'broccoli', 'cabbage', 'caesar salad', 'carrots', 'cauliflower', 'celery', 'chili peppers', 'coleslaw', 'collards', 'corn', 'cucumber', 'eggplant', 'fruit vegetables', 'garden salad', 'garlic', 'inflorescence vegetables', 'kale', 'leafy vegetables', 'lettuce', 'mashed potatoes', 'mixed vegetables', 'mushrooms', 'onions', 'peas', 'pickles pickled vegetables', 'potato salad', 'potatoes yams', 'pumpkin squash', 'radishes', 'root vegetables', 'scalloped potatoes', 'souffle', 'spinach', 'sprouts', 'stem vegetables', 'stir fried vegetables', 'sweet peppers', 'tomatoes', 'turnips', 'vegetable casseroles', 'zucchini']]
 
 
@@ -39,7 +40,23 @@ def getSearchEntry(brandEntry,searchEntry):
 		else:
 			searchEntry = "brandOnly:"+brandEntry
 	return searchEntry
-    
+
+def getSearchTerms(searchTerms):
+	searchTermsList = searchTerms.split(":")
+	if len(searchTermsList) > 1:
+		food = searchTermsList[0]
+		brand = searchTermsList[1]
+	else:
+		food = searchTermsList[0]
+		brand = None
+	if food == "brandOnly":
+		food = None
+	print "Brand: ",brand
+	print "Food: ",food
+	return food, brand
+	
+
+#Get Matching Categories from search
 def getMatchingCat(searchEntry,foodTypes):
 	matchingCat = []
 	eachTermList = searchEntry.split()
@@ -60,84 +77,87 @@ def mainCat(mainCatChosen):
 	global mainCategories
 	global foodTypes
 	mainCatChosen = int(mainCatChosen)
-	#print "in MainCat: ", mainCatChosen
-	#print "box1Head"
-	#print id(session["box1Head"])
+	
+	#Store the headings
 	session["box1Head"] = mainCategories[mainCatChosen]
 	session["box1Cat"] = foodTypes[mainCatChosen]
-	#print session["box1Head"]
-	#print session["box1Cat"] 
+
+	#if filter is applied, but now new category is chosen, filter is removed from the session dictionary
 	if "filter" in session.keys():
 		session.pop("filter")
 	
 	return redirect(url_for('resultCategory', categoryChosen =mainCategories[mainCatChosen]+":General"))
-
-def getInfo():
-	global basic_nutrient
-	global full_ext_nutrient
-	if session["foodInfo"] == None:
-		return [],[]
-	food = Food.query.filter(Food.id==session["foodInfo"]).first()
-	info = []
-	extraInfo = []
-	for i in range(8,25):
-		info.append( (basic_nutrient[i-8],   food.value(i)) )
-	for i in range(25,165):
-		extraInfo.append((full_ext_nutrient[i-25],   food.value(i)))
-		
-	return info, food
 	
 @app.route('/resultSearch', methods = ['GET', 'POST'])
 @app.route('/resultSearch/<int:page>', methods = ['GET', 'POST'])
 def resultSearch(page = 1):
 	
-
 	if not g.user.is_authenticated():
 		flash('Please First Sign in as a Guest')
 		return redirect(url_for('login'))
-	#get categories for the side
+
 	global mainCategories
 	global foodTypes
 	global full_ext_nutrient
-	#Search Function
-	form = SearchForm()
+	
+	
+	if "resultNew" in session.keys():
+		(defaultFood, defaultBrand) = getSearchTerms(session["resultNew"])
+	
+	# Create search form
+	form = SearchForm(defaultFood,defaultBrand)
+	
+	# If search form is submitted, and at lest one of the search box is filled
 	if form.validate_on_submit() and ( (len(form.searchEntry.data) != 0) or (len(form.brandEntry.data) != 0) ):
+		# get entries from the form
 		searchEntry = form.searchEntry.data
 		brandEntry = form.brandEntry.data
-		searchEntry = getSearchEntry(brandEntry,searchEntry)		
+		searchEntry = getSearchEntry(brandEntry,searchEntry)
+		
+		#Get the new search terms from the search form
 		session["resultNew"] = searchEntry
-		print "in search box: ", session["resultNew"]
+		#Clear the filter when new search takes place
 		if "filter" in session.keys():
 			session.pop("filter")
+		#Redirect back to the function 
 		return redirect(url_for('resultSearch'))
-	print "resultNew1:", session["resultNew"],  id(session["resultNew"])
-	print "reulst1:", session["result"], id(session["result"])
 	
+	# Create foods I like form
 	foodIdsArg = session[g.user.get_id()]
 	foodNamesArg = session["foodItem"]
 	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)
+	
+	#If the user has chosen some foods - foodIdsArg is not empty then get all the foods
+	#This is to create nutritional labels for all the foods from query in that pagination
 	if foodIdsArg:
 		foodsItemsILike = Food.query.filter(Food.id.in_(foodIdsArg)).all()
 	else:
 		foodsItemsILike = []
 
-	#Validate form
+	#Validate form of foods I like
 	if foodsILike.validate_on_submit() and (foodsILike.submit.data or  foodsILike.remove.data or foodsILike.toggle.data):
 		check = []
 		checkedFood = []
 		fieldIndex = 0
+		# The first 4 fields are not selected items
 		for field in foodsILike:
 			if fieldIndex >= 4:
 				check.append(field.data)
-				if field.data: # if it is checked - get the ID of the food
+				# Get ids of the checked food for submitting or for removing
+				if field.data: 
 					checkedFood.append(field.name)
 			fieldIndex +=1
+		
+		# Submit the food for linear programming
 		if foodsILike.submit.data == 1:
+			# If some foods are actually chosen, foods can be submitted
 			if sum(check) >=1:
 				session["optimize"] = [i for i in checkedFood]
 				return redirect(url_for('optimize'))
 			else:
 				flash('Please select the foods you like')
+		
+		# Remove the foods
 		elif foodsILike.remove.data == 1:
 			for i in checkedFood:
 				indexToDelete = session[g.user.get_id()].index(i)
@@ -145,28 +165,29 @@ def resultSearch(page = 1):
 				session["foodItem"].pop(indexToDelete)
 		return redirect(url_for('resultSearch'))
 	
-	print "resultNew2:", session["resultNew"],  id(session["resultNew"])
-	print "reulst2:", session["result"], id(session["result"])
-	# Filter form
+
+	# If filter is applied, keep the filter else give default to first one
 	if "filter" in session.keys():
 		selectFilter = SelectFilter(session["filter"])
 	else:
-		selectFilter = SelectFilter(24)
+		selectFilter = SelectFilter(22)
 	if request.method == 'POST':
 		if selectFilter.filter.data and request.form['filter'] == 'Go!':
 			filterNut = selectFilter.filterNut.data
 			session["filter"] = filterNut
 		
 	#Store search term
-	print "resultNew:", session["resultNew"]
-	print "reulst:", session["result"]
+	#If the search term is still the same, the same list of result is given
+	#If the search term is different, emit query to the database
 	if session["result"] != session["resultNew"]:
+		
+		#Hard copy of search term letter by letter
 		resultNew = ""
 		for each in session["resultNew"]:
 			resultNew += each
 		session["result"] = resultNew
-		print "Find new result", session["resultNew"]
 		searchEntry = session["resultNew"]
+		
 		#operate on this new search term
 		searchEntryList = searchEntry.split(":")
 		brandEntry = ""
@@ -174,6 +195,7 @@ def resultSearch(page = 1):
 			brandEntry = searchEntryList[1]		
 		searchEntry = searchEntryList[0]
 		
+		#intercept empty search because the query takes unnecessarily long to return empty query
 		if searchEntry == "" and brandEntry == "":
 			results= []
 		else:
@@ -181,9 +203,9 @@ def resultSearch(page = 1):
 				results = searchFoodBrand(brandEntry, Food)
 			else:
 				results = searchFood(searchEntry, brandEntry, Food,FoodKey)
+			#store current food ids found after querying the database
 			session["resultID"] = results
 	else:
-		print "Find old term", session["result"]
 		#Just to get potential categories
 		searchEntry = session["result"]
 		searchEntryList = searchEntry.split(":")
@@ -191,40 +213,49 @@ def resultSearch(page = 1):
 		if len(searchEntryList) > 1:
 			brandEntry = searchEntryList[1]		
 		searchEntry = searchEntryList[0]
-		
+		#get the food ids from the previous querying (same search terms)
 		results = session["resultID"]
 	
-	#Get potential 
-	matchingCat = getMatchingCat(searchEntry,foodTypes)
-	
-	#Standard query
+	#Create standard query before storing them in any order
 	if results:
 		results = Food.query.filter(Food.id.in_(results))
 	else:
 		results = Food.query.filter(Food.id==0)
-	print "resultNew3:", session["resultNew"],  id(session["resultNew"])
-	print "reulst3:", session["result"], id(session["result"])
+
 	box2Head = "Search Results - Foods"
 
+	# if filter is applied and not the default value
 	if "filter" in session.keys():
 		filterNut = session["filter"]
-		if filterNut != 24:
-			if filterNut in toReduce:
-				print "rank from lowest"
+		if filterNut != 22:
+			if filterNut == 23:
+				print "by food source"
+				results = results.order_by(Food.source)
+				box2Head += " by Brands"
+			elif filterNut == 24:
+				box2Head += " by Alphabetical Order"
+				results = results.order_by(Food.food)
+			# Differentiate which type of nutrients to rank by highest or lowest
+			# instrumentAttribute is the list of nutrients for ordering
+			elif filterNut in toReduce:
 				results = results.order_by(asc(instrumentAttribute[filterNut]))
 				box2Head += " with Lowest " + full_ext_nutrient[filterNut-25]
 			else:
-				print "rank from highest"
 				results = results.order_by(desc(instrumentAttribute[filterNut]))
 				box2Head += " with Highest " + full_ext_nutrient[filterNut-25]
 		else:
 			results = results.order_by(asc(func.char_length(Food.tag)))
 
+	# if no filter is applied, relevant search is made by ranking according to lengths of the tag
+	# This is because all the foods here strictly have all the keywords in the search.
 	else:
 		results = results.order_by(asc(func.char_length(Food.tag)))
 	
+	# Paginate the result
 	resultSearch = results.paginate(page, 20, False)
 	
+	#Get potential 
+	matchingCat = getMatchingCat(searchEntry,foodTypes)
 	session["box1Head"] = "Search Results - Categories"
 	session["box1Cat"] = matchingCat
 	
@@ -252,9 +283,12 @@ def resultCategory(categoryChosen, page = 1):
 	global foodTypes
 	global full_ext_nutrient
 		
-	# filterNut is the index of nutRatioUnmet
-	#Search Function
-	form = SearchForm()
+	#Search Function same snippet as in resultSearch
+	
+	# Create search form
+	defaultFood = None
+	defaultBrand = None
+	form = SearchForm(defaultFood,defaultBrand)
 	if form.validate_on_submit() and ( (len(form.searchEntry.data) != 0) or (len(form.brandEntry.data) != 0) ):
 		searchEntry = form.searchEntry.data
 		brandEntry = form.brandEntry.data
@@ -268,6 +302,8 @@ def resultCategory(categoryChosen, page = 1):
 	#Store category term
 	session["resultCategory"] = categoryChosen
 	
+	# Create foods I like form
+	# The snippet is the same as the resultSearch
 	foodIdsArg = session[g.user.get_id()]
 	foodNamesArg = session["foodItem"]
 	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)
@@ -284,7 +320,7 @@ def resultCategory(categoryChosen, page = 1):
 		for field in foodsILike:
 			if fieldIndex >= 4:
 				check.append(field.data)
-				if field.data: # if it is checked - get the ID of the food
+				if field.data:
 					checkedFood.append(field.name)
 			fieldIndex +=1
 		if foodsILike.submit.data == 1:
@@ -304,7 +340,7 @@ def resultCategory(categoryChosen, page = 1):
 	if "filter" in session.keys():
 		selectFilter = SelectFilter(session["filter"])
 	else:
-		selectFilter = SelectFilter(24)
+		selectFilter = SelectFilter(22)
 	if request.method == 'POST':
 		if selectFilter.filter.data and request.form['filter'] == 'Go!':
 			filterNut = selectFilter.filterNut.data
@@ -324,22 +360,31 @@ def resultCategory(categoryChosen, page = 1):
 	if "filter" in session.keys():
 		filterNut = session["filter"]
 		#print "filterrr: ", filterNut
-		if filterNut != 24:			
-			if filterNut in toReduce:
-				resultCategory = query.order_by(asc(instrumentAttribute[filterNut])).paginate(page, RESULTS_PER_PAGE, False)
+		if filterNut != 22:
+			if filterNut == 23:
+				print "by food source"
+				resultCategory = query.order_by(Food.source)
+				box2Head = categoryChosen + " by Brands"
+			elif filterNut == 24:
+				print "alphabetical"
+				resultCategory = query.order_by(Food.food)
+				box2Head = categoryChosen + " by Alphabetical Order"
+						
+			elif filterNut in toReduce:
+				resultCategory = query.order_by(asc(instrumentAttribute[filterNut]))
  				box2Head = categoryChosen + " with Lowest " + full_ext_nutrient[filterNut-25]
 
 			else:
-				resultCategory = query.order_by(desc(instrumentAttribute[filterNut])).paginate(page, RESULTS_PER_PAGE, False)
+				resultCategory = query.order_by(desc(instrumentAttribute[filterNut]))
  				box2Head = categoryChosen + " with Highest " + full_ext_nutrient[filterNut-25]
  		else:
- 			resultCategory = query.order_by(asc(Food.food)).paginate(page, RESULTS_PER_PAGE, False)
+ 			resultCategory = query.order_by(asc(Food.food))
 			box2Head = categoryChosen
 	else:
-		resultCategory = query.order_by(asc(Food.food)).paginate(page, RESULTS_PER_PAGE, False)
+		resultCategory = query.order_by(asc(Food.food))
 		box2Head = categoryChosen
 	
-	(info, food) = getInfo()
+	resultCategory = resultCategory.paginate(page, RESULTS_PER_PAGE, False)
 	
 	return render_template('resultCategory.html',
 			title = 'Search your food',
@@ -356,46 +401,24 @@ def resultCategory(categoryChosen, page = 1):
 			userProfile = session["userProfile"],
 			foodsItemsILike = foodsItemsILike)
 
-
-# redirecting functions Get Info
-@login_required
-@app.route('/selectFoodInfo/<foodIDInfo>')
-def selectFoodInfo(foodIDInfo):
-	session["foodInfo"] = foodIDInfo
-	return redirect(url_for('resultSearch'))
-
-@login_required
-@app.route('/selectFoodInfoCat/<foodIDInfo>')
-def selectFoodInfoCat(foodIDInfo):
-	session["foodInfo"] = foodIDInfo
-	categoryChosen = session["result"]
-	return redirect(url_for('resultCategory',categoryChosen =categoryChosen ))
-
-@login_required
-@app.route('/selectFoodInfoSuggest/<foodIDInfo>')
-def selectFoodInfoSuggest(foodIDInfo):
-	#print "lala"
-	session["foodInfo"] = foodIDInfo
-	return redirect(url_for('resultSuggest'))
-
-
-# redirecting functions Select Food
 @login_required
 @app.route('/selectFood/<foodChosen>')
 def selectFood(foodChosen):
+	#Only new food item is added
 	if not foodChosen in session[g.user.get_id()]:
-		#print "IN SELECT FOOD"
 		session[g.user.get_id()].insert(0,foodChosen)
 		food = Food.query.filter(Food.id==foodChosen).first()
 		session[("foodItem")].insert(0,food.food+ " "+ food.detail+ " (" +  food.source+")")
+	
 	categoryChosen = session["resultCategory"]
+	#Maintain the query string for url to redirect to resultCategory
 	return redirect(url_for('resultCategory',categoryChosen =categoryChosen ))
 
 @login_required
 @app.route('/selectFoodFromSearch/<foodIDFromSearch>')
 def selectFoodFromSearch(foodIDFromSearch):
+	#Only new food item is added
 	if not foodIDFromSearch in session[g.user.get_id()]:
-		#print "IN SELECT FOOD FROM SEARCH"
 		session[g.user.get_id()].insert(0,foodIDFromSearch)
 		food = Food.query.filter(Food.id==foodIDFromSearch).first()
 		session[("foodItem")].insert(0,food.food+ " "+ food.detail+ " (" +  food.source+")")
@@ -404,9 +427,9 @@ def selectFoodFromSearch(foodIDFromSearch):
 @login_required
 @app.route('/selectFoodFromSuggest/<foodIDFromSuggest>')
 def selectFoodFromSuggest(foodIDFromSuggest):
-
+	#If the food is removed - the nutrients lacking should be recalculated
 	if foodIDFromSuggest == "updateAfterRemove":
-		
+		# Get check 
 		(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(g.user.nutri[0],1)
 		constraints = []
 		for i in range(len(check)):
@@ -590,7 +613,6 @@ def reportRatio2(constraints, foodItems, nutri):
 	return givenCal, failedBestFood, nutRatioMinNew, nutRatioUnmetNew
 
 
-# return dictionary of each lacking nutrient and how much
 def reportTotal(constraints, outputFoodAmount, foodItems):
 	#print outputFoodAmount
 	TotalNut = []
@@ -619,7 +641,8 @@ def getCal(height, height2, weight, USorMetric, gender, activity,age):
 	elif gender == "Females":
 		constants = [9.56,1.85,-4.68,655]
 	cal = constants[0]*weightCvt + constants[1]* heightCvt + constants[2]*float(age) + constants[3]
-	return cal*float(activity)
+	cal = cal*float(activity)
+	return cal
 
 def getageGroup(age):
 	age = float(age)
@@ -1197,7 +1220,6 @@ def resultSuggest(page = 1):
 	# whenever client click which type of food this nutrient will be selected
 	# sample is calcium
 	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
-	(info, food) = getInfo()
 	#print "Test2: ",nutRatioUnmet, sumNutUnmet, nutRatioMin
 	if not nutRatioUnmet:
 		titleFindFood = "Your Food Items Are More Balanced"
@@ -1207,8 +1229,6 @@ def resultSuggest(page = 1):
 		box1Head = "Food Types I Like",
 		box1Cat = session["box1CatSuggest"],
 		titleFindFood = titleFindFood,
-		info = info,
-		food = food,
 		foodNamesArg= foodNamesArg,
 		foodsItemsILike= foodsItemsILike)
 	
@@ -1284,7 +1304,6 @@ def resultSuggest(page = 1):
 	titleFindFood = "Foods High in "+ currentNutName
 
 	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
-	(info, food) = getInfo()
 	return render_template('resultSuggest.html',
 		foodsILike = foodsILike,
 		lackingNut = lackingNut,
@@ -1297,8 +1316,6 @@ def resultSuggest(page = 1):
 		resultSearch = result,
 		titleFindFood = titleFindFood,
 		foodNamesArg = foodNamesArg,
-		info= info,
-		food = food,
 		userProfile = session['userProfile'],
 		foodsItemsILike= foodsItemsILike)
 	

@@ -97,8 +97,6 @@
     			</div>
     			<div id = box2ResultList>
     				{%for eachFood in resultSearch.items%}
-<!--     				<li><a href="{{ url_for('selectFoodInfoSuggest', foodIDInfo = eachFood.id) }}" style="text-decoration: none"> -->
-
     				<li><a id = {{eachFood.id}} href="{{ url_for('selectFoodFromSuggest', foodIDFromSuggest = eachFood.id) }}" style="text-decoration: none" > 
     				{{eachFood.food}} {{eachFood.detail}} ({{eachFood.source}}) </a></li>
     				{% endfor%}
