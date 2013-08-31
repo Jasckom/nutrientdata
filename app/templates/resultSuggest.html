@@ -1,58 +1,6 @@
-<html>
-	<head>
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/mystyle.css') }}">
-    	{% if title %}
-    	<title>{{title}} - NutriData </title>
-    	{% else %}
-    	<title>NutriData</title>
-    	{% endif %}
-	</head>
-	<body>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script src="{{url_for('static', filename= 'js/remove.js') }}"></script>
-    <div id = loading style="display: table;">
-    	<div style=" #position: absolute; #top: 50%;display: table-cell; vertical-align: middle;">
-			<div style=" #position: relative; #top: -50%">
-				<div class = "center">
-					Please Wait
-					<img src="{{url_for('static', filename= 'img/loading.gif') }}" />
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>	
-    	
-    	<div>DietPlanner:
-    	{% if g.user.is_authenticated()%}
-    		 <a href="{{ url_for('profile') }}" >Home</a>
-    		| <a href="{{ url_for('manage') }}" >Manage Diet Needs</a>
-    		| <a href="{{ url_for('resultSearch') }}" >Select Foods</a>
-    		| <a href="{{ url_for('optimize') }}" >Get Diet Plan</a>
-    		{%if g.user.role == 0 %}
-    		| <a href="{{ url_for('logout') }}" >Log out</a>
-			{% elif g.user.role == 1 %}
-			| <a href="{{ url_for('logout') }}" >Leave</a>
-			| <a href="{{ url_for('signup') }}" >Sign up</a>
-			{%endif%}
-		{%endif%}
-    	{%if userProfile%}
-    	| {{ userProfile }}
-    	{%endif%}
-    	
-    	</div>
-    	<hr>
-    	{% with messages = get_flashed_messages() %}
-    	{% if messages %}
-    	<ul>
-    	{% for message in messages %}
-        	<li>{{ message }} </li>
-    	{% endfor %}
-    	</ul>
-    	{% endif %}
-    	{% endwith %}
-    	{% if head_1%}
-    	<h1> {{head_1}} </h1>
-    	{% endif%}
+{% extends "baseResult.html" %}
+
+{% block content %}
 
 <!-- Search Box -->
     <div id = firstPage>
@@ -113,7 +61,20 @@
     			    	<div class = center>
     			    	<br>
     					{% if resultSearch.has_prev %}<a href="{{ url_for('resultSuggest',page = resultSearch.prev_num) }}"><< previous</a>{% else %}<< previous{% endif %} | 
-						{% if resultSearch.has_next %}<a href="{{ url_for('resultSuggest',page = resultSearch.next_num)  }}">next >></a>{% else %}next >>{% endif %}
+						
+						{% for page in resultSearch.iter_pages() %}
+							{% if page %}
+							  {% if page != resultSearch.page %}
+								<a href="{{ url_for('resultSuggest', page = page) }}">{{ page }}</a>
+							  {% else %}
+								<strong>{{ page }}</strong>
+							  {% endif %}
+							{% else %}
+							  <span class=ellipsis>…</span>
+							{% endif %}
+						{%endfor %}
+						
+						| {% if resultSearch.has_next %} <a href="{{ url_for('resultSuggest',page = resultSearch.next_num)  }}">next >></a>{% else %}next >>{% endif %}
 					</div>
 				</div>
     		</div> 
@@ -330,7 +291,7 @@
     				</div>
         		</div>	
     			<div id = box3FoodsILike>
-    			<div id = box3FoodsILikeListHead><strong>Foods I Like</strong>
+    			<div id = box3FoodsILikeListHead><strong>Submitted Foods I Like</strong>
     			</div>
     			<div id = box3FoodsILikeList>
     					{%set indexField = 0%}
@@ -354,26 +315,8 @@
         		</div>	
     	{% endif %}		
     	
-    	{% if editPreferredListForm %}
-    			<form action="" method="post" name="searchEntry">
-    				{{editPreferredListForm.hidden_tag()}}
-    			<div id = "submitMyFood">
-    				<div class = "center">
-    			    {{ editPreferredListForm.submit}} </div>
-        		</div>	
-    			<div id = result_category>
-    			<div id = head_category><h4>Foods I Like</h4>
-    			</div>
-    			<div id = list_result_category>
-        				{{ editPreferredListForm.foodOptions}}	
-    			</div>
-    			</div>
-    		    <div id = "submitMyFood">
-					{{ editPreferredListForm.remove}}
-        		</div>
-        	{%endif%}
-    </div>
-    </div>
-  	</body>
-</html>
 
+    </div>
+    </div>
+
+{% endblock %}

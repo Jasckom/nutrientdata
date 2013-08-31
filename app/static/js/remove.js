@@ -131,7 +131,42 @@ $(function () {
 		});
 	});
 	
-// 	$('html,body').animate({ scrollTop: $("#findFood").offset().top });
+	$("#box3ManageFoodsILikeList a").each(function(){
+		$(this).mouseover(function(){
+			var toShow = '#tabNut'+ $(this).attr('id');
+			$("table[id^='tabNut']").hide();
+			$(toShow).show();
+		});
+	});
+
+
+// Select/DeselectAll
+	$("#toggle").on( "click", function (e) {
+		e.preventDefault();
+		var i = 0;
+		$("#box3ManageFoodsILikeList input").each( function() { 
+			if ($(this).prop("checked") == 1){
+				i++;
+			}
+		});
+		if (i != 0){	
+			$("#box3ManageFoodsILikeList input").each( function() { 
+				$(this).prop("checked", 0); 
+			});
+		}	
+		else{
+			$("#box3ManageFoodsILikeList input").each( function() { 
+				$(this).prop("checked", 1); 
+			});
+		}
+	});
+
+// Check all Foods in Foods I like
+	$("#box3ManageFoodsILikeList input").each( function() { 
+		$(this).prop("checked", 1);
+	});
+
+
 
 	$("div[id^='nutExceed']").each(function(){
 		$(this).on("click",function(){

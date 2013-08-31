@@ -18,6 +18,12 @@ text-align:center;
 {
 text-align:right;
 }
+.rightNav
+{
+text-align:right;
+float:right;
+}
+
 .centcap {
 text-align:center;
 text-transform:capitalize;}
@@ -264,9 +270,38 @@ margin-left: 0px;
 border-color: white;
 }
 
+#manageFoodsILike{
+float: left;
+width: 620px;
+margin:10px;
+position: relative;
+padding:20px;
+border: solid
+}
 
+#box3ManageFoodsILikeList {
+width: 600px;
+padding-top: 10px;
+padding-bottom: 10px;
+margin-bottom: 10px;
+}
 
+#manageFoodDetails{
+position: fixed;
+height: 100px;
+top: 120px;
+right:300px;
+}
 
+#submitManageFood {
+text-align:right;
+float: right;
+width: 200px;
+height: 60px;
+position: absolute;
+top: 20px;
+right: 20px;
+}
 
 #firstPage{
 width: 1280px;

@@ -1,4 +1,4 @@
-def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsGivenmax, opt_maxormin, opt_nut, suggestedFood):
+def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsGivenmax, opt_maxormin, opt_nut):
 	
 	print "constraints:"
 	for each in constraints:
@@ -80,7 +80,6 @@ def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsG
 	listFood = [str(i) for i in range(len(listFoodObject))]
 	print "listFood: ", listFood
 	
-	listSuggested = [str(each) for each in suggestedFood]
 	
 	#Put the different food selected into respective nutrients dictionary
 	for each_constr in constraints:

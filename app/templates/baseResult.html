@@ -27,16 +27,18 @@
     		| <a href="{{ url_for('manage') }}" >Manage Diet Needs</a>
     		| <a href="{{ url_for('resultSearch') }}" >Select Foods</a>
     		| <a href="{{ url_for('optimize') }}" >Get Diet Plan</a>
-    		{%if g.user.role == 0 %}
-    		| <a href="{{ url_for('logout') }}" >Log out</a>
-			{% elif g.user.role == 1 %}
-			| <a href="{{ url_for('logout') }}" >Leave</a>
-			| <a href="{{ url_for('signup') }}" >Sign up</a>
-			{%endif%}
+
 		{%endif%}
     	{%if userProfile%}
     	| {{ userProfile }}
     	{%endif%}
+		{%if g.user.role == 0 %}
+		| <a href="{{ url_for('logout') }}" >Log out</a>
+		| <a href="{{ url_for('logout') }}" >Sign in as a New User</a>
+		{% elif g.user.role == 1 %}
+		| <a href="{{ url_for('logout') }}" >Leave</a>
+		| <a href="{{ url_for('signup') }}" >Save My Profile</a>
+		{%endif%}
  
     	
     	</div>

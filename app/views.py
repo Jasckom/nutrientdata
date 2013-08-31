@@ -55,6 +55,11 @@ def getSearchTerms(searchTerms):
 	print "Food: ",food
 	return food, brand
 	
+def saveFood():
+    userFood = Food.query.filter(Food.id.in_(session[g.user.get_id()])).all()
+    if userFood:
+		g.user.food = userFood
+		db.session.commit()
 
 #Get Matching Categories from search
 def getMatchingCat(searchEntry,foodTypes):
@@ -101,6 +106,10 @@ def resultSearch(page = 1):
 	global full_ext_nutrient
 	
 	
+	foodsByMainType = Food.query.filter(Food.id.in_(session[g.user.get_id()])).order_by(Food.mainType)
+	for each in foodsByMainType:
+		print each, each.mainType
+		
 	if "resultNew" in session.keys():
 		(defaultFood, defaultBrand) = getSearchTerms(session["resultNew"])
 	
@@ -259,6 +268,8 @@ def resultSearch(page = 1):
 	session["box1Head"] = "Search Results - Categories"
 	session["box1Cat"] = matchingCat
 	
+	saveFood()
+	
 	return render_template('resultSearch.html',
 		title = 'Search your food',
 		form = form,
@@ -386,6 +397,7 @@ def resultCategory(categoryChosen, page = 1):
 	
 	resultCategory = resultCategory.paginate(page, RESULTS_PER_PAGE, False)
 	
+	saveFood()
 	return render_template('resultCategory.html',
 			title = 'Search your food',
 			form = form,
@@ -436,9 +448,7 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 			if check[i]:
 				constraints.append(i+25)
 	
-		foodItems = []
-		for i in range(len(session[g.user.get_id()])):
-			foodItems.append(Food.query.filter(Food.id ==session[g.user.get_id()][i]).first())
+		foodItems = Food.query.filter(Food.id.in_(session["optimize"])).all()
 		
 		if "basicPlan" in session.keys():
 			if session["basicPlan"] == 1:
@@ -464,13 +474,13 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 			#print "Here" ,nutRatioUnmet
 			return redirect(url_for('resultSuggest'))
 	
-	if not foodIDFromSuggest in session[g.user.get_id()]:
-		#print "i'm heree3" , foodIDFromSuggest
-		session["suggested"].insert(0,foodIDFromSuggest)
-		print session["suggested"]
-		session[g.user.get_id()].insert(0,foodIDFromSuggest)
-		food = Food.query.filter(Food.id==foodIDFromSuggest).first()
-		session[("foodItem")].insert(0,food.food+ " "+ food.detail+ " (" +  food.source+")")
+	if not foodIDFromSuggest in session["optimize"]:
+		session["optimize"].insert(0,foodIDFromSuggest)
+		if not foodIDFromSuggest in session[g.user.get_id()]:
+			#print "i'm heree3" , foodIDFromSuggest
+			session[g.user.get_id()].insert(0,foodIDFromSuggest)
+			food = Food.query.filter(Food.id==foodIDFromSuggest).first()
+			session[("foodItem")].insert(0,food.food+ " "+ food.detail+ " (" +  food.source+")")
 	
 		(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(g.user.nutri[0],1)
 		constraints = []
@@ -487,7 +497,7 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 						newConstrainsts.append(each)
 				constraints = newConstrainsts
 		
-		foodItems = Food.query.filter(Food.id.in_(session[g.user.get_id()])).all()
+		foodItems = Food.query.filter(Food.id.in_(session["optimize"])).all()
 # 		for i in range(len(session[g.user.get_id()])):
 # 			foodItems.append(Food.query.filter(Food.id ==session[g.user.get_id()][i]).first())
 			
@@ -511,6 +521,99 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 		
 	else:
 		return redirect(url_for('resultSuggest'))
+
+
+@login_required
+@app.route('/foodsILike', methods = ['GET', 'POST'])
+def foodsILike():
+
+	global mainCategories
+	global foodTypes
+	global full_ext_nutrient
+	
+	print request.form
+	# If filter is applied, keep the filter else give default to first one
+	if "filterFoodsILike" in session.keys():
+		selectFilter = SelectFilter(session["filterFoodsILike"])
+	else:
+		selectFilter = SelectFilter(22)
+	if request.method == 'POST':
+		if selectFilter.filter.data and request.form['filter'] == 'Go!':
+			filterNut = selectFilter.filterNut.data
+			session["filterFoodsILike"] = filterNut
+	
+	#If filter is applied and not the default value
+	foodsItemsILike = Food.query.filter(Food.id.in_(session[g.user.get_id()]))
+	byCat = True
+	if "filterFoodsILike" in session.keys():
+		filterNut = session["filterFoodsILike"]
+		if filterNut != 22:
+			byCat = False
+			if filterNut == 23:
+				foodsItemsILike = foodsItemsILike.order_by(Food.source)
+			elif filterNut == 24:
+				foodsItemsILike = foodsItemsILike.order_by(Food.food)
+			# Differentiate which type of nutrients to rank by highest or lowest
+			# instrumentAttribute is the list of nutrients for ordering
+			elif filterNut in toReduce:
+				foodsItemsILike = foodsItemsILike.order_by(asc(instrumentAttribute[filterNut]))
+			else:
+				foodsItemsILike = foodsItemsILike.order_by(desc(instrumentAttribute[filterNut]))
+		else:
+			foodsItemsILike = foodsItemsILike.order_by(Food.mainType)
+
+	# if no filter is applied, relevant search is made by ranking according to lengths of the tag
+	# This is because all the foods here strictly have all the keywords in the search.
+	else:
+		foodsItemsILike = foodsItemsILike.order_by(Food.mainType)
+	
+	# Create foods I like form
+	foodIdsArg = [str(food.id) for food in foodsItemsILike]
+	foodNamesArg = [food.food+ " "+ food.detail+ " (" +  food.source+")" for food in foodsItemsILike]
+	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)
+	
+	#Validate form of foods I like
+	if foodsILike.validate_on_submit() and (foodsILike.submit.data or  foodsILike.remove.data or foodsILike.toggle.data):
+		check = []
+		checkedFood = []
+		fieldIndex = 0
+		# The first 4 fields are not selected items
+		for field in foodsILike:
+			if fieldIndex >= 4:
+				check.append(field.data)
+				# Get ids of the checked food for submitting or for removing
+				if field.data: 
+					checkedFood.append(field.name)
+			fieldIndex +=1
+		
+		# Submit the food for linear programming
+		if foodsILike.submit.data == 1:
+			# If some foods are actually chosen, foods can be submitted
+			if sum(check) >=1:
+				session["optimize"] = [i for i in checkedFood]
+				return redirect(url_for('optimize'))
+			else:
+				flash('Please select the foods you like')
+		
+		# Remove the foods
+		elif foodsILike.remove.data == 1:
+			for i in checkedFood:
+				indexToDelete = session[g.user.get_id()].index(i)
+				session[g.user.get_id()].pop(indexToDelete)
+				session["foodItem"].pop(indexToDelete)
+		return redirect(url_for('foodsILike'))
+	
+	
+	return render_template('foodsILike.html',
+		selectFilterFoodsILike =selectFilter,
+		manageFoodsILike = foodsILike,
+		foodNamesArg = foodNamesArg,
+		userProfile=session["userProfile"],
+		foodsItemsILike = foodsItemsILike,
+		byCat = byCat)
+		
+		
+
 	
 # get bounds from Nutri and decide whether to follow the recommended or follow the user's new constrainst
 def getKeysBounds(nutriObject,override):
@@ -700,7 +803,7 @@ def manage():
 	if not g.user.is_authenticated():
 		flash('Please First Sign in as a Guest')
 		return redirect(url_for('login'))
-	
+	saveFood()
 	if "basicPlan" not in session.keys():
 		firstDefault = 1
 	else:
@@ -831,13 +934,10 @@ def optimize():
 			return redirect(url_for('resultSearch'))
 			
 	# Save food that user select into Database
-	userFood = [Food.query.filter(Food.id==int(each)).first() for each in session[g.user.get_id()]]
-	if userFood:
-		g.user.food = userFood
-		db.session.commit()
+	saveFood()
 
 	# Get food items from the ids to pass to LP function
-	listFoodObject = [Food.query.filter(Food.id == i).first() for i in session["optimize"] ]
+	listFoodObject = Food.query.filter(Food.id.in_(session["optimize"])).all()
 	# Get contraints to pass to LP function	
 	(check, nutriField, defaultGenlowerBound, defaultGenupperBound) = getKeysBounds(g.user.nutri[0],1)
 	# Modify the constraints - if it is basic plan removed all that have been checked
@@ -857,18 +957,10 @@ def optimize():
 				newConstrainsts.append(each)
 		constraints = newConstrainsts
 	
-	suggestedFood = []
-	print "session", session.keys()
-	if "suggested" in session.keys():
-		print "There's sugest"
-		for each in session["suggested"]:
-			if each in session["optimize"]:
-				suggestedFood.append(session["optimize"].index(each))
-	print "suggestFood", suggestedFood
-		
+
 	
 	# Step 1 - normal LP
-	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut, suggestedFood )
+	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut )
 	(outputFood , outputFoodAmount , status ,objective, nullNut) = result
 	
 	# Step 2 - If infeasible - see what's the current situation like to see which food is lacking
@@ -876,7 +968,7 @@ def optimize():
 		print "minimizing - changed to max"
 		if opt_maxormin == 0:
 			#When infeasible solution - make objective maximize will make it better
-			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, 1, opt_nut, suggestedFood )
+			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, 1, opt_nut)
 			(outputFood , outputFoodAmount , status ,objective, nullNut) = result
 			
 	#Get lower bounds and upper bounds convert string from Nutri to float for calculations
@@ -915,7 +1007,7 @@ def optimize():
 				if each > pace:
 					stat == "Infeasible"
 			openUpperBound = [pace for i in range(len(defaultGenupperBound))]
-			(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut, suggestedFood )
+			(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut)
 			reportTotal(constraints, outputFoodAmount, listFoodObject)
 		#print "Open Bounded Solution"
 		(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
@@ -957,13 +1049,15 @@ def optimize():
 			upper = "ND"
 		if opt_nut != constraints[i]:
 			eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(int(round(totalNut[i]))) + " "+full_ext_nutrient_unit[constraints[i]-25])
-
+		else:
+			lowerOptNut = lower
+			upperOptNut = upper
 	if objective == None:
-		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lower)+":"+str(upper)+ ") 0 "+full_ext_nutrient_unit[constraints[i]-25])
+		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lowerOptNut)+":"+str(upperOptNut)+ ") 0 "+full_ext_nutrient_unit[opt_nut-25])
 		eachTotalStatement.append("None of the food items contain "+ full_ext_nutrient[opt_nut-25] + " to be optimized.")
 	else:
 		objective = int(objective)
-		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(objective) +" "+full_ext_nutrient_unit[constraints[i]-25])
+		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lowerOptNut)+":"+str(upperOptNut)+ ") "+ str(objective) +" "+full_ext_nutrient_unit[opt_nut-25])
 
 	
 	
@@ -1142,15 +1236,19 @@ def resultSuggest(page = 1):
 	global mainCategories
 	global foodTypes
 	
-	foodIdsArg = session[g.user.get_id()]
-	foodNamesArg = session["foodItem"]
-	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)
 	
+	foodIdsArg = session["optimize"]
 	if foodIdsArg:
-		foodsItemsILike = Food.query.filter(Food.id.in_(foodIdsArg)).all()
+	
+		foodsItemsILike = [Food.query.filter(Food.id == each).first() for each in foodIdsArg]
 	else:
 		foodsItemsILike = []
+	for each in foodsItemsILike:
+		print each
+	foodNamesArg = [food.food+ " "+ food.detail+ " (" +  food.source+")" for food in foodsItemsILike]
+	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)	
 	
+
 	#Validate form
 	if foodsILike.validate_on_submit():
 		check = []
@@ -1170,11 +1268,14 @@ def resultSuggest(page = 1):
 				flash('Please select the foods you like')
 		elif foodsILike.remove.data == 1:
 			for i in checkedFood:
-				if i in session["suggested"]:
-					session["suggested"].remove(i)
-				indexToDelete = session[g.user.get_id()].index(i)
-				session[g.user.get_id()].pop(indexToDelete)
-				session["foodItem"].pop(indexToDelete)
+				indexToDelete = session["optimize"].index(i)
+				session["optimize"].pop(indexToDelete)
+
+
+# 					session["suggested"].remove(i)
+# 				indexToDelete = session[g.user.get_id()].index(i)
+# 				session[g.user.get_id()].pop(indexToDelete)
+# 				session["foodItem"].pop(indexToDelete)
 		return redirect(url_for('selectFoodFromSuggest', foodIDFromSuggest = "updateAfterRemove"))
 		
 	
@@ -1304,6 +1405,7 @@ def resultSuggest(page = 1):
 	titleFindFood = "Foods High in "+ currentNutName
 
 	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
+	saveFood()
 	return render_template('resultSuggest.html',
 		foodsILike = foodsILike,
 		lackingNut = lackingNut,
@@ -1346,7 +1448,6 @@ def before_request():
     	session["result"] = ""
     	session["resultNew"] = ""
     	session["resultID"] = []
-    	session["suggested"] = []
  
 @lm.user_loader
 def load_user(id):
@@ -1446,7 +1547,9 @@ def profile():
 	if currentUser.username is not None:
 		username = g.user.username
 
-	return render_template("profile.html", username = username, editProfile = editProfile)
+	return render_template("profile.html", 
+		username = username, editProfile = editProfile,
+    	userProfile = getUserProfileDisplay(g.user))
 
 @app.route('/', methods = ['GET', 'POST'])
 def index():	
@@ -1592,16 +1695,20 @@ def signup():
         	session['userProfile'] = getUserProfileDisplay(g.user)
         	return redirect(url_for("manage"))	
     	flash("The username already exists Please try again.")
-    return render_template("signup.html", signupform=signupform)
+    return render_template("signup.html", 
+    		signupform=signupform,
+    		userProfile = getUserProfileDisplay(g.user))
 
 @app.route("/logout")
 @login_required
 def logout():
+	saveFood()
 	flash("You have logged out. Thank you")
 	#print "g_user is :", g.user
 	#print "current user is:", current_user
 	if (g.user.role == 2):
 		session.pop(g.user.get_id(), None)
+		db.session.delete(g.user.nutri[0])
 		db.session.delete(g.user)
 		db.session.commit()
 	keys = session.keys()
