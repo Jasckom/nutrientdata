@@ -490,6 +490,12 @@ border: solid;
 overflow:auto;
 }
 
+.tdReportLP{
+max-width:150px;
+min-width:150px; 
+width:150px; 
+}
+
 #optimizeResultLP{
 float: left;
 width: 1218px;

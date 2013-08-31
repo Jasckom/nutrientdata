@@ -67,13 +67,23 @@
 
     {%if eachTotalStatement%}
     <div id = reportLP>
-    		 <div class = subHeading><strong>Nutritional Report</strong></div><br>
-
-    {%for each in eachTotalStatement%}
-    {{each}}<br>
-    {%endfor%}
-    </div>
+    	<div class = subHeading><strong>Nutritional Report</strong></div><br>
+			{%set index = 0%}
+				<table>
+					{%for each in eachTotalStatement%}
+						{%if index is divisibleby 3%}
+							<tr><td class = tdReportLP>{{each}}</td>
+						{%else%}
+							<td>{{each}}</td>
+						{%endif%}
+						{%set index = index+1%}
+						{%if index is divisibleby 3%}
+							</tr>
+						{%endif%}
+					{%endfor%}
+				</table>
     {%endif%}
+	</div>
 </div>    
     
     <div id = manageDietPlan>

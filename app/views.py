@@ -1048,16 +1048,29 @@ def optimize():
 		if upper == 10000:
 			upper = "ND"
 		if opt_nut != constraints[i]:
-			eachTotalStatement.append(full_ext_nutrient[constraints[i]-25]+" ("+str(lower)+":"+str(upper)+ ") "+ str(int(round(totalNut[i]))) + " "+full_ext_nutrient_unit[constraints[i]-25])
-		else:
-			lowerOptNut = lower
-			upperOptNut = upper
+			eachTotalStatement.append(full_ext_nutrient[constraints[i]-25])
+			eachTotalStatement.append("("+str(lower)+":"+str(upper)+ ")")
+			eachTotalStatement.append(str(int(round(totalNut[i]))) + " "+full_ext_nutrient_unit[constraints[i]-25])
+
+	if defaultGenupperBound[opt_nut-25] == "ND":
+		upperOptNut = 10000
+	else:
+		upperOptNut = (float(defaultGenupperBound[opt_nut-25]))
+	if defaultGenlowerBound[opt_nut-25] == "ND":
+		lowerOptNut = 0
+	else:
+		lowerOptNut = (float(defaultGenlowerBound[opt_nut-25]))
+
 	if objective == None:
-		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lowerOptNut)+":"+str(upperOptNut)+ ") 0 "+full_ext_nutrient_unit[opt_nut-25])
+		eachTotalStatement.append(full_ext_nutrient[opt_nut-25])
+		eachTotalStatement.append("("+str(lowerOptNut)+":"+str(upperOptNut)+ ")")
+		eachTotalStatement.append("0 "+full_ext_nutrient_unit[opt_nut-25])
 		eachTotalStatement.append("None of the food items contain "+ full_ext_nutrient[opt_nut-25] + " to be optimized.")
 	else:
 		objective = int(objective)
-		eachTotalStatement.append(full_ext_nutrient[opt_nut-25]+" ("+str(lowerOptNut)+":"+str(upperOptNut)+ ") "+ str(objective) +" "+full_ext_nutrient_unit[opt_nut-25])
+		eachTotalStatement.append(full_ext_nutrient[opt_nut-25])
+		eachTotalStatement.append("("+str(lowerOptNut)+":"+str(upperOptNut)+ ")")
+		eachTotalStatement.append(str(objective) +" "+full_ext_nutrient_unit[opt_nut-25])
 
 	
 	
