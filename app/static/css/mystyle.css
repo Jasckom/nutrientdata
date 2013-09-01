@@ -416,7 +416,6 @@ margin:10px;
 position: relative;
 padding:20px;
 border: solid;
-overflow:auto;
 }
 
 #minMaxTable{
@@ -480,6 +479,7 @@ overflow:auto;
 #reportLP{
 float: left;
 height: 480px;
+width: 320px;
 position: relative;
 padding:20px;
 border: solid;
