@@ -94,7 +94,6 @@ margin:10px;
 margin-top: 10px;
 margin-bottom: -5px;
 position: relative;
-border-color: white;
 }
 
 #searchAndSort {
@@ -111,8 +110,7 @@ margin:10px;
 margin-top: 10px;
 margin-bottom: -5px;
 position: relative;
-border: solid;
-border-color: white;
+
 }
 
 #boxBelow{
