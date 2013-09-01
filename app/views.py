@@ -98,7 +98,7 @@ def mainCat(mainCatChosen):
 def resultSearch(page = 1):
 	
 	if not g.user.is_authenticated():
-		flash('Please First Sign in as a Guest')
+		flash('Please first sign in as a guest')
 		return redirect(url_for('login'))
 
 	global mainCategories
@@ -1241,7 +1241,8 @@ def optimize():
 		eachTotalStatement = eachTotalStatement,
 		nutLackStatement = nutLackStatement,
 		minMaxForm = minMaxForm)
-				
+
+@login_required				
 @app.route('/resultSuggest', methods=['GET', 'POST'])
 @app.route('/resultSuggest/<int:page>', methods = ['GET', 'POST'])
 def resultSuggest(page = 1):
@@ -1249,7 +1250,10 @@ def resultSuggest(page = 1):
 	global mainCategories
 	global foodTypes
 	
-	
+	if "optimize" not in session.keys():
+		flash('Please generate a diet plan First')
+		return redirect(url_for('optimize'))
+		
 	foodIdsArg = session["optimize"]
 	if foodIdsArg:
 	
@@ -1684,7 +1688,7 @@ def login():
 		#print "get login form"
 		user = User.query.filter(User.username == formLogin.usernameLog.data).filter(User.password == formLogin.passwordLog.data).first()
 		if user is None:
-			flash("Wrong Username or Password. Please try again")
+			flash("Wrong username or password. Please try again")
 			#print "No user"
 			return render_template("login.html", formLogin=formLogin, head_1 = "Log In", profileFull= profileFull)
 		login_user(user)
@@ -1730,7 +1734,15 @@ def logout():
 	logout_user()
 	return redirect(url_for('login'))
 
+@app.errorhandler(404)
+def internal_error(error):
+    return render_template('404.html'), 404
 
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('500.html'), 500
+    
 # TESTING Create dynamic form
 def create_form():
 	class F(Form):
