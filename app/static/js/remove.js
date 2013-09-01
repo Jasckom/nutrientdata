@@ -167,7 +167,6 @@ $(function () {
 	});
 
 
-
 	$("div[id^='nutExceed']").each(function(){
 		$(this).on("click",function(){
 		var toShow = "li[id='Food"+$(this).attr('id')+"']";
@@ -199,9 +198,6 @@ $(function () {
 	
 	$('#loading').hide();
 	
-	$("input[value='Proceed to Select Foods']").css('font-size','30px');
-	
-	$("input[value='Generate My Diet']").css('font-size','30px');	
 	
 	$("input[id='submitSignUp']").hide();
 	

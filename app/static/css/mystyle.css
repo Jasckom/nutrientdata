@@ -55,15 +55,12 @@ font-size:x-large;
 
 
 #mainCat {
-float: left;
-width: 520;
+width: 550;
 height: 130px;
 position: relative;
-overflow:auto;
+float:left;
 border: solid;
-margin-left: 10px;
-margin-right: 10px;
-margin-top: -7px;
+
 border-color: white;
 }
 
@@ -98,7 +95,6 @@ margin:10px;
 margin-top: 10px;
 margin-bottom: -5px;
 position: relative;
-border: solid;
 border-color: white;
 }
 #submitMyFood {
@@ -153,7 +149,7 @@ border: solid;
 #box1CatList {
 width: 180px;
 height: 200px;
-overflow:scroll;
+overflow:auto;
 padding-top: 10px;
 }
 
@@ -411,7 +407,7 @@ overflow:auto;
 
 #manageMinMaxForm{
 float: left;
-width: 520px;
+width: 550px;
 height: 485px;
 margin:10px;
 position: relative;
