@@ -17,7 +17,3 @@ CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess'
 
 RESULTS_PER_PAGE = 50
-
-#For full-text search
-#WHOOSH_BASE = os.path.join(basedir, 'search.db')
-#MAX_SEARCH_RESULTS = 100

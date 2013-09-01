@@ -498,6 +498,7 @@ width: 1218px;
 height: 526px;
 margin:10px;
 position: relative;
+overflow: auto;
 }
 
 
