@@ -69,35 +69,29 @@
     			<div id = search>
     			<div id class = subHeading><strong>Select Foods</strong></div>
 
-				<table>
+				
 				<form action="" method="post" name="searchEntry">
 				{{form.hidden_tag()}}
-				<tr>
-						<td>
+
 							Search by Keywords:
 							{{form.searchEntry(size=25,placeholder="Food")}}
 							{{form.brandEntry(size=20,placeholder="Brand (Optional)")}}
-						</td>
-						<td>
+
 							<input type="submit" name ="search" value="Go!">
-						</td>
 					</form>
-				</tr>
+
 				{% if selectFilter %}
 			
 				<form action="" method="post" name="Filter">
-				<tr>
+	
 					{{selectFilter.hidden_tag()}}
-					<td>
+
 					Order by: {{selectFilter.filterNut}}{{selectFilter.filter}}
-					</td>
-					<td>
-					
-					</td>
-				</tr>	
+
+
 				</form>
 				{%endif%}
-			</table>
+
 			</div>
 			
     	{% endif %}

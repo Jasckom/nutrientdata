@@ -417,7 +417,6 @@ overflow:auto;
 }
 
 #minMaxTable{
-width: 520px;
 margin-top: 10px;
 height: 380px;
 position: relative;
@@ -467,7 +466,6 @@ overflow:auto;
 
 #remarksLP{
 float: left;
-width: 320px;
 height: 480px;
 margin-right:20px;
 position: relative;
@@ -478,7 +476,6 @@ overflow:auto;
 
 #reportLP{
 float: left;
-width: 320px;
 height: 480px;
 position: relative;
 padding:20px;
