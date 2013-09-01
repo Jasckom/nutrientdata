@@ -72,21 +72,26 @@
 				
 				<form action="" method="post" name="searchEntry">
 				{{form.hidden_tag()}}
+				<div id = searchAndSort>
 
 							Search by Keywords:
 							{{form.searchEntry(size=25,placeholder="Food")}}
 							{{form.brandEntry(size=20,placeholder="Brand (Optional)")}}
-
 							<input type="submit" name ="search" value="Go!">
+				</div>
+
+							
 					</form>
 
 				{% if selectFilter %}
 			
 				<form action="" method="post" name="Filter">
+				<div id = searchAndSort>
 	
 					{{selectFilter.hidden_tag()}}
 
 					Order by: {{selectFilter.filterNut}}{{selectFilter.filter}}
+				</div>
 
 
 				</form>
