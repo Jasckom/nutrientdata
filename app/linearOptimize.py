@@ -93,6 +93,7 @@ def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsG
 
 	############################## LP Problem ####################################
 	from pulp import *
+	
 
 	# Create the 'prob' variable to contain the problem data
 	if opt_maxormin == 1:
@@ -145,9 +146,12 @@ def linearOptimize(listFoodObject,constraints, constraintsGivenmin, constraintsG
 		print outputFood[foodindex]
 		outputFoodAmount[foodindex] = (v.varValue)
 	
+		
+	
 	print "Status:", LpStatus[prob.status],
 	
-	print "Total "+full_total_nutrient[opt_nut-8], value(prob.objective) # -8 because there are 8 basic nutrients in full_total 
+	print "Total "+full_total_nutrient[opt_nut-8], value(prob.objective) # -8 because there are 8 basic nutrients in full_total
+	 
 	
 	return (outputFood, outputFoodAmount, LpStatus[prob.status], value(prob.objective), nullNut)
 	

@@ -3,10 +3,9 @@
 from flask import render_template, flash, redirect, url_for, g, session, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
-from forms import SearchForm, LoginForm, SignupForm, createMinMaxForm, EditPreferredList, Profile, manyButtons, createFoodsILike, SelectFilter, ProfileFull
+from forms import SearchForm, LoginForm, SignupForm, createMinMaxForm, Profile, createFoodsILike, SelectFilter, ProfileFull
 from datetime import datetime
-from linearOptimize import linearOptimize
-from filterFood import *
+from linearOptimize import *
 from sqlalchemy import asc, desc, func
 from sqlalchemy.orm import aliased
 from searchFood import searchFood, searchFoodBrand
@@ -30,7 +29,6 @@ foodTypes = [['apple pies', 'bagels', 'banana muffins', 'banana pumpkin breads',
 
 #Determine if the entry from search box is with brand or 
 def getSearchEntry(brandEntry,searchEntry):
-	##print "in search, brand is: ", brandEntry, searchEntry, 
 	if len(brandEntry) != 0:
 		if len(searchEntry) != 0:
 			if not searchEntry.isspace():
@@ -41,7 +39,11 @@ def getSearchEntry(brandEntry,searchEntry):
 			searchEntry = "brandOnly:"+brandEntry
 	return searchEntry
 
+#Get search term from the concatenate form - this is for remembering the search term
+#Instead of putting in the session a two separate terms 
 def getSearchTerms(searchTerms):
+	#The form is of the format food:brand
+	#If only brand is searched then in food "brandOnly"
 	searchTermsList = searchTerms.split(":")
 	if len(searchTermsList) > 1:
 		food = searchTermsList[0]
@@ -51,10 +53,9 @@ def getSearchTerms(searchTerms):
 		brand = None
 	if food == "brandOnly":
 		food = None
-	print "Brand: ",brand
-	print "Food: ",food
 	return food, brand
-	
+
+#Save food to the current user
 def saveFood():
     userFood = Food.query.filter(Food.id.in_(session[g.user.get_id()])).all()
     if userFood:
@@ -75,6 +76,43 @@ def getMatchingCat(searchEntry,foodTypes):
 	matchingCat = list(set(matchingCat))
 	matchingCat.sort()
 	return matchingCat
+
+#Get diet plan which has the most number of food items
+def findMaxFood(listFoodObject, constraints, defaultGenlowerBound, openUpperBound):
+	#This is just running the functions through the common diet plans
+	# cal, protein , fat ,carb, vitC
+	listOptNut = [26,28,29,30,52]
+	minAndMax = [0,1]
+	maxNonZeros = 0
+	for opt_nut in listOptNut:
+		for opt_maxormin in minAndMax:
+			(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut)
+			countNonZeros = 0
+			for eachVal in outputFoodAmount:
+				if eachVal != 0:
+					countNonZeros += 1
+			if  countNonZeros >= maxNonZeros:
+				maxNonZeros = countNonZeros
+				BestResult = (outputFood, outputFoodAmount, stat, valobj, nullNut)
+				status = "Max variety from" + str(opt_nut) + " " + str(opt_maxormin)
+				print "Number of foods: " + str(maxNonZeros)
+				print status
+
+# 	for opt_maxormin in minAndMax:
+# 		(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimizeMaxMinPortions(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut)
+# 		countNonZeros = 0
+# 		for eachVal in outputFoodAmount:
+# 			if eachVal != 0:
+# 				countNonZeros += 1
+# 		if  countNonZeros >= maxNonZeros:
+# 			maxNonZeros = countNonZeros
+# 			BestResult = (outputFood, outputFoodAmount, stat, valobj, nullNut)
+# 			status = "Max variety from min max potions"
+# 			print "Number of foods: " + str(maxNonZeros)
+# 			print status
+			
+	print "Total non zeroes: ", str(maxNonZeros)
+	return BestResult	
 
 @login_required
 @app.route('/mainCat/<mainCatChosen>')
@@ -105,11 +143,7 @@ def resultSearch(page = 1):
 	global foodTypes
 	global full_ext_nutrient
 	
-	
-	foodsByMainType = Food.query.filter(Food.id.in_(session[g.user.get_id()])).order_by(Food.mainType)
-	for each in foodsByMainType:
-		print each, each.mainType
-		
+	#Get the previous search term to put in the search form	
 	if "resultNew" in session.keys():
 		(defaultFood, defaultBrand) = getSearchTerms(session["resultNew"])
 	
@@ -357,7 +391,7 @@ def resultCategory(categoryChosen, page = 1):
 			filterNut = selectFilter.filterNut.data
 			session["filter"] = filterNut
 	
-	#Get results/cat
+	#Get resultsCategory as a standard result before sorting in any order
 	categoryChosen = categoryChosen.split(':')
 	if categoryChosen[1] == "General":
 		mainType = categoryChosen[0]
@@ -416,6 +450,7 @@ def resultCategory(categoryChosen, page = 1):
 @login_required
 @app.route('/selectFood/<foodChosen>')
 def selectFood(foodChosen):
+	#This is from the link of each food when users click on it
 	#Only new food item is added
 	if not foodChosen in session[g.user.get_id()]:
 		session[g.user.get_id()].insert(0,foodChosen)
@@ -439,17 +474,21 @@ def selectFoodFromSearch(foodIDFromSearch):
 @login_required
 @app.route('/selectFoodFromSuggest/<foodIDFromSuggest>')
 def selectFoodFromSuggest(foodIDFromSuggest):
+	#In selectFoodFromSuggest - foods are added to 2 places - in session["optimize"] and in session[g.user.get_id()]
+	#This is because only food submitted appears in result suggest it is separated from the whole list of foods
+	#All the calculations to dynamically satisfy the lacking nutrients are based on foods submitted session["optimize"]
 	#If the food is removed - the nutrients lacking should be recalculated
+	
+	#Two main parts - when foods are added tand when they are removed
+	#First when it is removed
 	if foodIDFromSuggest == "updateAfterRemove":
-		# Get check 
+		# Get check here is used to find the current constraints 
 		(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(g.user.nutri[0],1)
 		constraints = []
 		for i in range(len(check)):
 			if check[i]:
 				constraints.append(i+25)
-	
-		foodItems = Food.query.filter(Food.id.in_(session["optimize"])).all()
-		
+		# only take the ones in basic plan if it is chosen
 		if "basicPlan" in session.keys():
 			if session["basicPlan"] == 1:
 				global basicPlan
@@ -459,8 +498,11 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 						newConstrainsts.append(each)
 				constraints = newConstrainsts
 		
-			
-		(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, foodItems, g.user.nutri[0])
+		
+		foodItems = Food.query.filter(Food.id.in_(session["optimize"])).all()
+		
+		#Get ratioUnmet from the foods submitted	
+		(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio(constraints, foodItems, g.user.nutri[0])
 						
 		if nutRatioMin:
 			session["sumCal"] = sumCal
@@ -471,13 +513,13 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 			return redirect(url_for('resultSuggest'))
 		
 		else:
-			#print "Here" ,nutRatioUnmet
 			return redirect(url_for('resultSuggest'))
 	
+	# When food is added - have to check if it's already in the foods submitted
+	# Also check if it is in the foods i like
 	if not foodIDFromSuggest in session["optimize"]:
 		session["optimize"].insert(0,foodIDFromSuggest)
 		if not foodIDFromSuggest in session[g.user.get_id()]:
-			#print "i'm heree3" , foodIDFromSuggest
 			session[g.user.get_id()].insert(0,foodIDFromSuggest)
 			food = Food.query.filter(Food.id==foodIDFromSuggest).first()
 			session[("foodItem")].insert(0,food.food+ " "+ food.detail+ " (" +  food.source+")")
@@ -498,12 +540,9 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 				constraints = newConstrainsts
 		
 		foodItems = Food.query.filter(Food.id.in_(session["optimize"])).all()
-# 		for i in range(len(session[g.user.get_id()])):
-# 			foodItems.append(Food.query.filter(Food.id ==session[g.user.get_id()][i]).first())
 			
-		(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, foodItems, g.user.nutri[0])
+		(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio(constraints, foodItems, g.user.nutri[0])
 		
-		#print "In selectFood", nutRatioMin, nutRatioUnmet
 				
 		if nutRatioMin:
 			session["sumCal"] = sumCal
@@ -523,15 +562,16 @@ def selectFoodFromSuggest(foodIDFromSuggest):
 		return redirect(url_for('resultSuggest'))
 
 
+
 @login_required
 @app.route('/foodsILike', methods = ['GET', 'POST'])
 def foodsILike():
-
+	#Manage foods I like
+	
 	global mainCategories
 	global foodTypes
 	global full_ext_nutrient
 	
-	print request.form
 	# If filter is applied, keep the filter else give default to first one
 	if "filterFoodsILike" in session.keys():
 		selectFilter = SelectFilter(session["filterFoodsILike"])
@@ -543,6 +583,7 @@ def foodsILike():
 			session["filterFoodsILike"] = filterNut
 	
 	#If filter is applied and not the default value
+	#byCat will be passed to the html page so that the look is different from sorting by other criteria
 	foodsItemsILike = Food.query.filter(Food.id.in_(session[g.user.get_id()]))
 	byCat = True
 	if "filterFoodsILike" in session.keys():
@@ -613,9 +654,8 @@ def foodsILike():
 		byCat = byCat)
 		
 		
-
-	
 # get bounds from Nutri and decide whether to follow the recommended or follow the user's new constrainst
+# the default ones are unchecked when lower bounds are zeros and upper bounds are ND
 def getKeysBounds(nutriObject,override):
 	nutriField = []
 	check = []
@@ -628,21 +668,21 @@ def getKeysBounds(nutriObject,override):
 	i = 23
 	
 	for each in bounds:
-		##print "each in getkeys", each
 		each = each.split(":")
 		defaultGenlowerBound.append(each[0])
 		defautGenupperBound.append(each[1])
 		if override:
+			#get all the constraints 0 or 1 just as they are -
 			if len(each) >= 3:
 				check.append(int(each[2]))
 		else:
+			#check only those that has zero as lower bound as undefined upper bound (only meaningful ones)
 			if (each[0] == "0" and each[1] == "ND"):
 				check.append(0)
 				setattr(nutriObject, nutriField[i], str(each[0])+":"+str(each[1])+":0")
 			else:
 				check.append(1)
 				setattr(nutriObject, nutriField[i], str(each[0])+":"+str(each[1])+":1")
-			##print "In setting", nutriField[i], getattr(nutriObject, nutriField[i])
 		i += 1
 
 	db.session.commit()
@@ -650,8 +690,8 @@ def getKeysBounds(nutriObject,override):
 	
 	return 	check, nutriField, defaultGenlowerBound, defautGenupperBound
 
-# tell ratios and indicate which nutrient is not satisfied
-def reportRatio2(constraints, foodItems, nutri):
+def reportRatio(constraints, foodItems, nutri):
+	# tell ratios and indicate which nutrient is not satisfied
 
 	# If there are no constraints and food items given
 	if (not constraints) and (not foodItems):
@@ -677,8 +717,7 @@ def reportRatio2(constraints, foodItems, nutri):
 			nutRatioMin.append(nutri.nutCalRatio(eachCon))
 		return givenCal, [], nutRatioMin, constraints
 	
-	global full_ext_nutrient
-	
+	#check the best foods in each nutrient
 	for i in range(len(constraints)):
 		eachCon = constraints[i]
 		maxNut = 0
@@ -688,9 +727,8 @@ def reportRatio2(constraints, foodItems, nutri):
 				bestFood = foodItems[j]
 		bestFoods.append(bestFood)
 		bestFoodsVals.append(maxNut)
-		if eachCon == 58:
-			print bestFood
 	
+	#compare the best food if it passes the ratio
 	for i in range(len(constraints)):
 		eachCon = constraints[i]
 		bestFoodVal = bestFoodsVals[i]
@@ -700,13 +738,11 @@ def reportRatio2(constraints, foodItems, nutri):
 			nutRatioUnmet.append(eachCon)
 			nutRatioMin.append(minRatio)
 			failedBestFood.append(nutRatio)
-		if eachCon == 58:
-			print full_ext_nutrient[eachCon-25]
 	
+	#After failing the following nutrients which is quite strict, 
+	#only consider the ones that the infeasible solution cannot meet the lower bounds
 	nutRatioMinNew = []
 	nutRatioUnmetNew = []
-	print "nutLack", session["nutLack"]
-	print "nutUnmet", nutRatioUnmet
 	for each in session["nutLack"]:
 		if each in nutRatioUnmet:
 			indexNut = nutRatioUnmet.index(each)
@@ -715,11 +751,9 @@ def reportRatio2(constraints, foodItems, nutri):
 			
 	return givenCal, failedBestFood, nutRatioMinNew, nutRatioUnmetNew
 
-
+#get the nutritional content (according to constraints) from the given food items and the amount of the foods 
 def reportTotal(constraints, outputFoodAmount, foodItems):
-	#print outputFoodAmount
 	TotalNut = []
-	full_ext_nutrient = ["Water/g","Energy/kcal","Energy/kj","Protein/g","Total lipid fat/g","Carbohydrate, by difference/g","Fiber, total dietary/g","Sugars, total/g","Sucrose/g","Glucose dextrose/g","Fructose/g","Lactose/g","Maltose/g","Galactose/g","Starch/g","Adjusted Protein/g","Calcium, Ca/mg","Iron, Fe/mg","Magnesium, Mg/mg","Phosphorus, P/mg","Potassium, K/mg","Sodium, Na/mg","Zinc, Zn/mg","Copper, Cu/mg","Manganese, Mn/mg","Selenium, Se/mcg","Fluoride, F/mcg","Vitamin C, total ascorbic acid/mg","Thiamin/mg","Riboflavin/mg","Niacin/mg","Pantothenic acid/mg","Vitamin B-6/mg","Folate, total/mcg","Folic acid/mcg","Folate, food/mcg","Folate, DFE/mcg_DFE","Choline, total/mg","Betaine/mg","Vitamin B-12/mcg","Vitamin B-12, added/mcg","Vitamin A, IU/IU","Vitamin A, RAE/mcg_RAE","Retinol/mcg","Vitamin E (alpha-tocopherol)/mg","Vitamin E, added/mg","Tocopherol, beta/mg","Tocopherol, gamma/mg","Tocopherol, delta/mg","Vitamin K phylloquinone/mcg","Carotene, beta/mcg","Carotene, alpha/mcg","Cryptoxanthin, beta/mcg","Lycopene/mcg","Lutein + zeaxanthin/mcg","Vitamin D/IU","Stigmasterol/mg","Phytosterols/mg","Beta-sitosterol/mg","Campesterol/mg","Cholesterol/mg","Fatty acids, total monounsaturated/g","Fatty acids, total polyunsaturated/g","Fatty acids, total saturated/g","Fatty acids, total trans-monoenoic/g","Fatty acids, total trans-polyenoic/g","Fatty acids, total trans/g","Monounsaturated fats14:1/g","Monounsaturated fats15:1/g","Monounsaturated fats16:1 c/g","Monounsaturated fats16:1 t/g","Monounsaturated fats16:1 undifferentiated/g","Monounsaturated fats17:1/g","Monounsaturated fats18:1 c/g","Monounsaturated fats18:1 t/g","Monounsaturated fats18:1 undifferentiated/g","Monounsaturated fats20:1/g","Monounsaturated fats22:1 c/g","Monounsaturated fats22:1 t/g","Monounsaturated fats22:1 undifferentiated/g","Monounsaturated fats24:1 c/g","Polyunsaturated fats18:2 CLAs/g","Polyunsaturated fats18:2 i/g","Polyunsaturated fats18:2 n-6 c,c/g","Polyunsaturated fats18:2 t not further defined/g","Polyunsaturated fats18:2 t,t/g","Polyunsaturated fats18:2 undifferentiated/g","Polyunsaturated fats18:3 n-3 c,c,c/g","Polyunsaturated fats18:3 n-6 c,c,c/g","Polyunsaturated fats18:3 undifferentiated/g","Polyunsaturated fats18:3i/g","Polyunsaturated fats18:4/g","Polyunsaturated fats20:2 n-6 c,c/g","Polyunsaturated fats20:3 n-3/g","Polyunsaturated fats20:3 n-6/g","Polyunsaturated fats20:3 undifferentiated/g","Polyunsaturated fats20:4 n-6/g","Polyunsaturated fats20:4 undifferentiated/g","Polyunsaturated fats20:5 n-3/g","Polyunsaturated fats21:5/g","Polyunsaturated fats22:4/g","Polyunsaturated fats22:5 n-3/g","Polyunsaturated fats22:6 n-3/g","Saturated fats10:0/g","Saturated fats12:0/g","Saturated fats13:0/g","Saturated fats14:0/g","Saturated fats15:0/g","Saturated fats16:0/g","Saturated fats17:0/g","Saturated fats18:0/g","Saturated fats20:0/g","Saturated fats22:0/g","Saturated fats24:0/g","Saturated fats4:0/g","Saturated fats6:0/g","Saturated fats8:0/g","Alanine/g","Arginine/g","Aspartic acid/g","Cystine/g","Glutamic acid/g","Glycine/g","Histidine/g","Hydroxyproline/g","Isoleucine/g","Leucine/g","Lysine/g","Methionine/g","Phenylalanine/g","Proline/g","Serine/g","Threonine/g","Tryptophan/g","Tyrosine/g","Valine/g","Ash/g","Alcohol, ethyl/g","Caffeine/mg","Theobromine/mg"]
 	for i in range(len(constraints)):
 		eachCon = constraints[i]
 		totalEachNut = []
@@ -747,6 +781,7 @@ def getCal(height, height2, weight, USorMetric, gender, activity,age):
 	cal = cal*float(activity)
 	return cal
 
+# get age group because this is used for calculations of nutrients
 def getageGroup(age):
 	age = float(age)
 	ageGroup =["0-6 mo", "6-12 mo","1-3 y","4-8 y","9-13 y","14-18 y","19-30 y","31-50 y","51-70 y",">70 y"]
@@ -772,6 +807,7 @@ def getageGroup(age):
 		result = ageGroup[9]
 	return result
 
+#Show the composition of foods that contribute to exceeded nutrients
 def showExceed(xNut, totalNut, foodAmount, foodItems):
 	nutrientPercent = []
 	for i in range(len(foodItems)):
@@ -784,9 +820,9 @@ def showExceed(xNut, totalNut, foodAmount, foodItems):
 			majorPercent.append(("%.1f" %each[1],each[0]))
 		
 	return majorPercent
-
+	
+# Show profile of the user - this should be done for all pages as well
 def getUserProfileDisplay(user):
-	# Show profile of the user - this should be done for all pages as well
 	dictActivity = {1.2:"Sedentary",1.375:"Lightly Active",1.55:"Moderately Active",1.725:"Very active",1.9:"Extremely Active"}
 	if user.heightInch is None:
 		userProfile = user.gender.rstrip('s') +" " + str(int(user.age)) +", Weight: "+  str(int(user.weight)) + " kg, Height: "+ str(int(user.heightFeet)) + " cm, " + dictActivity[user.activity]
@@ -797,7 +833,8 @@ def getUserProfileDisplay(user):
 	else:
 		userProfile = "Guest - "+userProfile 
 	return userProfile
-	
+
+
 @app.route('/manage', methods = ['GET', 'POST'])
 def manage():
 	if not g.user.is_authenticated():
@@ -814,44 +851,44 @@ def manage():
 	
 	(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(currentNutri,1)
 	
+	# Default is to stay healthy unless the the nutrient options are chosen before then remember it
 	optMaxMin = 2
 	optNut = None
 	if "opt_maxormin" in session.keys():
 		opt_maxormin = session["opt_maxormin"]
 		opt_nut = session["opt_nut"]
-		if opt_maxormin ==  0 and opt_nut== 26:
+		if opt_maxormin ==  -1 and opt_nut== -1:
 			optMaxMin = 2
-		elif opt_maxormin == 0and opt_nut== 28:
+		elif opt_maxormin == 0 and opt_nut== 26:
 			optMaxMin = 3
-		elif opt_maxormin == 1and opt_nut== 28:
+		elif opt_maxormin == 1 and opt_nut== 28:
 			optMaxMin = 4
 		else:
 			optMaxMin = opt_maxormin
 			optNut = opt_nut
-		
+	
+	# Create the form
 	minMaxForm = createMinMaxForm(check,firstDefault,optMaxMin,optNut,'Proceed to Select Foods')
 	minMaxForm.lowerBound = defaultGenlowerBound
 	minMaxForm.upperBound = defautGenupperBound	
 	
 	# Form is submitted
+	# at least one of the nutritional constraints is pressed (u'y' in request.form.values())
 	if minMaxForm.is_submitted() and request.form['submit'] == 'Proceed to Select Foods' and (u'y' in request.form.values()):
-		#print "Imhere 1"
 		if ((minMaxForm.opt_maxormin.data == 0) or (minMaxForm.opt_maxormin.data == 1)):
-			#print "Im here2"
 			if minMaxForm.opt_nut.data is None:
-				#print "Ime here 3"
 				return redirect(url_for('manage'))
 			else:
 				opt_maxormin = minMaxForm.opt_maxormin.data
 				opt_nut = minMaxForm.opt_nut.data
 		
 		elif minMaxForm.opt_maxormin.data == 2:
-			opt_maxormin = 0
-			opt_nut = 26
+			opt_maxormin = -1
+			opt_nut = -1
 			minMaxForm.opt_nut.data = None
 		elif minMaxForm.opt_maxormin.data == 3:
 			opt_maxormin = 0
-			opt_nut = 28
+			opt_nut = 26
 			minMaxForm.opt_nut.data = None
 		elif minMaxForm.opt_maxormin.data == 4:
 			opt_maxormin = 1
@@ -862,27 +899,37 @@ def manage():
 		constraints = []
 		constraintslowerBound = []
 		constraintsupperBound = []
-		#print ("Form taken")
+		
+		#getting the values from the form - beyond 421 are no longer nutritional constraints
+		#according to the table format - checkbox ,lower bound, upperbound
 		i = 0
 		for field in minMaxForm:
 			if i >= 421:
 				break
 			elif i != 0:
+				
 				if (i-1) %3 == 0:
-#					#print (i-1)//3, field.name, field.data, type(field.data)
+					# check box - take the index of the nutrients
+					#print (i-1)//3, field.name, field.data, type(field.data)
 					if field.data == True:
 						constraints.append(25+(i-1)//3)
 				elif (i-2)%3 == 0:
-#					#print (i-2)//3, field.name, field.data, type(field.data)
+					# lower bound
+					#print (i-2)//3, field.name, field.data, type(field.data)
 					constraintslowerBound.append(field.data)
 				elif (i-3)%3 == 0:
-#					#print (i-3)//3, field.name, field.data, type(field.data)
+					#upperbound
+					#print (i-3)//3, field.name, field.data, type(field.data)
 					constraintsupperBound.append(field.data)
 			i += 1
 
+		#convert index of nutrients to 0 and 1 tobe stored in Nutri of the user
+		#this is so that user's constraints are saved
 		currentCheck = [0 for i in range(len(constraintsupperBound))]
 		for eachCon in constraints:
 			currentCheck[eachCon-25] = 1
+			
+		#Modifying user's nutri
 		modifyNut = g.user.nutri[0]
 		newCon = [field for field in modifyNut.__table__.columns.keys()]
 		for ic in range(len(constraintslowerBound)):
@@ -945,11 +992,19 @@ def optimize():
 	for i in range(len(check)):
 		if check[i]:
 			constraints.append(i+25)
-	# Get max/min and which objective
+	
+	# Get max/min and which objective from sessions 
+	# However, if it is just to stay healthy -negative numbers are used to signify this chosen plan
 	opt_maxormin = session["opt_maxormin"]
 	opt_nut = session["opt_nut"]
+	maxVariety = 0 
+	if opt_maxormin == -1 and opt_nut == -1:
+		opt_maxormin = 1
+		opt_nut = 28
+		maxVariety = 1
 	
-	if session["basicPlan"] == 1: # Chosen basic
+	# If basic plan is chosen over full nutrient plan
+	if session["basicPlan"] == 1: 
 		global basicPlan 
 		newConstrainsts = []
 		for each in constraints:
@@ -957,8 +1012,7 @@ def optimize():
 				newConstrainsts.append(each)
 		constraints = newConstrainsts
 	
-
-	
+	#Start Linear programming
 	# Step 1 - normal LP
 	result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, opt_maxormin, opt_nut )
 	(outputFood , outputFoodAmount , status ,objective, nullNut) = result
@@ -970,7 +1024,10 @@ def optimize():
 			#When infeasible solution - make objective maximize will make it better
 			result = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, defaultGenupperBound, 1, opt_nut)
 			(outputFood , outputFoodAmount , status ,objective, nullNut) = result
-			
+
+	finalUpper = defaultGenupperBound 
+	finalLower = defaultGenlowerBound
+	
 	#Get lower bounds and upper bounds convert string from Nutri to float for calculations
 	upperBoundConst = []
 	lowerBoundConst = []
@@ -994,28 +1051,38 @@ def optimize():
 	# Nutlack is only empty when optimal or all the lower constraints are satisfied
 	# Meaning if it gives infeasible the problem lies only with the upper bounds.
 	session["nutLack"] = nutLack
-	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])	
+	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio(constraints, listFoodObject, g.user.nutri[0])	
 	
+	stepDecrease = 100
 	# Step 3 - when the problem is upper bound 	
 	if not nutRatioMin and status == "Infeasible":
 		stat = "Optimal"
 		pace = 5000
 		while stat == "Optimal":
 			(outputFoodPre, outputFoodAmountPre, statPre, objective, nullNut) = (outputFood, outputFoodAmount, stat, objective, nullNut)
-			pace -= 100
+			pace -= stepDecrease
 			for each in upperBoundConst:
 				if each > pace:
 					stat == "Infeasible"
 			openUpperBound = [pace for i in range(len(defaultGenupperBound))]
 			(outputFood, outputFoodAmount, stat, valobj, nullNut) = linearOptimize(listFoodObject, constraints, defaultGenlowerBound, openUpperBound, opt_maxormin, opt_nut)
-			reportTotal(constraints, outputFoodAmount, listFoodObject)
+			finalUpper = [each+stepDecrease for each in openUpperBound]
+			
 		#print "Open Bounded Solution"
 		(outputFood , outputFoodAmount , status ,objective, nullNut) = (outputFoodPre, outputFoodAmountPre, statPre, valobj, nullNut)
 		#reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
-	# At the end here, we should get a desirable output
-
-	# Report details
+	# At the end here, we should get a desirable output as feasible region is found
+	
+	# Once found if the user wants to maximize variety just to stay healthy
+	if maxVariety:
+		(outputFood, outputFoodAmount, stat, valobj, nullNut) = findMaxFood(listFoodObject, constraints, finalLower, finalUpper)
+		#for remembering of the form below
+		opt_maxormin = -1 
+		opt_nut = -1
+	
+	#Report details
+	
 	#Get total of the food to be compared with upperbound
 	totalNut = reportTotal(constraints, outputFoodAmount, listFoodObject)
 	
@@ -1082,7 +1149,7 @@ def optimize():
 	
 	session["nutLack"] = nutLack
 	session["nutLackVal"] = nutLackVal
-	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio2(constraints, listFoodObject, g.user.nutri[0])
+	(sumCal, sumNutUnmet, nutRatioMin, nutRatioUnmet) = reportRatio(constraints, listFoodObject, g.user.nutri[0])
 	#givenCal, failedBestFood, nutRatioMin, nutRatioUnmet
 	
 
@@ -1093,22 +1160,7 @@ def optimize():
 	session["opt_maxormin"] = opt_maxormin
 	session["opt_nut"] = opt_nut
 	session[("chosenNut")] = 0
-	
-	lackNut = []
-	zeroNut = []
-# 	for i in range(len(nutRatioUnmet)):
-# 		#print i
-# 		if sumNutUnmet[i] == 0:
-# 			zeroNut.append("Zero Amount of "+ full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0])
-# 		else:
-# 			percent = 100*(nutRatioMin[i]-sumNutUnmet[i])/(nutRatioMin[i])
-# 			if percent == 0:
-# 				continue
-# 			lackNut.append("Low "+ full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0]) 
-# 				lackNut.append("Lacking about " +"%0.2f" %percent+ "% of Required " + full_ext_nutrient[nutRatioUnmet[i]-25].split("/")[0]) 
-	
-	nullNut = lackNut+zeroNut
-	
+		
 	yesFood = []
 	yesFoodAmount = []
 	noFood = []
@@ -1124,6 +1176,7 @@ def optimize():
 	outputFoodAmount = yesFoodAmount+noFoodAmount
 	print nutLackStatement
 	
+	#same snippet as that in manage
 	
 	if "basicPlan" not in session.keys():
 		firstDefault = 1
@@ -1140,9 +1193,9 @@ def optimize():
 	if "opt_maxormin" in session.keys():
 		opt_maxormin = session["opt_maxormin"]
 		opt_nut = session["opt_nut"]
-		if opt_maxormin ==  0 and opt_nut== 26:
+		if opt_maxormin ==  -1 and opt_nut== -1:
 			optMaxMin = 2
-		elif opt_maxormin == 0and opt_nut== 28:
+		elif opt_maxormin == 0 and opt_nut== 26:
 			optMaxMin = 3
 		elif opt_maxormin == 1and opt_nut== 28:
 			optMaxMin = 4
@@ -1156,23 +1209,20 @@ def optimize():
 	
 	# Form is submitted
 	if minMaxForm.is_submitted() and request.form['submit'] == 'Generate My Diet' and (u'y' in request.form.values()):
-		#print "Imhere 1"
 		if ((minMaxForm.opt_maxormin.data == 0) or (minMaxForm.opt_maxormin.data == 1)):
-			#print "Im here2"
 			if minMaxForm.opt_nut.data is None:
-				#print "Ime here 3"
 				return redirect(url_for('manage'))
 			else:
 				opt_maxormin = minMaxForm.opt_maxormin.data
 				opt_nut = minMaxForm.opt_nut.data
 		
 		elif minMaxForm.opt_maxormin.data == 2:
-			opt_maxormin = 0
-			opt_nut = 26
+			opt_maxormin = -1
+			opt_nut = -1
 			minMaxForm.opt_nut.data = None
 		elif minMaxForm.opt_maxormin.data == 3:
 			opt_maxormin = 0
-			opt_nut = 28
+			opt_nut = 26
 			minMaxForm.opt_nut.data = None
 		elif minMaxForm.opt_maxormin.data == 4:
 			opt_maxormin = 1
@@ -1183,7 +1233,7 @@ def optimize():
 		constraints = []
 		constraintslowerBound = []
 		constraintsupperBound = []
-		#print ("Form taken")
+
 		i = 0
 		for field in minMaxForm:
 			if i >= 421:
@@ -1201,9 +1251,7 @@ def optimize():
 					constraintsupperBound.append(field.data)
 			i += 1
 
-		#session["currentCheck"] = currentCheck		
-		#Save the nutritional constraints
-		#print "Save nutritional"
+
 		currentCheck = [0 for i in range(len(constraintsupperBound))]
 		for eachCon in constraints:
 			currentCheck[eachCon-25] = 1
@@ -1227,6 +1275,7 @@ def optimize():
 		db.session.commit()
 		
 		return redirect(url_for('optimize'))
+		
 	
 	return render_template("optimize.html",
 		outputFood = outputFood,
@@ -1242,21 +1291,29 @@ def optimize():
 		nutLackStatement = nutLackStatement,
 		minMaxForm = minMaxForm)
 
-@login_required				
+@login_required
 @app.route('/resultSuggest', methods=['GET', 'POST'])
 @app.route('/resultSuggest/<int:page>', methods = ['GET', 'POST'])
 def resultSuggest(page = 1):
-	#get categories for the side
+
+	#resultSuggest works only with foods submitted - not the whole list of preferred foods
+
 	global mainCategories
 	global foodTypes
+	global full_ext_nutrient
+	global instrumentAttribute
 	
+	# If the food diet has not been optimized - this will not work
+	# It relies on the information from infeasible solution (in reportRatio in selectFoodFromSuggest)
 	if "optimize" not in session.keys():
-		flash('Please generate a diet plan First')
+		flash('Please generate a diet plan first')
 		return redirect(url_for('optimize'))
-		
+	
+	# Create the form - very similar to foods I like form but this is submitted foods I like
+	# Therefore it is from session["optimize"] i	
 	foodIdsArg = session["optimize"]
 	if foodIdsArg:
-	
+		# it is necessary that the food in this list appears in this order
 		foodsItemsILike = [Food.query.filter(Food.id == each).first() for each in foodIdsArg]
 	else:
 		foodsItemsILike = []
@@ -1265,7 +1322,7 @@ def resultSuggest(page = 1):
 	foodNamesArg = [food.food+ " "+ food.detail+ " (" +  food.source+")" for food in foodsItemsILike]
 	foodsILike = createFoodsILike(foodIdsArg, foodNamesArg)	
 	
-
+	#same snippet of code as in resultSearch
 	#Validate form
 	if foodsILike.validate_on_submit():
 		check = []
@@ -1288,25 +1345,22 @@ def resultSuggest(page = 1):
 				indexToDelete = session["optimize"].index(i)
 				session["optimize"].pop(indexToDelete)
 
-
-# 					session["suggested"].remove(i)
-# 				indexToDelete = session[g.user.get_id()].index(i)
-# 				session[g.user.get_id()].pop(indexToDelete)
-# 				session["foodItem"].pop(indexToDelete)
 		return redirect(url_for('selectFoodFromSuggest', foodIDFromSuggest = "updateAfterRemove"))
 		
+	# Compared to structure with resultSearch
+	# Box 1 - all the food types that i like
+	# Box 2 - food items that are hight in that nutrient chosen
+	# Main cat - the nutrietns that are lacking
 	
-	# Box 1 is all the food types that i like
-	# Box 2 - chose same mechanism - therefore categry is better
-	# Main cat becomes the nutrietns that are lacking
-	
+	# get the unique mainType and type of foods that I like
 	typesMainTypesILike = []
 	for eachFoodID in session[g.user.get_id()]:
 		eachFood = Food.query.filter(Food.id==eachFoodID).first()
 		typesMainTypesILike.append(eachFood.mainType +' -> '+eachFood.type )
-	
 	typesMainTypesILike = list(set(typesMainTypesILike))
+	session["box1CatSuggest"] = typesMainTypesILike
 	
+	# ge
 	typesILike = []
 	MainTypeILike = []
 	for each in typesMainTypesILike:
@@ -1314,18 +1368,13 @@ def resultSuggest(page = 1):
 		typesILike.append(each[1])
 		MainTypeILike.append(each[0])
 	
-	session["box1CatSuggest"] = typesMainTypesILike
-
-	# To get the chosen type and main type from web
-	
-	global full_ext_nutrient
-	
-# 	#print ("chosenType") in session.keys()
+ 	#get chosenType 
 	if ("chosenType") in session.keys():
 		typeFood = session["chosenType"].split(' -> ')
 		MainTypeILike = typeFood[0]
 		typesILike = typeFood[1]
 		heading2List = session["chosenType"].title()
+	# if not it is a general suggested Foods
 	else:
 		heading2List = "Suggested Food Types"
 
@@ -1334,11 +1383,12 @@ def resultSuggest(page = 1):
 	nutRatioMin = session["nutRatioMin"] 
 	nutRatioUnmet = session["nutRatioUnmet"] 
 
-	# To get which nutrient to look for to get from session because we want it to stay
+	# get which nutrient to look for to get from session because we want it to stay
 	# whenever client click which type of food this nutrient will be selected
-	# sample is calcium
 	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
-	#print "Test2: ",nutRatioUnmet, sumNutUnmet, nutRatioMin
+	
+	# if all lower nutrients are satisfied - ratio unmet is empty
+	# this could be that all the lower nutritional constraints are satisfied given the infeasible solution
 	if not nutRatioUnmet:
 		titleFindFood = "Your Food Items Are More Balanced"
 		return render_template('resultBalanced.html',
@@ -1353,24 +1403,24 @@ def resultSuggest(page = 1):
 	
 	indexRatio = int(session[("chosenNut")])
 	ratio = nutRatioMin[indexRatio]
+	# make the ratio slightly stricter
 	ratio = ratio*1.005
-# 	sumNut = sumNutUnmet[indexRatio]
 	nutChosen = nutRatioUnmet[indexRatio]
 	opt_maxormin =  session["opt_maxormin"]
 	opt_nut = session["opt_nut"]
 	
-	
-	looseUpperSodium = 2600.0 #2400
-	looseUpperFat = 75.0 #65
+	#Make suggested foods healthy - it has limits of sodium and fats
+	looseUpperSodium = 2600.0 
+	looseUpperFat = 75.0 
 	
 	#Names of the two nutrients
 	currentNutName = full_ext_nutrient[nutChosen-25].split('/')[0]
 	objNutName = full_ext_nutrient[opt_nut-25].split('/')[0]
 	
-	global instrumentAttribute
-	global toReduce
-
-	#Find all the types except beverages
+	#Find all the types 
+	#except beverages (because beveages has a lot of nutrition/energy drinks)
+	#except vitamins
+	
 	if heading2List == "Suggested Food Types":
 		result = Food.query.\
 					filter(Food.source=="General").\
@@ -1388,15 +1438,9 @@ def resultSuggest(page = 1):
 								filter(Food.type!="vitamins")
 			else:
 				heading2List = "In the Database:"
-		
-# 		if nutChosen in toReduce:
-# 			result = result.order_by(asc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
-# 		else:
 		result = result.order_by(desc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
 
 	else:
-		#print typesILike, MainTypeILike
-		#print "In my type"
 		result = Food.query.filter(Food.type == typesILike).filter(Food.mainType == MainTypeILike).\
 					filter(instrumentAttribute[nutChosen]/sumCal>=ratio)
 		if result.count() == 0:
@@ -1405,23 +1449,13 @@ def resultSuggest(page = 1):
 			if result.count() == 0:
 				#result None
 				heading2List = "Please See Suggested Food Types. "+heading2List+":"
-
-# 		if nutChosen in toReduce:
-# 			result = result.order_by(asc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
-# 		else:
 		result = result.order_by(desc(instrumentAttribute[nutChosen]/sumCal)).paginate(page, RESULTS_PER_PAGE, False)
 	box2Head = heading2List
-	#print "box2Head" , box2Head 
-# 	for each in result.items:
-		#print each.food, each.type, each.mainType
-		#print each.value(nutChosen)
- 
-#  	if nutChosen in toReduce:
-# 		titleFindFood = "Foods Low in "+ currentNutName
-# 	else:
+
+
 	titleFindFood = "Foods High in "+ currentNutName
 
-	lackingNut = [full_ext_nutrient[i-25].split('/')[0] for i in nutRatioUnmet]
+	
 	saveFood()
 	return render_template('resultSuggest.html',
 		foodsILike = foodsILike,
@@ -1440,11 +1474,13 @@ def resultSuggest(page = 1):
 	
 @app.route('/selectNut/<chosenNut>/')
 def selectNut(chosenNut):
+	#store nutrient chosen to be satisfied in resultSuggest
 	session[("chosenNut")] = chosenNut
 	return redirect(url_for('resultSuggest'))
 	
 @app.route('/selectTypeILike/<chosenType>/')
 def selectTypeILike(chosenType):
+	#store food type chosen in resultSuggest
 	if chosenType == "Suggested Food Types":
 		if ("chosenType") in session.keys():
 			session.pop(("chosenType"))
@@ -1452,13 +1488,12 @@ def selectTypeILike(chosenType):
 		session[("chosenType")] = chosenType
 	return redirect(url_for('resultSuggest'))
 
-
 @app.before_request
 def before_request():
     g.user = current_user
-
+    
+	# if it is fresh login
     if g.user.is_authenticated() and not g.user.get_id() in session:
-    	#print "SESSION NOT IN"
     	session[g.user.get_id()] = [str(each.id) for each in g.user.food]
     	session["foodItem"] = [each.food+ " "+ each.detail+ " (" +  each.source+")" for each in g.user.food]
     	session["foodInfo"] = None
@@ -1473,11 +1508,14 @@ def load_user(id):
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-	currentUser = g.user
 	
+	#given the user
+	currentUser = g.user
+	#create the form for editing the profile
 	editProfile = Profile(currentUser)
 	formVal =  request.form.values()
 	valid = 0
+	# manually validate the profile form - to allow for two possible unit types (wtform is not used here)
 	if ("Save Changes" in formVal) and ("unitSystem" in request.form.keys()) and editProfile.is_submitted():
 		if editProfile.age.data is not None:
 			age = editProfile.age.data
@@ -1495,7 +1533,6 @@ def profile():
 					#getCal(height, height2, weight, USorMetric, gender, editProfile.activity.data, age)
 					cal = getCal(height, 0, weight, unitSystem, gender,activity, age)
 					valid = 1
-					#print "Cal",cal
 			else:
 				if (editProfile.weight.data is not None) and (editProfile.heightFeet.data is not None):
 					weightLb = editProfile.weight.data
@@ -1506,13 +1543,11 @@ def profile():
 						heightInch = 0
 					cal = getCal(heightFeet, heightInch, weightLb, unitSystem, gender, activity ,age)
 					valid = 1
-					#print "Cal ",cal
 					
 		if valid == 0:
 			return redirect(url_for('profile'))
 		else:
-			print "saving"
-			# Save profile of the user
+			# Save new profile of the user
 			currentUser = g.user
 			currentUser.age = age
 			currentUser.gender = gender
@@ -1527,8 +1562,7 @@ def profile():
 				currentUser.heightFeet = height
 				currentUser.heightInch = None
 				
-			# Get calories value
-			
+			# Update nutri object
 			currentNutri = currentUser.nutri[0]
 			ageGroup = getageGroup(age)
 			currentNutri.ageGroup = ageGroup
@@ -1547,10 +1581,11 @@ def profile():
 				if i >= 23:
 					setattr(currentNutri, eachKey, getattr(recNut, eachKey))
 				i += 1
-		
+				
+			#Adjust calories
 			currentNutri.t0Energy_kcal = "0:"+str(int(round(cal)))
+			
 			#Adjust upperbound of macro according to calories values
-		
 			currentNutri.t0Protein_g=  currentNutri.t0Protein_g.replace("ND",str(int(round(cal*int(protup)/400))))
 			currentNutri.t0TotalLipidFat_g=currentNutri.t0TotalLipidFat_g.replace(":ND",":"+str(int(round(cal*int(fatup)/900))))
 			currentNutri.t0Carbohydrate_ByDifference_g=currentNutri.t0Carbohydrate_ByDifference_g.replace("ND",str(int(round(cal*int(carbup)/400 ))))	
@@ -1586,6 +1621,7 @@ def login():
 	profileFull = ProfileFull()
 	formVal =  request.form.values()
 	valid = 0
+	# similar snippet as profile to validate form
 	if ("Sign Up" in formVal or "Guest" in formVal) and ("unitSystem" in request.form.keys()) and ("gender" in request.form.keys()):
 		if profileFull.age.data is not None:
 			age = profileFull.age.data
@@ -1603,7 +1639,6 @@ def login():
 					#getCal(height, height2, weight, USorMetric, gender, profileFull.activity.data, age)
 					cal = getCal(height, 0, weight, unitSystem, gender,activity, age)
 					valid = 1
-					#print "Cal",cal
 			else:
 				if (profileFull.weight.data is not None) and (profileFull.heightFeet.data is not None):
 					weightLb = profileFull.weight.data
@@ -1614,7 +1649,6 @@ def login():
 						heightInch = 0
 					cal = getCal(heightFeet, heightInch, weightLb, unitSystem, gender, activity ,age)
 					valid = 1
-					#print "Cal ",cal
 					
 		if valid == 0:
 			flash ("Please fill in all the information")
@@ -1638,7 +1672,7 @@ def login():
 				newUser.heightFeet = height
 				newUser.heightInch = None
 				
-			# Get calories value
+			# Create nutri object
 			
 			newNutri = Nutri(type=1)
 			newUser.nutri.append(newNutri)
@@ -1689,11 +1723,9 @@ def login():
 		user = User.query.filter(User.username == formLogin.usernameLog.data).filter(User.password == formLogin.passwordLog.data).first()
 		if user is None:
 			flash("Wrong username or password. Please try again")
-			#print "No user"
 			return render_template("login.html", formLogin=formLogin, head_1 = "Log In", profileFull= profileFull)
 		login_user(user)
 		session['userProfile'] = getUserProfileDisplay(g.user)
-		#print "logged user"
 		flash("Logged in successfully.")
 		return redirect(request.args.get("next") or url_for("profile"))
 	return render_template("login.html", formLogin=formLogin, profileFull= profileFull)
@@ -1742,43 +1774,6 @@ def internal_error(error):
 def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
-    
-# TESTING Create dynamic form
-def create_form():
-	class F(Form):
-		pass
-	F.submit = SubmitField('username')
-	list_nut = ['protein','fat','sugar']
-	for name in list_nut:
-		setattr(F, name, TextField(name))
-	k = F()
-	return k
-	
-from flask import jsonify
-
-
-def testajax():
-    return jsonify({ 
-        'text': "lala" })
-	
-		
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-	testajax()
-	form = manyButtons()
-	form2 = manyButtons()
-	for i in range(100000):
-		print i
-	
-# 	a = session.keys()
-# 	#print "currentUser: ", g.user.get_id()
-# 	for each in a:
-# 		session.pop(each)
-# 		#print "eachID: ", each , id(session[each])
-# 		#print session[each]
-# 		#print "\n\n"
-	return render_template('test.html')
-# 	return redirect(url_for('test'))
 	
 
     
