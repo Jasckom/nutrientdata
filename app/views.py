@@ -1505,10 +1505,12 @@ def before_request():
 def load_user(id):
     return User.query.get(int(id))
     
-
+@login_required
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
 	
+	if not g.user.is_authenticated():
+		return redirect(url_for('login'))
 	#given the user
 	currentUser = g.user
 	#create the form for editing the profile
