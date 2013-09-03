@@ -330,14 +330,34 @@ border: solid
 
 #sectionsInLongText{
 float: left;
-width: 220px;
-height: 220px;
+width: 280px;
+height: 280px;
 position: relative;
-margin-bottom: 20px;
 border: solid;
-padding:30px;
+}
 
+#textexpMdn{
+float: left;
+width: 280px;
+height: 280px;
+position: relative;
+border: solid;
+}
 
+#textexpSf{
+float: left;
+width: 280px;
+height: 280px;
+position: relative;
+border: solid;
+}
+
+#textexpGdp{
+float: left;
+width: 280px;
+height: 280px;
+position: relative;
+border: solid;
 }
 
 #sectionsLong{
@@ -606,8 +626,8 @@ table.nutrition {
 
 #loading
 {
-background-color:rgba(255,255,255,1);
 display: None;
+background-color:rgba(255,255,255,1);
 height: 100px;
 width: 100px;
 position: fixed;

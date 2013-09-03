@@ -198,7 +198,6 @@ $(function () {
 	
 	$('#loading').hide();
 	
-	
 	$("input[id='submitSignUp']").hide();
 	
 	
