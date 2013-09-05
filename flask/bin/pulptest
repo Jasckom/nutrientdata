@@ -1,4 +1,4 @@
-#!/Users/Mick/Desktop/nutri/flask/bin/python
+#!/Users/Mick/Desktop/nutriData/flask/bin/python
 # EASY-INSTALL-ENTRY-SCRIPT: 'PuLP==1.5.4','console_scripts','pulptest'
 __requires__ = 'PuLP==1.5.4'
 import sys
