@@ -13,6 +13,8 @@ Werkzeug==0.9.4
 decorator==3.4.0
 gunicorn==18.0
 itsdangerous==0.23
+newrelic==2.0.0.1
+psycopg2==2.5.1
 pyparsing==1.5.7
 sqlalchemy-migrate==0.7.2
 wsgiref==0.1.2
