@@ -1508,8 +1508,9 @@ def load_user(id):
 @login_required
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-	
+	print "profile 1"
 	if not g.user.is_authenticated():
+		print "profile 2"
 		return redirect(url_for('login'))
 	#given the user
 	currentUser = g.user
@@ -1517,9 +1518,11 @@ def profile():
 	editProfile = Profile(currentUser)
 	formVal =  request.form.values()
 	valid = 0
+	print "profile 3"
 	# manually validate the profile form - to allow for two possible unit types (wtform is not used here)
 	if ("Save Changes" in formVal) and ("unitSystem" in request.form.keys()) and editProfile.is_submitted():
 		if editProfile.age.data is not None:
+			print "profile 4"
 			age = editProfile.age.data
 			gender = editProfile.gender.data
 			condition = editProfile.conditions.data
@@ -1545,10 +1548,11 @@ def profile():
 						heightInch = 0
 					cal = getCal(heightFeet, heightInch, weightLb, unitSystem, gender, activity ,age)
 					valid = 1
-					
+		print "profile 5"		
 		if valid == 0:
 			return redirect(url_for('profile'))
 		else:
+			print "profile 6"
 			# Save new profile of the user
 			currentUser = g.user
 			currentUser.age = age
@@ -1576,7 +1580,8 @@ def profile():
 			protup = recNut.protein_g
 			fatup = recNut.fat_g
 			carbup = recNut.carb_g
-		
+			
+			print "profile 7"
 			# Copy this default into the current's user nutri
 			i = 0
 			for eachKey in recNut.__table__.columns.keys():
@@ -1596,11 +1601,11 @@ def profile():
 			
 			session['userProfile'] = getUserProfileDisplay(currentUser)
 			flash ("My Profile is updated! " +session['userProfile'])
-			
+			print "profile 8"
 	username = "Guest"
 	if currentUser.username is not None:
 		username = g.user.username
-
+	print "profile 9"
 	return render_template("profile.html", 
 		username = username, editProfile = editProfile,
     	userProfile = getUserProfileDisplay(g.user))
