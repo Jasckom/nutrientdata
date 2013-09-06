@@ -1623,8 +1623,11 @@ def login():
 	profileFull = ProfileFull()
 	formVal =  request.form.values()
 	valid = 0
+	print "time out"
+	
 	# similar snippet as profile to validate form
 	if ("Sign Up" in formVal or "Guest" in formVal) and ("unitSystem" in request.form.keys()) and ("gender" in request.form.keys()):
+		print "time out1"
 		if profileFull.age.data is not None:
 			age = profileFull.age.data
 			gender = request.form["gender"]
@@ -1656,6 +1659,7 @@ def login():
 			flash ("Please fill in all the information")
 			return redirect(url_for('login'))
 		else:
+			print "time out2"
 			# Save profile of the user
 			if "Sign Up" in formVal:
 				newUser = User()
@@ -1675,7 +1679,7 @@ def login():
 				newUser.heightInch = None
 				
 			# Create nutri object
-			
+			print "time out3"
 			newNutri = Nutri(type=1)
 			newUser.nutri.append(newNutri)
 			db.session.add(newUser)
@@ -1686,7 +1690,7 @@ def login():
 			currentNutri.ageGroup = ageGroup
 			currentNutri.gender = gender
 			currentNutri.conditions = condition
-				 
+			print "time out4"	 
 			# Get the default from "look-up table" from the database/ generate default lower and upper
 			recNut = Nutri.query.filter(Nutri.type==0).filter(Nutri.ageGroup==ageGroup).filter(Nutri.gender==gender).filter(Nutri.conditions==condition).first()
 			protup = recNut.protein_g
@@ -1699,6 +1703,7 @@ def login():
 				if i >= 23:
 					setattr(currentNutri, eachKey, getattr(recNut, eachKey))
 				i += 1
+			print "time out5"	
 		
 			currentNutri.t0Energy_kcal = "0:"+str(int(round(cal)))
 			#Adjust upperbound of macro according to calories values
@@ -1709,27 +1714,33 @@ def login():
 			(check, nutriField, defaultGenlowerBound, defautGenupperBound) = getKeysBounds(currentNutri,0)
 			db.session.commit()
 			
-
+			print "time out6"
 			if "Sign Up" in formVal:
 				login_user(newUser)
 				return redirect(url_for('signup'))
 			elif "Guest" in formVal:
+				print "time out7"
 				login_user(newUser)
 				session['userProfile'] = getUserProfileDisplay(newUser)
 				flash("Welcome, Guest!")
+				print "time out8"
 				return redirect(request.args.get("next") or url_for("manage"))
-			
+	
+	print "time out9"		
 	formLogin = LoginForm()
 	if formLogin.validate_on_submit():
 		#print "get login form"
 		user = User.query.filter(User.username == formLogin.usernameLog.data).filter(User.password == formLogin.passwordLog.data).first()
 		if user is None:
+			print "time out10"
 			flash("Wrong username or password. Please try again")
 			return render_template("login.html", formLogin=formLogin, head_1 = "Log In", profileFull= profileFull)
 		login_user(user)
 		session['userProfile'] = getUserProfileDisplay(g.user)
 		flash("Logged in successfully.")
+		print "time out11"
 		return redirect(request.args.get("next") or url_for("profile"))
+	print "time out12"	
 	return render_template("login.html", formLogin=formLogin, profileFull= profileFull)
     
 @app.route("/signup", methods=["GET", "POST"])
