@@ -1724,7 +1724,7 @@ def login():
 				session['userProfile'] = getUserProfileDisplay(newUser)
 				flash("Welcome, Guest!")
 				print "time out8"
-				return redirect(request.args.get("next") or url_for("manage"))
+				return redirect(url_for("manage"))
 	
 	print "time out9"		
 	formLogin = LoginForm()
@@ -1739,7 +1739,7 @@ def login():
 		session['userProfile'] = getUserProfileDisplay(g.user)
 		flash("Logged in successfully.")
 		print "time out11"
-		return redirect(request.args.get("next") or url_for("profile"))
+		return redirect(url_for("profile"))
 	print "time out12"	
 	return render_template("login.html", formLogin=formLogin, profileFull= profileFull)
     
